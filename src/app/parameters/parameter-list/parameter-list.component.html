@@ -1,0 +1,11 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Parameters</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngFor="let param of parameters">
+      <app-parameter-item-simple [parameter]="param" ></app-parameter-item-simple>
+    </div>
+  </mat-card-content>
+</mat-card>
+

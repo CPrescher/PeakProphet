@@ -12,4 +12,8 @@ export class ParameterItemSimpleComponent {
   constructor() {
     this.parameter = new Parameter("Peak Position");
   }
+
+  log(ev: any) {
+    console.log(ev);
+  }
 }

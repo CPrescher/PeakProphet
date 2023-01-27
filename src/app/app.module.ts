@@ -13,12 +13,19 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
+import { ParameterListComponent } from './parameters/parameter-list/parameter-list.component';
+import {MatCardModule} from "@angular/material/card";
+import { NumbersOnlyDirective } from './directives/numbers-only.directive';
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
     AppComponent,
     ParameterItemSimpleComponent,
-    MainViewComponent
+    MainViewComponent,
+    ParameterListComponent,
+    NumbersOnlyDirective
   ],
   imports: [
     BrowserModule,
@@ -30,7 +37,10 @@ import {MatButtonModule} from "@angular/material/button";
     MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

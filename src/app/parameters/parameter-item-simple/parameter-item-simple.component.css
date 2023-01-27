@@ -1,0 +1,13 @@
+mat-form-field {
+  width: 160px;
+  height: 75px;
+}
+
+.example-right-align {
+  text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
