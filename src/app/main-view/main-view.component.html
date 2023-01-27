@@ -1,0 +1,20 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav>
+    Menu
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar class="toolbar mat-elevation-z10" color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      Bampeak
+    </mat-toolbar>
+    <main class="content">
+      <app-parameter-item-simple></app-parameter-item-simple>
+      Was geht hier?
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+
