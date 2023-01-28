@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Parameter} from "../../shared/parameter.model";
+import {Parameter} from "../../../shared/parameter.model";
 
 @Component({
   selector: 'app-parameter-item-simple',
