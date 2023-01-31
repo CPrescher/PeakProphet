@@ -5,11 +5,11 @@ export class GaussianModel implements Model {
   parameters: Parameter[];
   name: string;
 
-  constructor() {
+  constructor(position=0.0, fwhm=0.5, intensity=1.0) {
     this.parameters = [
-      new Parameter("Position", 2.0),
-      new Parameter("FWHM", 0.5),
-      new Parameter("Intensity", 1.0),
+      new Parameter("Positions", position),
+      new Parameter("FWHM", fwhm),
+      new Parameter("Intensity", intensity),
     ];
     this.name = "Gaussian";
   }

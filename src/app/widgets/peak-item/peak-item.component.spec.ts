@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParameterListComponent } from './parameter-list.component';
+import { PeakItemComponent } from './peak-item.component';
 
-describe('ParameterListComponent', () => {
-  let component: ParameterListComponent;
-  let fixture: ComponentFixture<ParameterListComponent>;
+describe('PeakComponent', () => {
+  let component: PeakItemComponent;
+  let fixture: ComponentFixture<PeakItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ParameterListComponent ]
+      declarations: [ PeakItemComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ParameterListComponent);
+    fixture = TestBed.createComponent(PeakItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

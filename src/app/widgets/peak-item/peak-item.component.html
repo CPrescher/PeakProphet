@@ -1,0 +1,10 @@
+<mat-card class="mat-elevation-z5">
+  <mat-card-header>
+    <mat-card-title>{{peak.name}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngFor="let param of peak.parameters" class="parameter-item-container">
+      <app-parameter-item-simple [parameter]="param" class="parameter-item" ></app-parameter-item-simple>
+    </div>
+  </mat-card-content>
+</mat-card>

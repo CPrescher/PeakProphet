@@ -15,5 +15,24 @@
   flex-grow: 1;
   flex-shrink: 1;
   overflow: auto;
+
+  flex-direction: row;
+  justify-content: space-between;
   padding: 24px;
+}
+
+.left-content {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  float: left;
+}
+
+.right-content{
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow: auto;
+  float: right;
+  width: 250px;
+  padding: 0;
 }

@@ -13,19 +13,25 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import { ParameterListComponent } from './widgets/parameters/parameter-list/parameter-list.component';
 import {MatCardModule} from "@angular/material/card";
 import { NumbersOnlyDirective } from './shared/directives/numbers-only.directive';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {FormsModule} from "@angular/forms";
+import { PeakItemComponent } from './widgets/peak-item/peak-item.component';
+import {ModelService} from "./shared/model.service";
+import { PeakControlComponent } from './widgets/peak-control/peak-control.component';
+import { PlotComponent } from './widgets/plot/plot.component';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
     AppComponent,
     ParameterItemSimpleComponent,
     MainViewComponent,
-    ParameterListComponent,
-    NumbersOnlyDirective
+    NumbersOnlyDirective,
+    PeakItemComponent,
+    PeakControlComponent,
+    PlotComponent
   ],
   imports: [
     BrowserModule,
@@ -40,9 +46,10 @@ import {FormsModule} from "@angular/forms";
     MatInputModule,
     MatCardModule,
     MatCheckboxModule,
+    MatSelectModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ModelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
