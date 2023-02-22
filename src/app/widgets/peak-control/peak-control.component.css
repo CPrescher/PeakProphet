@@ -1,4 +1,11 @@
 mat-card {
     margin-bottom: 10px;
-    border-radius: 5px;
+}
+
+button {
+  margin-right: 12px;
+}
+
+.peak-type {
+  max-width: 150px;
 }

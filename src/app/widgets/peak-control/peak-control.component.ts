@@ -14,7 +14,4 @@ export class PeakControlComponent {
   addPeak() {
     console.log("addPeak");
   }
-  removePeak() {
-    console.log("removePeak");
-  }
 }

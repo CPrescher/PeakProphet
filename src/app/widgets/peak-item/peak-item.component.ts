@@ -10,12 +10,29 @@ import {ModelService} from "../../shared/model.service";
 })
 export class PeakItemComponent implements OnInit{
   peak: Model = new GaussianModel();
+
+  selectedModelIndex = 0;
   constructor(
      private modelService: ModelService) {
   }
 
   ngOnInit() {
     this.peak = this.modelService.getPeaks()[0];
+    this.modelService.selectedPeakSubject.subscribe((peak: Model) => {
+      this.peak = peak;
+    });
+    this.modelService.selectedPeakIndexSubject.subscribe((index: number) => {
+      this.selectedModelIndex = index;
+    });
+  }
+
+
+  incrementModelIndex() {
+    this.modelService.selectPeak(this.selectedModelIndex+1);
+  }
+
+  decrementModelIndex() {
+    this.modelService.selectPeak(this.selectedModelIndex-1);
   }
 
 }
