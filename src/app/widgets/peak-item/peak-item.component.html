@@ -2,8 +2,9 @@
   <mat-card-header>
     <mat-card-title>
       <button mat-button (click)="decrementModelIndex()" [disabled]="selectedModelIndex<1"><</button>
-      {{selectedModelIndex+1}}
+      <span class="peak-index">{{selectedModelIndex+1}}</span>
       <button mat-button (click)="incrementModelIndex()">></button>
+      <button mat-mini-fab color="primary" (click)="removePeak()">-</button>
       {{peak.name}}
     </mat-card-title>
   </mat-card-header>

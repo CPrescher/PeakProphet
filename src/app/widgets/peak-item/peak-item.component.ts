@@ -35,4 +35,8 @@ export class PeakItemComponent implements OnInit{
     this.modelService.selectPeak(this.selectedModelIndex-1);
   }
 
+  removePeak() {
+    this.modelService.removePeak(this.selectedModelIndex);
+  }
+
 }
