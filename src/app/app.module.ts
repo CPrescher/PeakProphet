@@ -22,6 +22,7 @@ import {ModelService} from "./shared/model.service";
 import { PeakControlComponent } from './widgets/peak-control/peak-control.component';
 import { PlotComponent } from './widgets/plot/plot.component';
 import {MatSelectModule} from "@angular/material/select";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -33,22 +34,23 @@ import {MatSelectModule} from "@angular/material/select";
     PeakControlComponent,
     PlotComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatInputModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatInputModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatSelectModule,
+        FormsModule,
+        MatTooltipModule
+    ],
   providers: [ModelService],
   bootstrap: [AppComponent]
 })

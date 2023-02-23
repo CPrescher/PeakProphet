@@ -7,7 +7,7 @@ export class LorentzianModel implements Model {
 
   constructor(position=0.0, fwhm=0.5, intensity=1.0) {
     this.parameters = [
-      new Parameter("Positions", position),
+      new Parameter("Position", position),
       new Parameter("FWHM", fwhm),
       new Parameter("Intensity", intensity),
     ];

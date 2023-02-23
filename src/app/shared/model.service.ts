@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Model} from "./model.interface";
 import {GaussianModel} from "./gaussian.model";
 import {LorentzianModel} from "./lorentzian.model";
+import {PseudoVoigtModel} from "./pseudo-voigt.model";
 import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
@@ -9,10 +10,10 @@ import {BehaviorSubject, Subject} from "rxjs";
 })
 export class ModelService {
   private peaks: Model[] = [];
-
   public peakTypes: { [key: string]: any } = {
     "Gaussian": GaussianModel,
     "Lorentzian": LorentzianModel,
+    "Pseudo-Voigt": PseudoVoigtModel,
   }
 
 

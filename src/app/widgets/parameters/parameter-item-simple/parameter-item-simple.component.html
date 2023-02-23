@@ -1,9 +1,15 @@
 
 <mat-form-field floatLabel="auto">
   <mat-label>{{parameter.name}}:</mat-label>
-  <input matInput numbersOnly class="example-right-align" (change)="log($event)"
+  <input matInput numbersOnly class="example-right-align" (change)="inputChange($event)"
          [value]="parameter.value.toString()">
 </mat-form-field>
 
-<mat-checkbox [(ngModel)]="parameter.fit"></mat-checkbox>
+<mat-checkbox
+  [(ngModel)]="parameter.fit"
+  matTooltip="Fit?"
+  matTooltipShowDelay="500"
+  matTooltipPosition="above"
+>
+</mat-checkbox>
 

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Parameter} from "../../../shared/parameter.model";
 
 @Component({
@@ -8,12 +8,14 @@ import {Parameter} from "../../../shared/parameter.model";
 })
 export class ParameterItemSimpleComponent {
   @Input() parameter: Parameter;
+  @Output() parameterChange = new EventEmitter<Parameter>();
 
   constructor() {
     this.parameter = new Parameter("Peak Position");
   }
 
-  log(ev: any) {
-    console.log(ev);
+  inputChange(ev: any) {
+    this.parameter.value = ev.target.value;
+    this.parameterChange.emit(this.parameter);
   }
 }
