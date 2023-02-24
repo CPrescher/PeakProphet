@@ -31,6 +31,8 @@ export class ModelService {
     if (index < this.peaks.length && index >= 0) {
       this.selectedPeakIndexSubject.next(index);
       this.selectedPeakSubject.next(this.peaks[index]);
+    } else {
+      throw new Error(`Cannot select peak at index ${index}, it does not exist`);
     }
   }
 
@@ -56,6 +58,12 @@ export class ModelService {
       } else {
         this.selectPeak(index);
       }
+    } else {
+      throw new Error(`Cannot remove peak at index ${index}, it does not exist`);
     }
+  }
+
+  clearPeaks() {
+    this.peaks = [];
   }
 }
