@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PeakControlComponent} from './peak-control.component';
-import {AppModule} from "../../app.module";
+import {MaterialsModule} from "../../shared/gui/materials.module";
 
 describe('PeakControlComponent', () => {
   let component: PeakControlComponent;
@@ -9,7 +9,7 @@ describe('PeakControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule],
+      imports: [MaterialsModule],
       declarations: [PeakControlComponent]
     })
       .compileComponents();

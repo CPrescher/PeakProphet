@@ -1,7 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PeakItemComponent} from './peak-item.component';
-import {AppModule} from "../../app.module";
+import {MaterialsModule} from "../../shared/gui/materials.module";
+import {ParameterItemSimpleComponent} from "../parameters/parameter-item-simple/parameter-item-simple.component";
 
 describe('PeakItemComponent', () => {
   let component: PeakItemComponent;
@@ -9,8 +10,8 @@ describe('PeakItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [PeakItemComponent]
+      imports: [MaterialsModule],
+      declarations: [PeakItemComponent, ParameterItemSimpleComponent]
     })
       .compileComponents();
 

@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ParameterItemSimpleComponent } from './parameter-item-simple.component';
-import {AppModule} from "../../../app.module";
+import {ParameterItemSimpleComponent} from './parameter-item-simple.component';
+import {MaterialsModule} from "../../../shared/gui/materials.module";
 
 describe('ParameterItemSimpleComponent', () => {
   let component: ParameterItemSimpleComponent;
@@ -9,10 +9,10 @@ describe('ParameterItemSimpleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [ ParameterItemSimpleComponent ]
+      imports: [MaterialsModule],
+      declarations: [ParameterItemSimpleComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ParameterItemSimpleComponent);
     component = fixture.componentInstance;
