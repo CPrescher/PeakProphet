@@ -1,11 +1,11 @@
 <mat-card class="mat-elevation-z5">
   <mat-card-header>
     <mat-card-title>
-      <button mat-button (click)="decrementModelIndex()" [disabled]="selectedModelIndex<1"><</button>
-      <span class="peak-index">{{selectedModelIndex+1}}</span>
-      <button mat-button (click)="incrementModelIndex()">></button>
-      <button mat-mini-fab color="primary" (click)="removePeak()">-</button>
-      {{peak.name}}
+      <button mat-button data-test="decrease-button" (click)="decreaseModelIndex()" [disabled]="selectedModelIndex<1"><</button>
+      <span data-test="peak-index" class="peak-index">{{selectedModelIndex+1}}</span>
+      <button mat-button data-test="increase-button" (click)="increaseModelIndex()">></button>
+      <button mat-mini-fab data-test="remove-button" color="primary" (click)="removePeak()">-</button>
+      <span data-test="peak-type">{{peak.name}}</span>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>

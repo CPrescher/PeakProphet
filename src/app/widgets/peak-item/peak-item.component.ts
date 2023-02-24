@@ -27,11 +27,11 @@ export class PeakItemComponent implements OnInit{
   }
 
 
-  incrementModelIndex() {
+  increaseModelIndex() {
     this.modelService.selectPeak(this.selectedModelIndex+1);
   }
 
-  decrementModelIndex() {
+  decreaseModelIndex() {
     this.modelService.selectPeak(this.selectedModelIndex-1);
   }
 
