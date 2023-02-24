@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PeakControlComponent } from './peak-control.component';
+import {PeakControlComponent} from './peak-control.component';
+import {AppModule} from "../../app.module";
 
 describe('PeakControlComponent', () => {
   let component: PeakControlComponent;
@@ -8,9 +9,10 @@ describe('PeakControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PeakControlComponent ]
+      imports: [AppModule],
+      declarations: [PeakControlComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PeakControlComponent);
     component = fixture.componentInstance;

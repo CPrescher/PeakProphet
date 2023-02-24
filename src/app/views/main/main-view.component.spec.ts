@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MainViewComponent } from './main-view.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MainViewComponent} from "./main-view.component";
+import {AppModule} from "../../app.module";
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -8,9 +8,10 @@ describe('MainViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainViewComponent ]
+      imports: [AppModule],
+      declarations: [MainViewComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MainViewComponent);
     component = fixture.componentInstance;

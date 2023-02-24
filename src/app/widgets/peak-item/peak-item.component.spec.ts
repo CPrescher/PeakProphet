@@ -1,16 +1,18 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PeakItemComponent } from './peak-item.component';
+import {PeakItemComponent} from './peak-item.component';
+import {AppModule} from "../../app.module";
 
-describe('PeakComponent', () => {
+describe('PeakItemComponent', () => {
   let component: PeakItemComponent;
   let fixture: ComponentFixture<PeakItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PeakItemComponent ]
+      imports: [AppModule],
+      declarations: [PeakItemComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PeakItemComponent);
     component = fixture.componentInstance;
