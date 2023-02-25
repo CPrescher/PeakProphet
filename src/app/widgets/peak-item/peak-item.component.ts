@@ -18,10 +18,10 @@ export class PeakItemComponent implements OnInit{
 
   ngOnInit() {
     this.peak = this.modelService.getPeaks()[0];
-    this.modelService.selectedPeakSubject.subscribe((peak: Model) => {
+    this.modelService.selectedPeak$.subscribe((peak: Model) => {
       this.peak = peak;
     });
-    this.modelService.selectedPeakIndexSubject.subscribe((index: number) => {
+    this.modelService.selectedPeakIndex$.subscribe((index: number) => {
       this.selectedModelIndex = index;
     });
   }

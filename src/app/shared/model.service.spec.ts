@@ -19,14 +19,14 @@ describe('ModelService', () => {
 
   it('Should select the first peak', () => {
     service.selectPeak(0);
-    service.selectedPeakIndexSubject.subscribe(index => {
+    service.selectedPeakIndex$.subscribe(index => {
       expect(index).toBe(0);
     });
   });
 
   it('Should select the second peak', () => {
     service.selectPeak(1);
-    service.selectedPeakIndexSubject.subscribe(index => {
+    service.selectedPeakIndex$.subscribe(index => {
       expect(index).toBe(1);
     });
   });
@@ -66,7 +66,7 @@ describe('ModelService', () => {
   });
 
   it('Should select the first peak', (done: DoneFn) => {
-    service.selectedPeakSubject.subscribe(peak => {
+    service.selectedPeak$.subscribe(peak => {
       expect(peak.name).toBe("Gaussian");
       done();
     });

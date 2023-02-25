@@ -17,8 +17,10 @@ export class ModelService {
   }
 
 
-  public selectedPeakIndexSubject = new BehaviorSubject<number>(0);
-  public selectedPeakSubject = new Subject<Model>();
+  private selectedPeakIndexSubject = new BehaviorSubject<number>(0);
+  public selectedPeakIndex$ = this.selectedPeakIndexSubject.asObservable();
+  private selectedPeakSubject = new Subject<Model>();
+  public selectedPeak$ = this.selectedPeakSubject.asObservable();
 
   constructor() {
     this.peaks = [
