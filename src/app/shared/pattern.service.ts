@@ -9,8 +9,13 @@ export class PatternService {
   public patterns: Pattern[] = [];
   public selectedPattern: Pattern;
   public selectedIndex: number;
-  public selectedIndexSubject = new Subject<number>();
-  public selectedSubject = new Subject<Pattern>();
+  private selectedIndexSubject = new Subject<number>();
+  public selectedIndex$ = this.selectedIndexSubject.asObservable();
+  private selectedSubject = new Subject<Pattern>();
+  public selected$ = this.selectedSubject.asObservable();
+  private clearSubject = new Subject<void>();
+  public clear$ = this.clearSubject.asObservable();
+
 
   constructor() {
   }
@@ -27,6 +32,9 @@ export class PatternService {
     } else if(index < this.patterns.length) {
       this.selectPattern(index);
     }
+    if (this.patterns.length === 0) {
+      this.clearSubject.next();
+    }
   }
   selectPattern(index: number): void {
     if (index < this.patterns.length && index >= 0 && isInt(index)) {
@@ -37,6 +45,11 @@ export class PatternService {
     } else {
       throw new Error(`Cannot select pattern at index ${index}, it does not exist`);
     }
+  }
+
+  clearPatterns(): void {
+    this.patterns = [];
+    this.clearSubject.next();
   }
 }
 

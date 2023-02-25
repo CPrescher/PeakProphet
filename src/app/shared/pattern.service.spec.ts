@@ -79,16 +79,16 @@ describe('PatternService', () => {
 
   it("pattern subject is updated when pattern is selected", (done: DoneFn) => {
     populatePatternService(service);
-    service.selectedSubject.subscribe(pattern => {
+    service.selected$.subscribe(pattern => {
       expect(pattern.name).toBe('test2');
       done();
     });
     service.selectPattern(1);
   });
 
-  it("index subject is updated when pattern is added", (done: DoneFn) => {
+  it("index Observable is updated when pattern is added", (done: DoneFn) => {
     populatePatternService(service);
-    service.selectedIndexSubject.subscribe(index => {
+    service.selectedIndex$.subscribe(index => {
       expect(index).toBe(1);
       expect(service.patterns[index].name).toBe('test2');
       done();
@@ -96,10 +96,10 @@ describe('PatternService', () => {
     service.selectPattern(1);
   });
 
-  it("index subject is updated when pattern is removed", (done: DoneFn) => {
+  it("index observable is updated when pattern is removed", (done: DoneFn) => {
     populatePatternService(service);
     service.selectPattern(2);
-    service.selectedIndexSubject.subscribe(index => {
+    service.selectedIndex$.subscribe(index => {
       expect(index).toBe(1);
       expect(service.patterns[index].name).toBe('test2');
       done();
@@ -108,7 +108,7 @@ describe('PatternService', () => {
   });
 
   it("updates selected subject when pattern is added", (done: DoneFn) => {
-    service.selectedSubject.subscribe(pattern => {
+    service.selected$.subscribe(pattern => {
       expect(pattern.name).toBe('test');
       done();
     });
@@ -116,10 +116,24 @@ describe('PatternService', () => {
   });
 
   it("updates selected Index subject when pattern is added", (done: DoneFn) => {
-    service.selectedIndexSubject.subscribe(index => {
+    service.selectedIndex$.subscribe(index => {
       expect(index).toBe(0);
       done();
     });
     service.addPattern('test', [1, 2, 3], [4, 5, 6]);
+  });
+
+  it("clears the pattern list", () => {
+    populatePatternService(service);
+    service.clearPatterns();
+    expect(service.patterns.length).toBe(0);
+  });
+
+  it("sends clear observable upon deleting last pattern", (done: DoneFn) => {
+    service.clear$.subscribe(() => {
+      done();
+    });
+    service.addPattern('test', [1, 2, 3], [4, 5, 6]);
+    service.removePattern(0);
   });
 });

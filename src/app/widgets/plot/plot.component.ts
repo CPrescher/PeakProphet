@@ -3,6 +3,7 @@ import PatternPlot from "../../lib/plotting/pattern-plot";
 import LineItem from "../../lib/plotting/items/lineItem";
 import VerticalLineItem from "../../lib/plotting/items/verticalLineItem";
 import * as _ from 'lodash';
+import {PatternService} from "../../shared/pattern.service";
 
 @Component({
   selector: 'app-plot',
@@ -22,15 +23,23 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   throttleResize;
 
-  constructor() {
+  constructor(private patternService: PatternService){
   }
 
   ngOnInit(): void {
+    this.patternService.selected$.subscribe((pattern) => {
+      if (pattern) {
+        this.mainLine.setData(pattern.x, pattern.y);
+      }
+    });
+
 
   }
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
+
+    this.patternService.addPattern("LALALA", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 10, 5, 6, 7, 8, 9])
   }
 
   _initPlot(): void {
@@ -44,8 +53,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this.mainLine = new LineItem();
     this.mainLine.autoRanged = true;
     this.plot.addItem(this.mainLine);
-
-    this.mainLine.setData([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   }
 
   _initResizeHandling(): void {
