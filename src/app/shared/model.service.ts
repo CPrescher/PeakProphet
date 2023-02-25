@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Model} from "./model.interface";
-import {GaussianModel} from "./gaussian.model";
-import {LorentzianModel} from "./lorentzian.model";
-import {PseudoVoigtModel} from "./pseudo-voigt.model";
+import {Model} from "./peak-types/model.interface";
+import {GaussianModel} from "./peak-types/gaussian.model";
+import {LorentzianModel} from "./peak-types/lorentzian.model";
+import {PseudoVoigtModel} from "./peak-types/pseudo-voigt.model";
 import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({

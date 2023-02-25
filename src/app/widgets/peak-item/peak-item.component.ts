@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {GaussianModel} from "../../shared/gaussian.model";
-import {Model} from "../../shared/model.interface";
+import {GaussianModel} from "../../shared/peak-types/gaussian.model";
+import {Model} from "../../shared/peak-types/model.interface";
 import {ModelService} from "../../shared/model.service";
 
 @Component({
