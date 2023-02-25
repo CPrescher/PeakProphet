@@ -36,7 +36,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
   _initPlot(): void {
     this.plot = new PatternPlot(
       '#pattern-plot',
-      800, 500,
+      500, 200,
     );
     this.plot.setXAxisLabel('X');
     this.plot.setYAxisLabel('Y');

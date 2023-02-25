@@ -12,6 +12,7 @@ import {PeakItemComponent} from './widgets/peak-item/peak-item.component';
 import {ModelService} from "./shared/model.service";
 import {PeakControlComponent} from './widgets/peak-control/peak-control.component';
 import {PlotComponent} from './widgets/plot/plot.component';
+import { PatternControlComponent } from './widgets/pattern-control/pattern-control.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {PlotComponent} from './widgets/plot/plot.component';
     NumbersOnlyDirective,
     PeakItemComponent,
     PeakControlComponent,
-    PlotComponent
+    PlotComponent,
+    PatternControlComponent
   ],
   imports: [
     BrowserModule,
