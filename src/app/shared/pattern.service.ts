@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Pattern} from "./pattern";
 import {BehaviorSubject, Subject} from "rxjs";
+import {createRandomPattern} from "./data-generation";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,9 @@ export class PatternService {
   public clear$ = this.clearSubject.asObservable();
 
   constructor() {
+    const pattern = (createRandomPattern("Random Pattern 1", 10, [0, 100]));
+    this.addPattern(pattern.name, pattern.x, pattern.y);
+
   }
 
   addPattern(name: string, x: number[], y: number[]): void {

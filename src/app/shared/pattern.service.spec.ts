@@ -8,6 +8,7 @@ describe('PatternService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(PatternService);
+    service.clearPatterns();
   });
 
   it('should add a new pattern', () => {

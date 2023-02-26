@@ -27,19 +27,16 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.patternService.selected$.subscribe((pattern) => {
-      if (pattern) {
-        this.mainLine.setData(pattern.x, pattern.y);
-      }
-    });
-
-
   }
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
 
-    this.patternService.addPattern("LALALA", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 10, 5, 6, 7, 8, 9])
+    this.patternService.selected$.subscribe((pattern) => {
+      if (pattern) {
+        this.mainLine.setData(pattern.x, pattern.y);
+      }
+    });
   }
 
   _initPlot(): void {
