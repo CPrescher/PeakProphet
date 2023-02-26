@@ -11,6 +11,7 @@ export class PeakItemComponent implements OnInit {
   peak: Model | undefined = undefined;
 
   selectedModelIndex: number | undefined = undefined;
+  peakNum: number = 0;
 
   constructor(
     private modelService: ModelService) {
@@ -19,11 +20,10 @@ export class PeakItemComponent implements OnInit {
   ngOnInit() {
     this.modelService.selectedPeak$.subscribe((peak: Model | undefined) => {
       this.peak = peak;
-      console.log(`Selected peak: ${peak}`)
     });
     this.modelService.selectedPeakIndex$.subscribe((index: number | undefined) => {
       this.selectedModelIndex = index;
-      console.log(`Selected peak index: ${index}`)
+      this.peakNum = this.modelService.getPeaks().length;
     });
   }
 

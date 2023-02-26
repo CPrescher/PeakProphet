@@ -49,19 +49,26 @@ describe('PeakItemComponent', () => {
     expect(peakIndexElement.textContent).toEqual("2");
   });
 
-  it("calls correct model method when browsing  peaks", async () => {
+  it("calls correct model method when decrement peak index", async () => {
     modelService.selectPeak(1);
     const decreaseButton = await loader.getHarness<MatButtonHarness>(MatButtonHarness.with({selector: '[data-test="decrease-button"]'}));
-    const increaseButton = await loader.getHarness<MatButtonHarness>(MatButtonHarness.with({selector: '[data-test="increase-button"]'}));
-
 
     spyOn(modelService, "selectPeak").and.callFake(() => {
     });
     await decreaseButton.click();
-    await increaseButton.click();
     expect(modelService.selectPeak).toHaveBeenCalledWith(0);
-    expect(modelService.selectPeak).toHaveBeenCalledWith(2);
   });
+
+  it("calls correct model method when browsing  peaks", async () => {
+    modelService.selectPeak(0);
+    const increaseButton = await loader.getHarness<MatButtonHarness>(MatButtonHarness.with({selector: '[data-test="increase-button"]'}));
+
+    spyOn(modelService, "selectPeak").and.callFake(() => {
+    });
+    await increaseButton.click();
+    expect(modelService.selectPeak).toHaveBeenCalledWith(1);
+  });
+
 
   it("shows correct peak type", async () => {
     modelService.selectPeak(1);
