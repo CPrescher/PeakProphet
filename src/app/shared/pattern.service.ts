@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Pattern} from "./pattern";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +9,12 @@ export class PatternService {
   public patterns: Pattern[] = [];
   public selectedPattern: Pattern;
   public selectedIndex: number;
-  private selectedIndexSubject = new Subject<number>();
+  private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
-  private selectedSubject = new Subject<Pattern>();
+  private selectedSubject = new BehaviorSubject<Pattern | undefined>(undefined);
   public selected$ = this.selectedSubject.asObservable();
   private clearSubject = new Subject<void>();
   public clear$ = this.clearSubject.asObservable();
-
 
   constructor() {
   }
@@ -29,13 +28,14 @@ export class PatternService {
     this.patterns.splice(index, 1);
     if (index === this.patterns.length && index > 0) {
       this.selectPattern(index - 1);
-    } else if(index < this.patterns.length) {
+    } else if (index < this.patterns.length) {
       this.selectPattern(index);
     }
     if (this.patterns.length === 0) {
       this.clearSubject.next();
     }
   }
+
   selectPattern(index: number): void {
     if (index < this.patterns.length && index >= 0 && isInt(index)) {
       this.selectedIndex = index;

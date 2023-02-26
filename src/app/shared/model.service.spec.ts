@@ -66,10 +66,29 @@ describe('ModelService', () => {
   });
 
   it('Should select the first peak', (done: DoneFn) => {
+    service.selectPeak(0);
     service.selectedPeak$.subscribe(peak => {
+      if (peak === undefined) return;
       expect(peak.name).toBe("Gaussian");
       done();
     });
-    service.selectPeak(0);
+  });
+
+  it('send undfined when clearing peaks', (done: DoneFn) => {
+    service.clearPeaks();
+    service.selectedPeak$.subscribe(peak => {
+      expect(peak).toBe(undefined);
+      done();
+    });
+  });
+
+  it('should send undefined when removing the last peak', (done: DoneFn) => {
+    service.clearPeaks();
+    service.addPeak("Gaussian");
+    service.removePeak(0);
+    service.selectedPeak$.subscribe(peak => {
+      expect(peak).toBe(undefined);
+      done();
+    });
   });
 });

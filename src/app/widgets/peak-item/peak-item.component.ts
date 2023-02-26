@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {GaussianModel} from "../../shared/peak-types/gaussian.model";
+import {Component, OnInit} from '@angular/core';
 import {Model} from "../../shared/peak-types/model.interface";
 import {ModelService} from "../../shared/model.service";
 
@@ -8,35 +7,41 @@ import {ModelService} from "../../shared/model.service";
   templateUrl: './peak-item.component.html',
   styleUrls: ['./peak-item.component.css']
 })
-export class PeakItemComponent implements OnInit{
-  peak: Model = new GaussianModel();
+export class PeakItemComponent implements OnInit {
+  peak: Model | undefined = undefined;
 
-  selectedModelIndex = 0;
+  selectedModelIndex: number | undefined = undefined;
+
   constructor(
-     private modelService: ModelService) {
+    private modelService: ModelService) {
   }
 
   ngOnInit() {
-    this.peak = this.modelService.getPeaks()[0];
-    this.modelService.selectedPeak$.subscribe((peak: Model) => {
+    this.modelService.selectedPeak$.subscribe((peak: Model | undefined) => {
       this.peak = peak;
+      console.log(`Selected peak: ${peak}`)
     });
-    this.modelService.selectedPeakIndex$.subscribe((index: number) => {
+    this.modelService.selectedPeakIndex$.subscribe((index: number | undefined) => {
       this.selectedModelIndex = index;
+      console.log(`Selected peak index: ${index}`)
     });
   }
 
-
   increaseModelIndex() {
-    this.modelService.selectPeak(this.selectedModelIndex+1);
+    if (this.selectedModelIndex !== undefined) {
+      this.modelService.selectPeak(this.selectedModelIndex + 1);
+    }
   }
 
   decreaseModelIndex() {
-    this.modelService.selectPeak(this.selectedModelIndex-1);
+    if (this.selectedModelIndex !== undefined) {
+      this.modelService.selectPeak(this.selectedModelIndex - 1);
+    }
   }
 
   removePeak() {
-    this.modelService.removePeak(this.selectedModelIndex);
+    if (this.selectedModelIndex !== undefined) {
+      this.modelService.removePeak(this.selectedModelIndex);
+    }
   }
-
 }

@@ -79,48 +79,56 @@ describe('PatternService', () => {
 
   it("pattern subject is updated when pattern is selected", (done: DoneFn) => {
     populatePatternService(service);
-    service.selected$.subscribe(pattern => {
-      expect(pattern.name).toBe('test2');
-      done();
-    });
     service.selectPattern(1);
+    service.selected$.subscribe(pattern => {
+      if (pattern) {
+        expect(pattern.name).toBe('test2');
+        done();
+      }
+    });
   });
 
   it("index Observable is updated when pattern is added", (done: DoneFn) => {
     populatePatternService(service);
-    service.selectedIndex$.subscribe(index => {
-      expect(index).toBe(1);
-      expect(service.patterns[index].name).toBe('test2');
-      done();
-    });
     service.selectPattern(1);
+    service.selectedIndex$.subscribe(index => {
+      if (index) {
+        expect(index).toBe(1);
+        expect(service.patterns[index].name).toBe('test2');
+        done();
+      }
+    });
   });
 
   it("index observable is updated when pattern is removed", (done: DoneFn) => {
     populatePatternService(service);
     service.selectPattern(2);
+    service.removePattern(2);
     service.selectedIndex$.subscribe(index => {
       expect(index).toBe(1);
-      expect(service.patterns[index].name).toBe('test2');
-      done();
+      if (index) {
+        expect(service.patterns[index].name).toBe('test2');
+        done();
+      }
     });
-    service.removePattern(2);
   });
 
   it("updates selected subject when pattern is added", (done: DoneFn) => {
-    service.selected$.subscribe(pattern => {
-      expect(pattern.name).toBe('test');
-      done();
-    });
     service.addPattern('test', [1, 2, 3], [4, 5, 6]);
+    service.selected$.subscribe(pattern => {
+      if(pattern){
+        expect(pattern.name).toBe('test');
+        done();
+      }
+    });
   });
 
   it("updates selected Index subject when pattern is added", (done: DoneFn) => {
+    service.addPattern('test', [1, 2, 3], [4, 5, 6]);
     service.selectedIndex$.subscribe(index => {
       expect(index).toBe(0);
       done();
     });
-    service.addPattern('test', [1, 2, 3], [4, 5, 6]);
   });
 
   it("clears the pattern list", () => {

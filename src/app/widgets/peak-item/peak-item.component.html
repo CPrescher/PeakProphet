@@ -1,16 +1,23 @@
 <mat-card class="mat-elevation-z5">
   <mat-card-header>
     <mat-card-title>
-      <button mat-button data-test="decrease-button" (click)="decreaseModelIndex()" [disabled]="selectedModelIndex<1"><</button>
-      <span data-test="peak-index" class="peak-index">{{selectedModelIndex+1}}</span>
-      <button mat-button data-test="increase-button" (click)="increaseModelIndex()">></button>
-      <button mat-mini-fab data-test="remove-button" color="primary" (click)="removePeak()">-</button>
-      <span data-test="peak-type">{{peak.name}}</span>
+      <div *ngIf="selectedModelIndex !== undefined">
+        <button mat-button data-test="decrease-button" (click)="decreaseModelIndex()" [disabled]="selectedModelIndex<1"><</button>
+        <span data-test="peak-index" class="peak-index">{{selectedModelIndex+1}}</span>
+        <button mat-button data-test="increase-button" (click)="increaseModelIndex()">></button>
+        <button mat-mini-fab data-test="remove-button" color="primary" (click)="removePeak()">-</button>
+        <span *ngIf="peak" data-test="peak-type">{{peak.name}}</span>
+      </div>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div *ngFor="let param of peak.parameters" class="parameter-item-container">
-      <app-parameter-item-simple [parameter]="param" class="parameter-item" ></app-parameter-item-simple>
+    <div *ngIf="peak !== undefined; else elseBlock">
+      <div *ngFor="let param of peak.parameters" class="parameter-item-container">
+        <app-parameter-item-simple [parameter]="param" class="parameter-item" ></app-parameter-item-simple>
+      </div>
     </div>
+    <ng-template #elseBlock>
+      No peak selected
+    </ng-template>
   </mat-card-content>
 </mat-card>
