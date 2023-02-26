@@ -2,11 +2,39 @@
   <mat-card-header>
     <mat-card-title>
       <div *ngIf="selectedModelIndex !== undefined">
-        <button mat-button data-test="decrease-button" (click)="decreaseModelIndex()" [disabled]="selectedModelIndex<1"><</button>
-        <span data-test="peak-index" class="peak-index">{{selectedModelIndex+1}}</span>
-        <button mat-button data-test="increase-button" (click)="increaseModelIndex()">></button>
-        <button mat-mini-fab data-test="remove-button" color="primary" (click)="removePeak()">-</button>
-        <span *ngIf="peak" data-test="peak-type">{{peak.name}}</span>
+        <button
+          mat-button
+          data-test="decrease-button"
+          (click)="decreaseModelIndex()"
+          [disabled]="selectedModelIndex<1">
+          <
+        </button>
+        <span
+          data-test="peak-index"
+          class="not-selectable"
+        >{{selectedModelIndex+1}}
+        </span>
+        <button
+          mat-button
+          data-test="increase-button"
+          (click)="increaseModelIndex()"
+          [disabled]="selectedModelIndex>=peakNum-1">
+        >
+        </button>
+
+        <button
+          mat-mini-fab
+          data-test="remove-button"
+          color="primary"
+          (click)="removePeak()"
+        >-
+        </button>
+        <span
+          *ngIf="peak"
+          data-test="peak-type"
+          class="not-selectable"
+        >{{peak.name}}
+        </span>
       </div>
     </mat-card-title>
   </mat-card-header>
