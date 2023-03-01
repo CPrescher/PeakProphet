@@ -31,8 +31,8 @@
         <app-parameter-item-simple [parameter]="param" class="parameter-item" ></app-parameter-item-simple>
       </div>
     </div>
-    <ng-template #elseBlock>
-      No peak selected
+    <ng-template #elseBlock class="not-selectable">
+      <span class="not-selectable">No peaks defined for this pattern. </span>
     </ng-template>
   </mat-card-content>
 </mat-card>

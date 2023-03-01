@@ -50,8 +50,27 @@ export class PeakService {
 
   setPeaks(peaks: Model[]) {
     this.peaks = peaks;
-    this.selectedPeakIndexSubject.next(0);
-    this.selectedPeakSubject.next(this.peaks[0]);
+    this.updatePeakSelectionSubjects();
+  }
+
+  /**
+   * Updates the selected peak index and selected peak subjects to be valid references. Takes into account the case
+   * where the selected peak index is out of bounds. If the selected peak index is out of bounds, it is set to the last
+   * peak in the list.
+   */
+  updatePeakSelectionSubjects() {
+    if (this.peaks.length === 0) {
+      this.selectedPeakIndexSubject.next(undefined);
+      this.selectedPeakSubject.next(undefined);
+      return;
+    } else {
+      let selectedPeakIndex = this.selectedPeakIndexSubject.getValue();
+      if (selectedPeakIndex === undefined || selectedPeakIndex >= this.peaks.length) {
+        selectedPeakIndex = this.peaks.length - 1;
+      }
+      this.selectedPeakIndexSubject.next(selectedPeakIndex);
+      this.selectedPeakSubject.next(this.peaks[selectedPeakIndex]);
+    }
   }
 
   addPeak(peakTypeName: string) {
@@ -69,15 +88,7 @@ export class PeakService {
     if (index < this.peaks.length && index >= 0) {
       this.peaks.splice(index, 1);
       this.removedPeakSubject.next(index);
-
-      if (this.peaks.length === 0) {
-        this.selectedPeakIndexSubject.next(undefined);
-        this.selectedPeakSubject.next(undefined);
-      } else if (index === this.peaks.length) {
-        this.selectPeak(index - 1);
-      } else {
-        this.selectPeak(index);
-      }
+      this.updatePeakSelectionSubjects();
     } else {
       throw new Error(`Cannot remove peak at index ${index}, it does not exist`);
     }
