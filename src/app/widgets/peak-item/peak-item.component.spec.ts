@@ -3,13 +3,14 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {PeakItemComponent} from './peak-item.component';
 import {MaterialsModule} from "../../shared/gui/materials.module";
 import {ParameterItemSimpleComponent} from "../parameters/parameter-item-simple/parameter-item-simple.component";
-import {ModelService} from "../../shared/model.service";
+import {PeakService} from "../../shared/peak.service";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
+import {BrowseIndexComponent} from "../browse-index/browse-index.component";
 
 describe('PeakItemComponent', () => {
-  let modelService: ModelService;
+  let modelService: PeakService;
   let component: PeakItemComponent;
   let loader: HarnessLoader;
   let fixture: ComponentFixture<PeakItemComponent>;
@@ -17,11 +18,11 @@ describe('PeakItemComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MaterialsModule],
-      declarations: [PeakItemComponent, ParameterItemSimpleComponent]
+      declarations: [PeakItemComponent, ParameterItemSimpleComponent, BrowseIndexComponent]
     })
       .compileComponents();
 
-    modelService = TestBed.inject(ModelService);
+    modelService = TestBed.inject(PeakService);
     modelService.clearPeaks();
     modelService.addPeak("Gaussian");
     modelService.addPeak("Lorentzian");

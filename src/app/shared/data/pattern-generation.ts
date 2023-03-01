@@ -1,5 +1,5 @@
-import {GaussianModel} from "./peak-types/gaussian.model";
-import {Model} from "./peak-types/model.interface";
+import {GaussianModel} from "../peak-types/gaussian.model";
+import {Model} from "../peak-types/model.interface";
 import {Pattern} from "./pattern";
 
 function createRandomGaussian(positionRange: [number, number] = [10, 20],

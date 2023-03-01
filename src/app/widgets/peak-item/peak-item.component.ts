@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Model} from "../../shared/peak-types/model.interface";
-import {ModelService} from "../../shared/model.service";
+import {PeakService} from "../../shared/peak.service";
 
 @Component({
   selector: 'app-peak-item',
@@ -14,7 +14,7 @@ export class PeakItemComponent implements OnInit {
   peakNum: number = 0;
 
   constructor(
-    private modelService: ModelService) {
+    private modelService: PeakService) {
   }
 
   ngOnInit() {
@@ -27,21 +27,13 @@ export class PeakItemComponent implements OnInit {
     });
   }
 
-  increaseModelIndex() {
-    if (this.selectedModelIndex !== undefined) {
-      this.modelService.selectPeak(this.selectedModelIndex + 1);
-    }
-  }
-
-  decreaseModelIndex() {
-    if (this.selectedModelIndex !== undefined) {
-      this.modelService.selectPeak(this.selectedModelIndex - 1);
-    }
-  }
-
   removePeak() {
     if (this.selectedModelIndex !== undefined) {
       this.modelService.removePeak(this.selectedModelIndex);
     }
+  }
+
+  selectPeak(index: number) {
+    this.modelService.selectPeak(index);
   }
 }

@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import PatternPlot from "../../lib/plotting/pattern-plot";
 import LineItem from "../../lib/plotting/items/lineItem";
-import VerticalLineItem from "../../lib/plotting/items/verticalLineItem";
 import * as _ from 'lodash';
 import {PatternService} from "../../shared/pattern.service";
+import {PeakService} from "../../shared/peak.service";
+import {Model} from "../../shared/peak-types/model.interface";
 
 @Component({
   selector: 'app-plot',
@@ -15,28 +16,27 @@ export class PlotComponent implements OnInit, AfterViewInit {
   @ViewChild('container') plotContainer!: ElementRef;
 
 
-
   plot!: PatternPlot;
   mainLine!: LineItem;
-  verticalLine!: VerticalLineItem;
-
+  modelLines: LineItem[] = [];
 
   throttleResize;
 
-  constructor(private patternService: PatternService){
+  constructor(
+    private patternService: PatternService,
+    private modelService: PeakService
+  ) {
   }
 
   ngOnInit(): void {
   }
+
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
 
-    this.patternService.selected$.subscribe((pattern) => {
-      if (pattern) {
-        this.mainLine.setData(pattern.x, pattern.y);
-      }
-    });
+    this._initMainLine();
+    this._initModelLines();
   }
 
   _initPlot(): void {
@@ -67,5 +67,26 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this.throttleResize();
   }
 
+  _initMainLine(): void {
+    this.patternService.selected$.subscribe((pattern) => {
+      if (pattern) {
+        this.mainLine.setData(pattern.x, pattern.y);
+      }
+    });
+  }
 
+  _initModelLines(): void {
+    this.modelService.addedPeak$.subscribe((peak: Model) => {
+      const line = new LineItem("green");
+      this.plot.addItem(line);
+      this.modelLines.push(line);
+      line.setData(this.mainLine.x, peak.evaluate(this.mainLine.x));
+    });
+
+    this.modelService.removedPeak$.subscribe((index) => {
+      const line = this.modelLines[index];
+      this.plot.removeItem(line);
+      this.modelLines.splice(index, 1);
+    });
+  }
 }

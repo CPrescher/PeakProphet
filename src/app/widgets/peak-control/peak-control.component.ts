@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ModelService} from "../../shared/model.service";
+import {PeakService} from "../../shared/peak.service";
 
 @Component({
   selector: 'app-peak-control',
@@ -10,7 +10,7 @@ export class PeakControlComponent implements OnInit {
   peakTypes: String[] = [];
   selectedPeakType: string = "Gaussian";
 
-  constructor(private modelService: ModelService) {
+  constructor(private modelService: PeakService) {
   }
 
   ngOnInit() {

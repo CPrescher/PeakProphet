@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {ModelService} from './model.service';
+import {PeakService} from './peak.service';
 
 describe('ModelService', () => {
-  let service: ModelService;
+  let service: PeakService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ModelService);
+    service = TestBed.inject(PeakService);
     service.clearPeaks();
     service.addPeak("Gaussian");
     service.addPeak("Lorentzian");
@@ -90,5 +90,21 @@ describe('ModelService', () => {
       expect(peak).toBe(undefined);
       done();
     });
+  });
+
+  it("should send addedPeak when adding a peak", (done: DoneFn) => {
+    service.addedPeak$.subscribe(peak => {
+      expect(peak.name).toBe("Gaussian");
+      done();
+    });
+    service.addPeak("Gaussian");
+  });
+
+  it("should send removedPeak when removing a peak", (done: DoneFn) => {
+    service.removedPeak$.subscribe(index => {
+      expect(index).toBe(1);
+      done();
+    });
+    service.removePeak(1);
   });
 });

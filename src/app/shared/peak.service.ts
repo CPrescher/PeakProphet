@@ -3,12 +3,12 @@ import {Model} from "./peak-types/model.interface";
 import {GaussianModel} from "./peak-types/gaussian.model";
 import {LorentzianModel} from "./peak-types/lorentzian.model";
 import {PseudoVoigtModel} from "./peak-types/pseudo-voigt.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ModelService {
+export class PeakService {
   private peaks: Model[] = [];
   public peakTypes: { [key: string]: any } = {
     "Gaussian": GaussianModel,
@@ -20,6 +20,10 @@ export class ModelService {
   public selectedPeakIndex$ = this.selectedPeakIndexSubject.asObservable();
   private selectedPeakSubject = new BehaviorSubject<Model | undefined>(undefined);
   public selectedPeak$ = this.selectedPeakSubject.asObservable();
+  private addedPeakSubject = new Subject<Model>();
+  public addedPeak$ = this.addedPeakSubject.asObservable();
+  private removedPeakSubject = new Subject<number>();
+  public removedPeak$ = this.removedPeakSubject.asObservable();
 
   constructor() {
     this.peaks = [
@@ -44,6 +48,12 @@ export class ModelService {
     return this.peaks;
   }
 
+  setPeaks(peaks: Model[]) {
+    this.peaks = peaks;
+    this.selectedPeakIndexSubject.next(0);
+    this.selectedPeakSubject.next(this.peaks[0]);
+  }
+
   addPeak(peakTypeName: string) {
     const peakType = this.peakTypes[peakTypeName];
     if (peakType === undefined) {
@@ -51,12 +61,15 @@ export class ModelService {
     }
     const peak = new peakType();
     this.peaks.push(peak);
+    this.addedPeakSubject.next(peak);
     this.selectPeak(this.peaks.length - 1);
   }
 
   removePeak(index: number) {
     if (index < this.peaks.length && index >= 0) {
       this.peaks.splice(index, 1);
+      this.removedPeakSubject.next(index);
+
       if (this.peaks.length === 0) {
         this.selectedPeakIndexSubject.next(undefined);
         this.selectedPeakSubject.next(undefined);

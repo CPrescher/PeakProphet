@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PatternControlComponent } from './pattern-control.component';
+import { BrowseIndexComponent } from './browse-index.component';
 
-describe('PatternControlComponent', () => {
-  let component: PatternControlComponent;
-  let fixture: ComponentFixture<PatternControlComponent>;
+describe('BrowseIndexComponent', () => {
+  let component: BrowseIndexComponent;
+  let fixture: ComponentFixture<BrowseIndexComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PatternControlComponent ]
+      declarations: [ BrowseIndexComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PatternControlComponent);
+    fixture = TestBed.createComponent(BrowseIndexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,18 @@
+<button
+  mat-button
+  data-test="decrease-button"
+  (click)="decreaseIndex()"
+  [disabled]="index<=min">
+  <
+</button>
+<span
+  data-test="peak-index"
+  class="not-selectable"
+>{{index+add}}</span>
+<button
+  mat-button
+  data-test="increase-button"
+  (click)="increaseIndex()"
+  [disabled]="index>=max-1">
+  >
+</button>

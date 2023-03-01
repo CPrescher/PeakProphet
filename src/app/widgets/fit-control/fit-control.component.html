@@ -1,0 +1,16 @@
+<mat-card class="mat-elevation-z24">
+  <mat-card-header>
+    <mat-card-title>Data</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+    <app-browse-index
+      [index]="selectedModelIndex"
+      [min]="0"
+      [max]="modelNum"
+      [add]="1"
+      (indexChange)="selectModel($event)"
+    ></app-browse-index>
+
+  </mat-card-content>
+</mat-card>
