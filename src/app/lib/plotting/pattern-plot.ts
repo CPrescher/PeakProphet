@@ -10,12 +10,12 @@ export default class PatternPlot extends LabeledBasePlot {
     super(selector, width, height);
   }
 
-  addItem(item: ItemInterface): void {
+  addItem(item: ItemInterface, root=this.rootElement): void {
     this.items.push(item);
     item.dataChanged.subscribe(() => {
       this.itemDataChanged();
     });
-    item.initialize(this.rootElement, this.x, this.y, this.clipPath);
+    item.initialize(root, this.x, this.y, this.clipPath);
   }
 
   removeItem(item: ItemInterface): void {

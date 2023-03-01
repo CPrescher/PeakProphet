@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import {PatternService} from "../../shared/pattern.service";
 import {PeakService} from "../../shared/peak.service";
 import {Model} from "../../shared/peak-types/model.interface";
+import {Item} from "../../lib/plotting/items/item";
 
 @Component({
   selector: 'app-plot',
@@ -18,13 +19,14 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   plot!: PatternPlot;
   mainLine!: LineItem;
+  modelGroup: Item;
   modelLines: LineItem[] = [];
 
   throttleResize;
 
   constructor(
     private patternService: PatternService,
-    private modelService: PeakService
+    private peakService: PeakService
   ) {
   }
 
@@ -34,7 +36,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
-
+    this._initModelGroup(); // group for all model lines, needs to be created before main line to be behind it
     this._initMainLine();
     this._initModelLines();
   }
@@ -47,9 +49,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this.plot.setXAxisLabel('X');
     this.plot.setYAxisLabel('Y');
 
-    this.mainLine = new LineItem();
-    this.mainLine.autoRanged = true;
-    this.plot.addItem(this.mainLine);
   }
 
   _initResizeHandling(): void {
@@ -68,6 +67,10 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   _initMainLine(): void {
+    this.mainLine = new LineItem();
+    this.mainLine.autoRanged = true;
+    this.plot.addItem(this.mainLine);
+
     this.patternService.selected$.subscribe((pattern) => {
       if (pattern) {
         this.mainLine.setData(pattern.x, pattern.y);
@@ -75,18 +78,46 @@ export class PlotComponent implements OnInit, AfterViewInit {
     });
   }
 
+  _initModelGroup(): void {
+    this.modelGroup = new Item();
+    this.plot.addItem(this.modelGroup);
+  }
+
   _initModelLines(): void {
-    this.modelService.addedPeak$.subscribe((peak: Model) => {
-      const line = new LineItem("green");
-      this.plot.addItem(line);
-      this.modelLines.push(line);
-      line.setData(this.mainLine.x, peak.evaluate(this.mainLine.x));
+    this.peakService.addedPeak$.subscribe((peak: Model) => {
+      this.addModelLine().setData(this.mainLine.x, peak.evaluate(this.mainLine.x));
     });
 
-    this.modelService.removedPeak$.subscribe((index) => {
-      const line = this.modelLines[index];
-      this.plot.removeItem(line);
-      this.modelLines.splice(index, 1);
+    this.peakService.removedPeak$.subscribe((index) => {
+      this.removeModelLine(index);
     });
+
+    this.peakService.peaks$.subscribe((peaks: Model[]) => {
+      const peakNum = peaks.length;
+      const modelLineNum = this.modelLines.length;
+
+      for (let i = this.modelLines.length; i < peaks.length; i++) {
+        this.addModelLine();
+      }
+      for (let i = peakNum; i < modelLineNum; i++) {
+        this.removeModelLine(0);
+      }
+
+      for (let i = 0; i < peaks.length; i++) {
+        this.modelLines[i].setData(this.mainLine.x, peaks[i].evaluate(this.mainLine.x));
+      }
+    });
+  }
+
+  addModelLine(): LineItem {
+    const line = new LineItem("green");
+    this.plot.addItem(line, this.modelGroup.root);
+    this.modelLines.push(line);
+    return line;
+  }
+
+  removeModelLine(index: number): void {
+    this.plot.removeItem(this.modelLines[index]);
+    this.modelLines.splice(index, 1);
   }
 }

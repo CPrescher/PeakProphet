@@ -2,13 +2,11 @@ import {Injectable} from '@angular/core';
 import {PatternService} from "./pattern.service";
 import {FitModel} from "./data/fit-model";
 import {createRandomPattern} from "./data/pattern-generation";
+import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {Model} from "./peak-types/model.interface";
 import {Pattern} from "./data/pattern";
-import {GaussianModel} from "./peak-types/gaussian.model";
-import {LorentzianModel} from "./peak-types/lorentzian.model";
 import {BehaviorSubject} from "rxjs";
-
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +28,8 @@ export class FitModelService {
     ];
     for (let i = 0; i < patterns.length; i++) {
       const peaks = [
-        new GaussianModel(),
-        new LorentzianModel(),
+        createRandomGaussian(),
+        createRandomGaussian(),
       ]
       this.addFitModel(`Fit Model ${i}`, patterns[i], peaks);
     }

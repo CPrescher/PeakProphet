@@ -9,7 +9,10 @@ import {BehaviorSubject, Subject} from "rxjs";
   providedIn: 'root'
 })
 export class PeakService {
-  private peaks: Model[] = [];
+  public peaks: Model[] = [];
+  private peaksSubject = new BehaviorSubject<Model[]>([]);
+  public peaks$ = this.peaksSubject.asObservable();
+
   public peakTypes: { [key: string]: any } = {
     "Gaussian": GaussianModel,
     "Lorentzian": LorentzianModel,
@@ -33,6 +36,7 @@ export class PeakService {
 
     this.selectedPeakIndexSubject.next(1);
     this.selectedPeakSubject.next(this.peaks[1]);
+    this.peaksSubject.next(this.peaks);
   }
 
   selectPeak(index: number) {
@@ -50,6 +54,7 @@ export class PeakService {
 
   setPeaks(peaks: Model[]) {
     this.peaks = peaks;
+    this.peaksSubject.next(this.peaks);
     this.updatePeakSelectionSubjects();
   }
 
@@ -88,6 +93,7 @@ export class PeakService {
     if (index < this.peaks.length && index >= 0) {
       this.peaks.splice(index, 1);
       this.removedPeakSubject.next(index);
+      this.peaksSubject.next(this.peaks);
       this.updatePeakSelectionSubjects();
     } else {
       throw new Error(`Cannot remove peak at index ${index}, it does not exist`);
@@ -98,5 +104,6 @@ export class PeakService {
     this.peaks = [];
     this.selectedPeakIndexSubject.next(undefined);
     this.selectedPeakSubject.next(undefined);
+    this.peaksSubject.next(this.peaks);
   }
 }
