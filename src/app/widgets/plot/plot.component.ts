@@ -39,6 +39,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this._initModelGroup(); // group for all model lines, needs to be created before main line to be behind it
     this._initMainLine();
     this._initModelLines();
+    this._initModelSumLine();
   }
 
   _initPlot(): void {
@@ -119,5 +120,17 @@ export class PlotComponent implements OnInit, AfterViewInit {
   removeModelLine(index: number): void {
     this.plot.removeItem(this.modelLines[index]);
     this.modelLines.splice(index, 1);
+  }
+
+  _initModelSumLine(): void {
+    const sumLine = new LineItem("red");
+    this.plot.addItem(sumLine, this.modelGroup.root);
+
+    this.peakService.peaks$.subscribe((peaks: Model[]) => {
+      const sum = this.mainLine.y.map((y, i) => {
+        return y + peaks.reduce((sum, peak) => sum + peak.evaluate(this.mainLine.x)[i], 0);
+      });
+      sumLine.setData(this.mainLine.x, sum);
+    });
   }
 }
