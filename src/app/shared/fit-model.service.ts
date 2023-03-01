@@ -15,12 +15,10 @@ import {BehaviorSubject} from "rxjs";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
-  public selectedIndex: number;
 
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
 
-  public
   constructor(
     private patternService: PatternService,
     private peakService: PeakService,
@@ -53,7 +51,7 @@ export class FitModelService {
       const fitModel = this.fitModels[index];
       this.patternService.selectPattern(index);
       this.peakService.setPeaks(fitModel.peaks);
-      this.selectedIndex = index;
+      this.selectedIndexSubject.next(index);
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }
