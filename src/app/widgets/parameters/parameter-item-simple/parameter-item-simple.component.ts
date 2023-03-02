@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Parameter} from "../../../shared/peak-types/parameter.model";
+import {Parameter} from "../../../shared/models/parameter.model";
 
 @Component({
   selector: 'app-parameter-item-simple',

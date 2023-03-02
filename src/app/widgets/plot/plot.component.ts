@@ -4,7 +4,7 @@ import LineItem from "../../lib/plotting/items/lineItem";
 import * as _ from 'lodash';
 import {PatternService} from "../../shared/pattern.service";
 import {PeakService} from "../../shared/peak.service";
-import {Model} from "../../shared/peak-types/model.interface";
+import {Model} from "../../shared/models/model.interface";
 import {Item} from "../../lib/plotting/items/item";
 
 @Component({

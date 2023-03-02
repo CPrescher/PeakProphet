@@ -1,4 +1,4 @@
-import {GaussianModel} from "../peak-types/gaussian.model";
+import {GaussianModel} from "../models/peaks/gaussian.model";
 
 export function createRandomGaussian(positionRange: [number, number] = [0, 100],
                                      fwhmRange: [number, number] = [0.5, 2],

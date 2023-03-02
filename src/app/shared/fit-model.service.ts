@@ -4,7 +4,7 @@ import {FitModel} from "./data/fit-model";
 import {createRandomPattern} from "./data/pattern-generation";
 import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
-import {Model} from "./peak-types/model.interface";
+import {Model} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
 import {BehaviorSubject} from "rxjs";
 
@@ -37,7 +37,7 @@ export class FitModelService {
   }
 
   addFitModel(name: string, pattern: Pattern, peaks: Model[]) {
-    const fitModel = new FitModel(name, pattern, peaks);
+    const fitModel = new FitModel(name, pattern, peaks, createRandomGaussian());
     this.fitModels.push(fitModel);
     this.patternService.addPattern(fitModel.pattern.name, fitModel.pattern.x, fitModel.pattern.y);
     this.peakService.setPeaks(fitModel.peaks);

@@ -1,4 +1,4 @@
-import {Model} from "../peak-types/model.interface";
+import {Model} from "../models/model.interface";
 import {Pattern} from "./pattern";
 import {createRandomGaussian} from "./peak-generation";
 

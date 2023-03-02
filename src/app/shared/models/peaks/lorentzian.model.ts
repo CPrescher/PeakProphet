@@ -1,7 +1,7 @@
-import {Model} from "./model.interface";
-import {Parameter} from "./parameter.model";
+import {Model} from "../model.interface";
+import {Parameter} from "../parameter.model";
 
-export class GaussianModel implements Model {
+export class LorentzianModel implements Model {
   parameters: Parameter[];
   name: string;
 
@@ -11,7 +11,7 @@ export class GaussianModel implements Model {
       new Parameter("FWHM", fwhm),
       new Parameter("Intensity", intensity),
     ];
-    this.name = "Gaussian";
+    this.name = "Lorentzian";
   }
 
   getParameter(name: string): Parameter {
@@ -27,7 +27,7 @@ export class GaussianModel implements Model {
     const position = this.getParameter("Position").value;
     const fwhm = this.getParameter("FWHM").value;
     const intensity = this.getParameter("Intensity").value;
-    const sigma = fwhm / (2 * Math.sqrt(2 * Math.log(2)));
-    return x.map(v => intensity * Math.exp(-Math.pow(v - position, 2) / (2 * Math.pow(sigma, 2))));
+    const gamma = fwhm / 2;
+    return x.map(v => intensity * (gamma / (Math.pow(v - position, 2) + Math.pow(gamma, 2))));
   }
 }

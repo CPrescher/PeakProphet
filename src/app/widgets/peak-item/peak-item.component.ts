@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Model} from "../../shared/peak-types/model.interface";
+import {Model} from "../../shared/models/model.interface";
 import {PeakService} from "../../shared/peak.service";
 
 @Component({

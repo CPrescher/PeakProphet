@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ParameterItemSimpleComponent} from './parameter-item-simple.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
-import {Parameter} from "../../../shared/peak-types/parameter.model";
+import {Parameter} from "../../../shared/models/parameter.model";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatInputHarness} from "@angular/material/input/testing";
