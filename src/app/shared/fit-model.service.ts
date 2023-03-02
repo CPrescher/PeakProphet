@@ -6,13 +6,16 @@ import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {Model} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
+import {BkgService} from "./bkg.service";
+import {LinearModel} from "./models/bkg/linear.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
+  private bkgSubscription: Subscription = new Subscription();
 
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
@@ -20,6 +23,7 @@ export class FitModelService {
   constructor(
     private patternService: PatternService,
     private peakService: PeakService,
+    private bkgService: BkgService,
   ) {
     const patterns = [
       createRandomPattern("Random Pattern 1", 10, [0, 100]),
@@ -33,11 +37,10 @@ export class FitModelService {
       ]
       this.addFitModel(`Fit Model ${i}`, patterns[i], peaks);
     }
-
   }
 
   addFitModel(name: string, pattern: Pattern, peaks: Model[]) {
-    const fitModel = new FitModel(name, pattern, peaks, createRandomGaussian());
+    const fitModel = new FitModel(name, pattern, peaks, new LinearModel());
     this.fitModels.push(fitModel);
     this.patternService.addPattern(fitModel.pattern.name, fitModel.pattern.x, fitModel.pattern.y);
     this.peakService.setPeaks(fitModel.peaks);
@@ -50,6 +53,14 @@ export class FitModelService {
       this.patternService.selectPattern(index);
       this.peakService.setPeaks(fitModel.peaks);
       this.selectedIndexSubject.next(index);
+      this.bkgSubscription.unsubscribe();
+      this.bkgService.selectBkgModel(fitModel.background);
+
+      this.bkgSubscription = this.bkgService.bkgModel$.subscribe((bkgModel) => {
+        if (bkgModel) {
+          fitModel.background = bkgModel;
+        }
+      });
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }

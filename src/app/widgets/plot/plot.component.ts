@@ -6,6 +6,7 @@ import {PatternService} from "../../shared/pattern.service";
 import {PeakService} from "../../shared/peak.service";
 import {Model} from "../../shared/models/model.interface";
 import {Item} from "../../lib/plotting/items/item";
+import {BkgService} from "../../shared/bkg.service";
 
 @Component({
   selector: 'app-plot',
@@ -19,6 +20,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   plot!: PatternPlot;
   mainLine!: LineItem;
+  bkgLine!: LineItem;
   modelGroup: Item;
   modelLines: LineItem[] = [];
 
@@ -26,7 +28,8 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   constructor(
     private patternService: PatternService,
-    private peakService: PeakService
+    private peakService: PeakService,
+    private bkgService: BkgService,
   ) {
   }
 
@@ -39,6 +42,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this._initModelGroup(); // group for all model lines, needs to be created before main line to be behind it
     this._initMainLine();
     this._initModelLines();
+    this._initBkgLine();
     this._initModelSumLine();
   }
 
@@ -120,6 +124,19 @@ export class PlotComponent implements OnInit, AfterViewInit {
   removeModelLine(index: number): void {
     this.plot.removeItem(this.modelLines[index]);
     this.modelLines.splice(index, 1);
+  }
+
+  _initBkgLine(): void {
+    this.bkgLine = new LineItem("orange");
+    this.plot.addItem(this.bkgLine, this.modelGroup.root);
+
+    this.bkgService.bkgModel$.subscribe((bkgModel: Model | undefined) => {
+      if (!bkgModel) {
+        this.bkgLine.setData([], []);
+        return;
+      }
+      this.bkgLine.setData(this.mainLine.x, bkgModel.evaluate(this.mainLine.x));
+    });
   }
 
   _initModelSumLine(): void {

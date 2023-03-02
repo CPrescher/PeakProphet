@@ -11,7 +11,7 @@ export class QuadraticModel implements Model {
       new Parameter('b', b),
       new Parameter('c', c)
     ];
-    this.name = 'Quadratic';
+    this.name = 'quadratic';
   }
 
   getParameter(name: string): Parameter {

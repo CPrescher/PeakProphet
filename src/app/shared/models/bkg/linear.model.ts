@@ -10,7 +10,7 @@ export class LinearModel implements Model {
       new Parameter('m', m),
       new Parameter('b', b)
     ];
-    this.name = 'Linear';
+    this.name = 'linear';
   }
 
   getParameter(name: string): Parameter {

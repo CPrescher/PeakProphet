@@ -3,12 +3,14 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {PlotComponent} from './plot.component';
 import {PeakService} from "../../shared/peak.service";
 import {PatternService} from "../../shared/pattern.service";
+import {BkgService} from "../../shared/bkg.service";
 
 describe('PlotComponent', () => {
   let component: PlotComponent;
   let fixture: ComponentFixture<PlotComponent>;
   let peakService: PeakService;
   let patternService: PatternService;
+  let bkgService: BkgService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,6 +21,8 @@ describe('PlotComponent', () => {
     peakService = TestBed.inject(PeakService);
     patternService = TestBed.inject(PatternService);
     patternService.addPattern("RandomData", [2, 3, 4], [2, 3, 4, 5]);
+
+    bkgService = TestBed.inject(BkgService);
 
 
     fixture = TestBed.createComponent(PlotComponent);
@@ -50,5 +54,16 @@ describe('PlotComponent', () => {
     peakService.addPeak("Gaussian");
     expect(component.modelLines[0].x).toBeTruthy();
     expect(component.modelLines[0].y).toBeTruthy();
+  });
+
+  it("should create a bkg Line item when Bkg is added", () => {
+    bkgService.selectBkgType("quadratic");
+    expect(component.bkgLine).toBeTruthy();
+  });
+
+  it("should assign x and y values to the bkg Line item", () => {
+    bkgService.selectBkgType("quadratic");
+    expect(component.bkgLine.x).toBeTruthy();
+    expect(component.bkgLine.y).toBeTruthy();
   });
 });

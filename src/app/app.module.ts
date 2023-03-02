@@ -14,6 +14,7 @@ import {PeakControlComponent} from './widgets/peak-control/peak-control.componen
 import {PlotComponent} from './widgets/plot/plot.component';
 import { FitControlComponent } from './widgets/fit-control/fit-control.component';
 import { BrowseIndexComponent } from './widgets/browse-index/browse-index.component';
+import { BkgControlComponent } from './widgets/bkg-control/bkg-control.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { BrowseIndexComponent } from './widgets/browse-index/browse-index.compon
     PeakControlComponent,
     PlotComponent,
     FitControlComponent,
-    BrowseIndexComponent
+    BrowseIndexComponent,
+    BkgControlComponent
   ],
   imports: [
     BrowserModule,

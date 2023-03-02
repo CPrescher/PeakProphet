@@ -12,7 +12,7 @@ export class PolynomialModel implements Model {
     for(let i = 0; i <= degree; i++) {
       this.parameters.push(new Parameter(`c${i}`, coefficients[i]));
     }
-    this.name = 'Polynomial';
+    this.name = 'polynomial';
   }
 
   getParameter(name: string): Parameter {
