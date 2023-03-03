@@ -1,0 +1,14 @@
+<mat-card class="mat-elevation-z24">
+  <mat-card-content>
+    <div class="container">
+      <div class="mouse-position">
+        <div data-test="x">x: {{(mousePositionService.patternMousePosition$ | async)?.x | number}}</div>
+        <div data-test="y">y: {{(mousePositionService.patternMousePosition$ | async)?.y | number}}</div>
+      </div>
+      <div class="click-position">
+        <div data-test="x-click">x: {{(mousePositionService.patternClickPosition$ | async)?.x | number}}</div>
+        <div data-test="y-click">y: {{(mousePositionService.patternClickPosition$ | async)?.y | number}}</div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

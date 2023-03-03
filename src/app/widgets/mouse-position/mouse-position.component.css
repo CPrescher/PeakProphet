@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.mouse-position, .click-position {
+  flex: 1 1 0;
+  width: 0;
+}
+
+.click-position {
+  color: lawngreen;
+}

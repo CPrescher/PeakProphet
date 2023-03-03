@@ -7,6 +7,7 @@ import {PeakService} from "../../shared/peak.service";
 import {Model} from "../../shared/models/model.interface";
 import {Item} from "../../lib/plotting/items/item";
 import {BkgService} from "../../shared/bkg.service";
+import {MousePositionService} from "../../shared/mouse-position.service";
 
 @Component({
   selector: 'app-plot',
@@ -17,6 +18,8 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   @ViewChild('container') plotContainer!: ElementRef;
 
+
+  throttleImageMouseMoved;
 
   plot!: PatternPlot;
   mainLine!: LineItem;
@@ -32,7 +35,8 @@ export class PlotComponent implements OnInit, AfterViewInit {
     private patternService: PatternService,
     private peakService: PeakService,
     private bkgService: BkgService,
-  ) {
+    private mouseService: MousePositionService) {
+
   }
 
   ngOnInit(): void {
@@ -41,6 +45,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
+    this._initMouseEvents();
     this._initLineGroups(); // group for all model lines, needs to be created before main line to be behind it
     this._initMainLine();
     this._initPeakLines();
@@ -66,6 +71,24 @@ export class PlotComponent implements OnInit, AfterViewInit {
     }, 50);
 
     setTimeout(() => this.throttleResize(), 50);
+  }
+
+  _initMouseEvents(): void {
+    this.throttleImageMouseMoved = _.throttle((x, y) => {
+      this.mouseService.updatePatternMousePosition(x, y);
+    }, 100);
+
+    this.plot.mouseMoved.subscribe({
+      next: ({x, y}) => {
+        this.throttleImageMouseMoved(x, y);
+      }
+    });
+
+    this.plot.mouseClicked.subscribe({
+      next: ({x, y}) => {
+        this.mouseService.updatePatternClickPosition(x, y)
+      }
+    });
   }
 
   @HostListener('window:resize')
@@ -104,7 +127,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
       this.updateSumLine();
     });
 
-    this.peakService.updatedPeak$.subscribe((data:{"index": number, model: Model}) => {
+    this.peakService.updatedPeak$.subscribe((data: { "index": number, model: Model }) => {
       this.peakLines[data.index].setData(this.mainLine.x, data.model.evaluate(this.mainLine.x));
       this.updateSumLine();
     });

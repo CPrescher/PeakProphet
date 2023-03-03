@@ -9,7 +9,7 @@ import {BehaviorSubject, Subject} from "rxjs";
   providedIn: 'root'
 })
 export class PeakService {
-  private peaks: Model[] = [];
+  public peaks: Model[] = [];
   private peaksSubject = new BehaviorSubject<Model[]>([]);
   public peaks$ = this.peaksSubject.asObservable();
 
@@ -26,7 +26,7 @@ export class PeakService {
   private addedPeakSubject = new Subject<Model>();
   public addedPeak$ = this.addedPeakSubject.asObservable();
 
-  private updatedPeakSubject = new Subject<{"index": number, "model": Model}>();
+  private updatedPeakSubject = new Subject<{ "index": number, "model": Model }>();
   public updatedPeak$ = this.updatedPeakSubject.asObservable();
   private removedPeakSubject = new Subject<number>();
   public removedPeak$ = this.removedPeakSubject.asObservable();
