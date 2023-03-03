@@ -2,7 +2,7 @@
 <mat-form-field floatLabel="auto" #parameterInput >
   <mat-label>{{parameter.name}}:</mat-label>
   <input matInput numbersOnly class="example-right-align" (change)="inputChange($event)"
-         [value]="parameter.value.toString()">
+         [value]="parameter.value.toString() | number">
 </mat-form-field>
 
 <mat-checkbox
