@@ -41,19 +41,19 @@ describe('PlotComponent', () => {
   it("should create a model Line item when Peak is added", () => {
     const peakNum = peakService.peaks.length;
     peakService.addPeak("Gaussian");
-    expect(component.modelLines.length).toBe(peakNum + 1);
+    expect(component.peakLines.length).toBe(peakNum + 1);
   });
 
   it("should remove a model Line item when Peak is removed", () => {
     const peakNum = peakService.peaks.length;
     peakService.removePeak(0);
-    expect(component.modelLines.length).toBe(peakNum - 1);
+    expect(component.peakLines.length).toBe(peakNum - 1);
   });
 
   it("should assign x and y values to the model Line item", () => {
     peakService.addPeak("Gaussian");
-    expect(component.modelLines[0].x).toBeTruthy();
-    expect(component.modelLines[0].y).toBeTruthy();
+    expect(component.peakLines[0].x).toBeTruthy();
+    expect(component.peakLines[0].y).toBeTruthy();
   });
 
   it("should create a bkg Line item when Bkg is added", () => {

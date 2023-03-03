@@ -21,8 +21,10 @@ export class PlotComponent implements OnInit, AfterViewInit {
   plot!: PatternPlot;
   mainLine!: LineItem;
   bkgLine!: LineItem;
-  modelGroup: Item;
-  modelLines: LineItem[] = [];
+  sumLine!: LineItem;
+  private peakGroup: Item;
+  private modelSumGroup: Item;
+  peakLines: LineItem[] = [];
 
   throttleResize;
 
@@ -39,9 +41,9 @@ export class PlotComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._initPlot();
     this._initResizeHandling();
-    this._initModelGroup(); // group for all model lines, needs to be created before main line to be behind it
+    this._initLineGroups(); // group for all model lines, needs to be created before main line to be behind it
     this._initMainLine();
-    this._initModelLines();
+    this._initPeakLines();
     this._initBkgLine();
     this._initModelSumLine();
   }
@@ -83,25 +85,35 @@ export class PlotComponent implements OnInit, AfterViewInit {
     });
   }
 
-  _initModelGroup(): void {
-    this.modelGroup = new Item();
-    this.plot.addItem(this.modelGroup);
+  _initLineGroups(): void {
+    this.peakGroup = new Item();
+    this.plot.addItem(this.peakGroup);
+    this.modelSumGroup = new Item();
+    this.plot.addItem(this.modelSumGroup);
+
   }
 
-  _initModelLines(): void {
+  _initPeakLines(): void {
     this.peakService.addedPeak$.subscribe((peak: Model) => {
       this.addModelLine().setData(this.mainLine.x, peak.evaluate(this.mainLine.x));
+      this.updateSumLine();
     });
 
     this.peakService.removedPeak$.subscribe((index) => {
       this.removeModelLine(index);
+      this.updateSumLine();
+    });
+
+    this.peakService.updatedPeak$.subscribe((data:{"index": number, model: Model}) => {
+      this.peakLines[data.index].setData(this.mainLine.x, data.model.evaluate(this.mainLine.x));
+      this.updateSumLine();
     });
 
     this.peakService.peaks$.subscribe((peaks: Model[]) => {
       const peakNum = peaks.length;
-      const modelLineNum = this.modelLines.length;
+      const modelLineNum = this.peakLines.length;
 
-      for (let i = this.modelLines.length; i < peaks.length; i++) {
+      for (let i = this.peakLines.length; i < peaks.length; i++) {
         this.addModelLine();
       }
       for (let i = peakNum; i < modelLineNum; i++) {
@@ -109,26 +121,27 @@ export class PlotComponent implements OnInit, AfterViewInit {
       }
 
       for (let i = 0; i < peaks.length; i++) {
-        this.modelLines[i].setData(this.mainLine.x, peaks[i].evaluate(this.mainLine.x));
+        this.peakLines[i].setData(this.mainLine.x, peaks[i].evaluate(this.mainLine.x));
       }
+      this.updateSumLine();
     });
   }
 
   addModelLine(): LineItem {
     const line = new LineItem("green");
-    this.plot.addItem(line, this.modelGroup.root);
-    this.modelLines.push(line);
+    this.plot.addItem(line, this.peakGroup.root);
+    this.peakLines.push(line);
     return line;
   }
 
   removeModelLine(index: number): void {
-    this.plot.removeItem(this.modelLines[index]);
-    this.modelLines.splice(index, 1);
+    this.plot.removeItem(this.peakLines[index]);
+    this.peakLines.splice(index, 1);
   }
 
   _initBkgLine(): void {
     this.bkgLine = new LineItem("orange");
-    this.plot.addItem(this.bkgLine, this.modelGroup.root);
+    this.plot.addItem(this.bkgLine, this.peakGroup.root);
 
     this.bkgService.bkgModel$.subscribe((bkgModel: Model | undefined) => {
       if (!bkgModel) {
@@ -140,14 +153,19 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   _initModelSumLine(): void {
-    const sumLine = new LineItem("red");
-    this.plot.addItem(sumLine, this.modelGroup.root);
+    this.sumLine = new LineItem("red");
+    this.plot.addItem(this.sumLine, this.modelSumGroup.root);
 
-    this.peakService.peaks$.subscribe((peaks: Model[]) => {
-      const sum = this.mainLine.y.map((y, i) => {
-        return y + peaks.reduce((sum, peak) => sum + peak.evaluate(this.mainLine.x)[i], 0);
-      });
-      sumLine.setData(this.mainLine.x, sum);
+    this.bkgService.bkgModel$.subscribe(() => {
+      this.updateSumLine();
     });
+  }
+
+  updateSumLine(): void {
+    const sum = this.bkgLine.y.map((y, i) => {
+      return y + this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
+    });
+    this.sumLine.setData(this.mainLine.x, sum);
+
   }
 }

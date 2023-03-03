@@ -28,7 +28,11 @@
   <mat-card-content>
     <div *ngIf="peak !== undefined; else elseBlock">
       <div *ngFor="let param of peak.parameters" class="parameter-item-container">
-        <app-parameter-item-simple [parameter]="param" class="parameter-item" ></app-parameter-item-simple>
+        <app-parameter-item-simple
+          [parameter]="param"
+          (parameterChange)="updatePeak()"
+          class="parameter-item">
+        </app-parameter-item-simple>
       </div>
     </div>
     <ng-template #elseBlock class="not-selectable">

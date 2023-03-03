@@ -14,26 +14,32 @@ export class PeakItemComponent implements OnInit {
   peakNum: number = 0;
 
   constructor(
-    private modelService: PeakService) {
+    private peakService: PeakService) {
   }
 
   ngOnInit() {
-    this.modelService.selectedPeak$.subscribe((peak: Model | undefined) => {
+    this.peakService.selectedPeak$.subscribe((peak: Model | undefined) => {
       this.peak = peak;
     });
-    this.modelService.selectedPeakIndex$.subscribe((index: number | undefined) => {
+    this.peakService.selectedPeakIndex$.subscribe((index: number | undefined) => {
       this.selectedModelIndex = index;
-      this.peakNum = this.modelService.getPeaks().length;
+      this.peakNum = this.peakService.getPeaks().length;
     });
   }
 
   removePeak() {
     if (this.selectedModelIndex !== undefined) {
-      this.modelService.removePeak(this.selectedModelIndex);
+      this.peakService.removePeak(this.selectedModelIndex);
+    }
+  }
+
+  updatePeak() {
+    if (this.peak !== undefined && this.selectedModelIndex !== undefined) {
+      this.peakService.updatePeak(this.selectedModelIndex, this.peak);
     }
   }
 
   selectPeak(index: number) {
-    this.modelService.selectPeak(index);
+    this.peakService.selectPeak(index);
   }
 }

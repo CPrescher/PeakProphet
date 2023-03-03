@@ -9,7 +9,7 @@ import {BehaviorSubject, Subject} from "rxjs";
   providedIn: 'root'
 })
 export class PeakService {
-  public peaks: Model[] = [];
+  private peaks: Model[] = [];
   private peaksSubject = new BehaviorSubject<Model[]>([]);
   public peaks$ = this.peaksSubject.asObservable();
 
@@ -25,6 +25,9 @@ export class PeakService {
   public selectedPeak$ = this.selectedPeakSubject.asObservable();
   private addedPeakSubject = new Subject<Model>();
   public addedPeak$ = this.addedPeakSubject.asObservable();
+
+  private updatedPeakSubject = new Subject<{"index": number, "model": Model}>();
+  public updatedPeak$ = this.updatedPeakSubject.asObservable();
   private removedPeakSubject = new Subject<number>();
   public removedPeak$ = this.removedPeakSubject.asObservable();
 
@@ -97,6 +100,15 @@ export class PeakService {
       this.updatePeakSelectionSubjects();
     } else {
       throw new Error(`Cannot remove peak at index ${index}, it does not exist`);
+    }
+  }
+
+  updatePeak(index: number, peak: Model) {
+    if (index < this.peaks.length && index >= 0) {
+      this.peaks[index] = peak;
+      this.updatedPeakSubject.next({"index": index, "model": peak});
+    } else {
+      throw new Error(`Cannot update peak at index ${index}, it does not exist`);
     }
   }
 
