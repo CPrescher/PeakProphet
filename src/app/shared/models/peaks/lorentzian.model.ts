@@ -1,15 +1,18 @@
-import {Model} from "../model.interface";
+import {ClickModel} from "../model.interface";
 import {Parameter} from "../parameter.model";
+import {lorentzian} from "./model-functions";
 
-export class LorentzianModel implements Model {
+export class LorentzianModel implements ClickModel {
   parameters: Parameter[];
   name: string;
+  clickSteps = 2;
+  currentStep = 0;
 
   constructor(position=0.0, fwhm=0.5, intensity=1.0) {
     this.parameters = [
       new Parameter("Position", position),
       new Parameter("FWHM", fwhm),
-      new Parameter("Intensity", intensity),
+      new Parameter("Amplitude", intensity),
     ];
     this.name = "Lorentzian";
   }
@@ -24,10 +27,32 @@ export class LorentzianModel implements Model {
   }
 
   evaluate(x: number[]): number[] {
-    const position = this.getParameter("Position").value;
-    const fwhm = this.getParameter("FWHM").value;
-    const intensity = this.getParameter("Intensity").value;
-    const gamma = fwhm / 2;
-    return x.map(v => intensity * (gamma / (Math.pow(v - position, 2) + Math.pow(gamma, 2))));
+    return lorentzian(
+      x,
+      this.getParameter("Position").value,
+      this.getParameter("FWHM").value,
+      this.getParameter("Amplitude").value
+    )
+  }
+
+
+  defineModel(x: number, y: number): void {
+    switch (this.currentStep) {
+      case 0:
+        this.getParameter("Position").value = x;
+        this.getParameter("Amplitude").value = y * this.getParameter("FWHM").value * Math.PI * 0.5;
+        break;
+      case 1:
+        const position = this.getParameter("Position").value;
+        const old_fwhm = this.getParameter("FWHM").value;
+        const old_intensity = this.getParameter("Amplitude").value;
+        let new_fwhm = Math.abs(x - position) * 2;
+        if(new_fwhm==0) {
+            new_fwhm = 0.5
+        }
+        this.getParameter("FWHM").value = new_fwhm;
+        this.getParameter("Amplitude").value = old_intensity * new_fwhm / old_fwhm;
+        break;
+    }
   }
 }

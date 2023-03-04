@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Model} from "../../shared/models/model.interface";
+import {ClickModel} from "../../shared/models/model.interface";
 import {PeakService} from "../../shared/peak.service";
 
 @Component({
@@ -8,9 +8,9 @@ import {PeakService} from "../../shared/peak.service";
   styleUrls: ['./peak-item.component.css']
 })
 export class PeakItemComponent implements OnInit {
-  peak: Model | undefined = undefined;
+  peak: ClickModel | undefined = undefined;
 
-  selectedModelIndex: number | undefined = undefined;
+  selectedPeakIndex: number | undefined = undefined;
   peakNum: number = 0;
 
   constructor(
@@ -18,28 +18,34 @@ export class PeakItemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.peakService.selectedPeak$.subscribe((peak: Model | undefined) => {
+    this.peakService.selectedPeak$.subscribe((peak: ClickModel | undefined) => {
       this.peak = peak;
     });
     this.peakService.selectedPeakIndex$.subscribe((index: number | undefined) => {
-      this.selectedModelIndex = index;
+      this.selectedPeakIndex = index;
       this.peakNum = this.peakService.getPeaks().length;
     });
   }
 
   removePeak() {
-    if (this.selectedModelIndex !== undefined) {
-      this.peakService.removePeak(this.selectedModelIndex);
+    if (this.selectedPeakIndex !== undefined) {
+      this.peakService.removePeak(this.selectedPeakIndex);
     }
   }
 
   updatePeak() {
-    if (this.peak !== undefined && this.selectedModelIndex !== undefined) {
-      this.peakService.updatePeak(this.selectedModelIndex, this.peak);
+    if (this.peak !== undefined && this.selectedPeakIndex !== undefined) {
+      this.peakService.updatePeak(this.selectedPeakIndex, this.peak);
     }
   }
 
   selectPeak(index: number) {
     this.peakService.selectPeak(index);
+  }
+
+  definePeak() {
+    if(this.selectedPeakIndex !== undefined) {
+      this.peakService.clickDefinePeak(this.selectedPeakIndex);
+    }
   }
 }

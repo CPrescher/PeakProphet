@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
-import {Model} from "./models/model.interface";
+import {ClickModel, Model} from "./models/model.interface";
 import {GaussianModel} from "./models/peaks/gaussian.model";
 import {LorentzianModel} from "./models/peaks/lorentzian.model";
 import {PseudoVoigtModel} from "./models/peaks/pseudo-voigt.model";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, Subject, Subscription} from "rxjs";
+import {MousePositionService} from "./mouse-position.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PeakService {
-  public peaks: Model[] = [];
-  private peaksSubject = new BehaviorSubject<Model[]>([]);
+  public peaks: ClickModel[] = [];
+  private peaksSubject = new BehaviorSubject<ClickModel[]>([]);
   public peaks$ = this.peaksSubject.asObservable();
 
   public peakTypes: { [key: string]: any } = {
@@ -21,17 +22,17 @@ export class PeakService {
 
   private selectedPeakIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedPeakIndex$ = this.selectedPeakIndexSubject.asObservable();
-  private selectedPeakSubject = new BehaviorSubject<Model | undefined>(undefined);
+  private selectedPeakSubject = new BehaviorSubject<ClickModel | undefined>(undefined);
   public selectedPeak$ = this.selectedPeakSubject.asObservable();
-  private addedPeakSubject = new Subject<Model>();
+  private addedPeakSubject = new Subject<ClickModel>();
   public addedPeak$ = this.addedPeakSubject.asObservable();
 
-  private updatedPeakSubject = new Subject<{ "index": number, "model": Model }>();
+  private updatedPeakSubject = new Subject<{ "index": number, "model": ClickModel }>();
   public updatedPeak$ = this.updatedPeakSubject.asObservable();
   private removedPeakSubject = new Subject<number>();
   public removedPeak$ = this.removedPeakSubject.asObservable();
 
-  constructor() {
+  constructor(private mousePositionService: MousePositionService) {
     this.peaks = [
       new GaussianModel(),
       new LorentzianModel(),
@@ -55,7 +56,7 @@ export class PeakService {
     return this.peaks;
   }
 
-  setPeaks(peaks: Model[]) {
+  setPeaks(peaks: ClickModel[]) {
     this.peaks = peaks;
     this.peaksSubject.next(this.peaks);
     this.updatePeakSelectionSubjects();
@@ -103,7 +104,7 @@ export class PeakService {
     }
   }
 
-  updatePeak(index: number, peak: Model) {
+  updatePeak(index: number, peak: ClickModel) {
     if (index < this.peaks.length && index >= 0) {
       this.peaks[index] = peak;
       this.updatedPeakSubject.next({"index": index, "model": peak});
@@ -118,4 +119,36 @@ export class PeakService {
     this.selectedPeakSubject.next(undefined);
     this.peaksSubject.next(this.peaks);
   }
+
+  private mousePositionSubscription: Subscription = new Subscription();
+  private mouseClickSubscription: Subscription = new Subscription();
+
+  clickDefinePeak(index: number) {
+
+    // Unsubscribe from any existing subscriptions
+    this.mousePositionSubscription.unsubscribe()
+    this.mouseClickSubscription.unsubscribe()
+    // Reset the peak steps
+    this.peaks[index].currentStep = 0;
+
+    this.mousePositionSubscription =
+      this.mousePositionService.patternMousePosition$.subscribe((mousePosition) => {
+        const x = mousePosition.x;
+        const y = mousePosition.y;
+        this.peaks[index].defineModel(x, y);
+        this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
+      });
+
+    this.mouseClickSubscription =
+      this.mousePositionService.patternClickPosition$.subscribe((mousePosition) => {
+        this.peaks[index].defineModel(mousePosition.x, mousePosition.y);
+        this.peaks[index].currentStep++;
+        this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
+        if (this.peaks[index].currentStep === this.peaks[index].clickSteps) {
+          this.mousePositionSubscription.unsubscribe();
+          this.mouseClickSubscription.unsubscribe();
+        }
+      });
+  }
+
 }

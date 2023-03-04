@@ -189,6 +189,5 @@ export class PlotComponent implements OnInit, AfterViewInit {
       return y + this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
     });
     this.sumLine.setData(this.mainLine.x, sum);
-
   }
 }

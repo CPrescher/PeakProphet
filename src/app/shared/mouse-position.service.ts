@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MousePositionService {
 
-  private patternMousePosition = new BehaviorSubject<{ x: number, y: number }>({x: 0, y: 0});
-  private patternClickPosition = new BehaviorSubject<{ x: number, y: number }>({x: 0, y: 0});
+  private patternMousePosition = new Subject<{ x: number, y: number }>();
+  private patternClickPosition = new Subject<{ x: number, y: number }>();
 
   public patternMousePosition$ = this.patternMousePosition.asObservable();
   public patternClickPosition$ = this.patternClickPosition.asObservable();
