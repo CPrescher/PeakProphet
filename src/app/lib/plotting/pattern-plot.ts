@@ -13,7 +13,10 @@ export default class PatternPlot extends LabeledBasePlot {
   addItem(item: ItemInterface, root=this.rootElement): void {
     this.items.push(item);
     item.dataChanged.subscribe(() => {
-      this.itemDataChanged();
+      this.updateDomain();
+      if (this.enableAutoRange && item.autoRanged) {
+          this.autoRange();
+      }
     });
     item.initialize(root, this.x, this.y, this.clipPath);
   }
@@ -26,22 +29,19 @@ export default class PatternPlot extends LabeledBasePlot {
     item.root.remove();
   }
 
-  itemDataChanged(): void {
-    if (this.enableAutoRange) {
-      const xDomain = {min: +Infinity, max: -Infinity};
-      const yDomain = {min: +Infinity, max: -Infinity};
-      for (const item of this.items) {
-        if (item.autoRanged) {
-          xDomain.min = xDomain.min > item.xRange.min ? item.xRange.min : xDomain.min;
-          xDomain.max = xDomain.max < item.xRange.max ? item.xRange.max : xDomain.max;
-          yDomain.min = yDomain.min > item.yRange.min ? item.yRange.min : yDomain.min;
-          yDomain.max = yDomain.max < item.yRange.max ? item.yRange.max : yDomain.max;
-          this.plotDomainX = [xDomain.min, xDomain.max];
-          this.plotDomainY = [yDomain.min, yDomain.max];
-          this.autoRange();
-        }
+  private updateDomain(): void {
+    const xDomain = {min: +Infinity, max: -Infinity};
+    const yDomain = {min: +Infinity, max: -Infinity};
+    for (const item of this.items) {
+      if(item.autoRanged) {
+        xDomain.min = xDomain.min > item.xRange.min ? item.xRange.min : xDomain.min;
+        xDomain.max = xDomain.max < item.xRange.max ? item.xRange.max : xDomain.max;
+        yDomain.min = yDomain.min > item.yRange.min ? item.yRange.min : yDomain.min;
+        yDomain.max = yDomain.max < item.yRange.max ? item.yRange.max : yDomain.max;
       }
     }
+    this.plotDomainX = [xDomain.min, xDomain.max];
+    this.plotDomainY = [yDomain.min, yDomain.max];
   }
 
   _updateItems(): void {
