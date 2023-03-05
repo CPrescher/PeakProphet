@@ -19,5 +19,6 @@ export class PeakControlComponent implements OnInit {
 
   addPeak() {
     this.modelService.addPeak(this.selectedPeakType);
+    this.modelService.clickDefinePeak()
   }
 }
