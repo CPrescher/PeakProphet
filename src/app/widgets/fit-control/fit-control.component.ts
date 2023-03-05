@@ -11,6 +11,8 @@ export class FitControlComponent {
   public modelNum = 0;
   public selectedModelIndex = 0;
 
+  public fitModelName: string = '';
+
   constructor(private fitModelService: FitModelService) {
 
     this.modelNum = this.fitModelService.fitModels.length;
@@ -19,6 +21,7 @@ export class FitControlComponent {
       if (index !== undefined) {
         this.selectedModelIndex = index;
         this.modelNum = this.fitModelService.fitModels.length;
+        this.fitModelName = this.fitModelService.fitModels[index].name;
       }
     });
   }
@@ -27,8 +30,11 @@ export class FitControlComponent {
     this.fitModelService.selectFitModel(index);
   }
 
-  addModel() {
-
+  onFileSelected(event: any) {
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.fitModelService.readData(files[i]);
+    }
   }
 
 }

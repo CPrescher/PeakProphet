@@ -123,7 +123,7 @@ export class PeakService {
   private mousePositionSubscription: Subscription = new Subscription();
   private mouseClickSubscription: Subscription = new Subscription();
 
-  clickDefinePeak(index: number) {
+  clickDefinePeak(index: number = this.selectedPeakIndexSubject.getValue() as number) {
 
     // Unsubscribe from any existing subscriptions
     this.mousePositionSubscription.unsubscribe()

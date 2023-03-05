@@ -9,6 +9,7 @@ import {Pattern} from "./data/pattern";
 import {BehaviorSubject, Subscription} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
+import {readXY} from "./data/input";
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,19 @@ export class FitModelService {
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }
+  }
+
+  readData(file: File) {
+    const fileReader = new FileReader();
+    fileReader.onload = (_) => {
+      const data = fileReader.result;
+      if (typeof data === 'string') {
+        const result: { x: number[], y: number[] } = readXY(data);
+        const pattern = new Pattern(file.name, result.x, result.y);
+        this.addFitModel(file.name, pattern, []);
+      }
+    }
+    fileReader.readAsText(file);
   }
 
   removeFitModel(index: number) {
