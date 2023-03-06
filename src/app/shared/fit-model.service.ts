@@ -45,7 +45,7 @@ export class FitModelService {
   addFitModel(name: string, pattern: Pattern, peaks: ClickModel[]) {
     const fitModel = new FitModel(name, pattern, peaks, new LinearModel());
     this.fitModels.push(fitModel);
-    this.patternService.addPattern(fitModel.pattern.name, fitModel.pattern.x, fitModel.pattern.y);
+    this.patternService.setPattern(fitModel.pattern);
     this.peakService.setPeaks(fitModel.peaks);
     this.fitModelsSubject.next(this.fitModels);
     this.selectFitModel(this.fitModels.length - 1);
@@ -54,7 +54,7 @@ export class FitModelService {
   selectFitModel(index: number) {
     if (index < this.fitModels.length && index >= 0) {
       const fitModel = this.fitModels[index];
-      this.patternService.selectPattern(index);
+      this.patternService.setPattern(fitModel.pattern);
       this.peakService.setPeaks(fitModel.peaks);
       this.selectedIndexSubject.next(index);
       this.bkgSubscription.unsubscribe();
@@ -85,7 +85,6 @@ export class FitModelService {
 
   removeFitModel(index: number) {
     this.fitModels.splice(index, 1);
-    this.patternService.removePattern(index);
     if (index === this.fitModels.length && index > 0) {
       this.selectFitModel(index - 1);
     } else if (index < this.fitModels.length) {
@@ -93,6 +92,7 @@ export class FitModelService {
     }
     if (this.fitModels.length === 0) {
       this.peakService.clearPeaks();
+      this.patternService.clearPattern();
     }
   }
 }

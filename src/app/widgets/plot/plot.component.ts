@@ -101,7 +101,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this.mainLine.autoRanged = true;
     this.plot.addItem(this.mainLine);
 
-    this.patternService.selected$.subscribe((pattern) => {
+    this.patternService.pattern$.subscribe((pattern) => {
       if (pattern) {
         this.mainLine.setData(pattern.x, pattern.y);
       }

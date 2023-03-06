@@ -4,6 +4,7 @@ import {PlotComponent} from './plot.component';
 import {PeakService} from "../../shared/peak.service";
 import {PatternService} from "../../shared/pattern.service";
 import {BkgService} from "../../shared/bkg.service";
+import {Pattern} from "../../shared/data/pattern";
 
 describe('PlotComponent', () => {
   let component: PlotComponent;
@@ -20,7 +21,7 @@ describe('PlotComponent', () => {
 
     peakService = TestBed.inject(PeakService);
     patternService = TestBed.inject(PatternService);
-    patternService.addPattern("RandomData", [2, 3, 4], [2, 3, 4, 5]);
+    patternService.setPattern(new Pattern("RandomData", [2, 3, 4], [2, 3, 4, 5]));
 
     bkgService = TestBed.inject(BkgService);
 
