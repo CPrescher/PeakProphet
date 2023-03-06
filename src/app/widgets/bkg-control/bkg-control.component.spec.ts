@@ -35,7 +35,7 @@ describe('BkgControlComponent', () => {
 
   it("should show correct bkg type upon setting bkg model", () => {
     const bkgModel = new QuadraticModel();
-    bkgService.selectBkgModel(bkgModel);
+    bkgService.setBkgModel(bkgModel);
     expect(component.selectedBkgType).toBe("quadratic");
   });
 });

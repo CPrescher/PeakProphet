@@ -6,7 +6,7 @@ import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, Subscription} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -18,8 +18,6 @@ export class FitModelService {
   public fitModels: FitModel[] = [];
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
-  private bkgSubscription: Subscription = new Subscription();
-
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
 
@@ -40,10 +38,25 @@ export class FitModelService {
       ]
       this.addFitModel(`Fit Model ${i}`, patterns[i], peaks);
     }
+
+
+    this.bkgService.bkgTypeChanged$.subscribe((bkgModel) => {
+      if (bkgModel) {
+        const selectedIndex = this.selectedIndexSubject.value;
+        if (selectedIndex !== undefined) {
+          const selectedFitModel = this.fitModels[selectedIndex];
+          bkgModel.guess(selectedFitModel.pattern.x, selectedFitModel.pattern.y);
+          selectedFitModel.background = bkgModel;
+          this.selectFitModel(selectedIndex);
+        }
+      }
+    });
   }
 
   addFitModel(name: string, pattern: Pattern, peaks: ClickModel[], silent = false) {
-    const fitModel = new FitModel(name, pattern, peaks, new LinearModel());
+    const bkg = new LinearModel();
+    bkg.guess(pattern.x, pattern.y)
+    const fitModel = new FitModel(name, pattern, peaks, bkg);
     this.fitModels.push(fitModel);
     this.fitModelsSubject.next(this.fitModels);
 
@@ -56,21 +69,15 @@ export class FitModelService {
   private updateSubServices(fitModel: FitModel) {
     this.patternService.setPattern(fitModel.pattern);
     this.peakService.setPeaks(fitModel.peaks);
-    this.bkgService.selectBkgModel(fitModel.background);
+    this.bkgService.setBkgModel(fitModel.background);
   }
 
   selectFitModel(index: number) {
     if (index < this.fitModels.length && index >= 0) {
       const fitModel = this.fitModels[index];
-      this.bkgSubscription.unsubscribe();
       this.updateSubServices(fitModel);
       this.selectedIndexSubject.next(index);
 
-      this.bkgSubscription = this.bkgService.bkgModel$.subscribe((bkgModel) => {
-        if (bkgModel) {
-          fitModel.background = bkgModel;
-        }
-      });
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }

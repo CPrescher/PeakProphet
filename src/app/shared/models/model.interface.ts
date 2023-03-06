@@ -7,6 +7,10 @@ export interface Model {
   evaluate(x: number[]): number[];
 }
 
+export interface GuessModel extends Model {
+  guess(x: number[], y: number[]): void;
+}
+
 export interface ClickModel extends Model {
   clickSteps: number;
   currentStep: number;

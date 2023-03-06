@@ -1,7 +1,7 @@
 import {Parameter} from "../parameter.model";
-import {Model} from "../model.interface";
+import {GuessModel} from "../model.interface";
 
-export class LinearModel implements Model {
+export class LinearModel implements GuessModel {
   parameters: Parameter[];
   name: string;
 

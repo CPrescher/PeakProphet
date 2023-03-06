@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {LinearModel} from "./models/bkg/linear.model";
 import {QuadraticModel} from "./models/bkg/quadratic.model";
 import {PolynomialModel} from "./models/bkg/polynomial.model";
-import {Model} from "./models/model.interface";
+import {GuessModel} from "./models/model.interface";
 import {BehaviorSubject} from "rxjs";
 
 @Injectable({
@@ -15,14 +15,21 @@ export class BkgService {
     "quadratic": QuadraticModel,
     "polynomial": PolynomialModel
   }
-  private bkgModelSubject = new BehaviorSubject<Model | undefined>(undefined);
+  private bkgModelSubject = new BehaviorSubject<GuessModel | undefined>(undefined);
   public bkgModel$ = this.bkgModelSubject.asObservable();
 
+  private bkgTypeChangedSubject = new BehaviorSubject<GuessModel | undefined>(undefined);
+  public bkgTypeChanged$ = this.bkgTypeChangedSubject.asObservable();
+
+
+  constructor() {}
+
   selectBkgType(bkgType: string): void {
-    this.bkgModelSubject.next(new this.bkgTypes[bkgType]());
+    const newBkgModel = new this.bkgTypes[bkgType]();
+    this.bkgTypeChangedSubject.next(newBkgModel);
   }
 
-  selectBkgModel(bkgModel: Model): void {
+  setBkgModel(bkgModel: GuessModel): void {
     this.bkgModelSubject.next(bkgModel);
   }
 }

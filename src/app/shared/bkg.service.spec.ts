@@ -15,9 +15,9 @@ describe('BkgService', () => {
     expect(service).toBeTruthy();
   });
 
-  it("select Bkg Type emits a new bkg model", (done: DoneFn) => {
+  it("select Bkg Type emits a bkgTypeChanged", (done: DoneFn) => {
     service.selectBkgType("quadratic");
-    service.bkgModel$.subscribe((bkgModel) => {
+    service.bkgTypeChanged$.subscribe((bkgModel) => {
       expect(bkgModel).toBeTruthy();
       done();
     });
@@ -25,7 +25,7 @@ describe('BkgService', () => {
 
   it("sel Bkg Model emits the correct model", (done: DoneFn) => {
     const bkgModel = new QuadraticModel();
-    service.selectBkgModel(bkgModel);
+    service.setBkgModel(bkgModel);
     service.bkgModel$.subscribe((bkgModel) => {
       expect(bkgModel).toBe(bkgModel);
       done();

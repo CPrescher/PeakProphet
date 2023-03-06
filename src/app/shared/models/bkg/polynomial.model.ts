@@ -1,7 +1,7 @@
-import {Model} from "../model.interface";
+import {GuessModel} from "../model.interface";
 import {Parameter} from "../parameter.model";
 
-export class PolynomialModel implements Model {
+export class PolynomialModel implements GuessModel {
   parameters: Parameter[];
   degree: number;
   name: string;
@@ -32,5 +32,9 @@ export class PolynomialModel implements Model {
       }
       return y;
     });
+  }
+
+  guess(x: number[], y: number[]): void {
+    return;
   }
 }
