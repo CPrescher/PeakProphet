@@ -30,9 +30,6 @@ export class FitControlComponent {
 
     fitModelService.fitModels$.subscribe((fitModels) => {
       this.fitModelNames = fitModels.map(fitModel => fitModel.name);
-      // this.selectedFitModelName = fitModels[this.selectedModelIndex].name;
-      console.log('fitModelNames', this.fitModelNames)
-      console.log('selectedFitModelName', this.selectedFitModelName)
     });
   }
 
@@ -43,7 +40,7 @@ export class FitControlComponent {
   onFileSelected(event: any) {
     const files = event.target.files;
     for (let i = 0; i < files.length; i++) {
-      this.fitModelService.readData(files[i]);
+      this.fitModelService.readData(files[i], i>0);
     }
   }
 

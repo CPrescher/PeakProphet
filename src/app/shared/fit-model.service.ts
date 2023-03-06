@@ -42,23 +42,29 @@ export class FitModelService {
     }
   }
 
-  addFitModel(name: string, pattern: Pattern, peaks: ClickModel[]) {
+  addFitModel(name: string, pattern: Pattern, peaks: ClickModel[], silent = false) {
     const fitModel = new FitModel(name, pattern, peaks, new LinearModel());
     this.fitModels.push(fitModel);
+    this.fitModelsSubject.next(this.fitModels);
+
+    if (!silent) {
+      this.updateSubServices(fitModel);
+      this.selectFitModel(this.fitModels.length - 1);
+    }
+  }
+
+  private updateSubServices(fitModel: FitModel) {
     this.patternService.setPattern(fitModel.pattern);
     this.peakService.setPeaks(fitModel.peaks);
-    this.fitModelsSubject.next(this.fitModels);
-    this.selectFitModel(this.fitModels.length - 1);
+    this.bkgService.selectBkgModel(fitModel.background);
   }
 
   selectFitModel(index: number) {
     if (index < this.fitModels.length && index >= 0) {
       const fitModel = this.fitModels[index];
-      this.patternService.setPattern(fitModel.pattern);
-      this.peakService.setPeaks(fitModel.peaks);
-      this.selectedIndexSubject.next(index);
       this.bkgSubscription.unsubscribe();
-      this.bkgService.selectBkgModel(fitModel.background);
+      this.updateSubServices(fitModel);
+      this.selectedIndexSubject.next(index);
 
       this.bkgSubscription = this.bkgService.bkgModel$.subscribe((bkgModel) => {
         if (bkgModel) {
@@ -70,14 +76,14 @@ export class FitModelService {
     }
   }
 
-  readData(file: File) {
+  readData(file: File, silent = false) {
     const fileReader = new FileReader();
     fileReader.onload = (_) => {
       const data = fileReader.result;
       if (typeof data === 'string') {
         const result: { x: number[], y: number[] } = readXY(data);
         const pattern = new Pattern(file.name, result.x, result.y);
-        this.addFitModel(file.name, pattern, []);
+        this.addFitModel(file.name, pattern, [], silent);
       }
     }
     fileReader.readAsText(file);
