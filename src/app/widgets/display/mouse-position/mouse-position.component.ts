@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MousePositionService} from "../../shared/mouse-position.service";
+import {MousePositionService} from "../../../shared/mouse-position.service";
 
 @Component({
   selector: 'app-mouse-position',

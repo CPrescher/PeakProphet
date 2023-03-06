@@ -1,13 +1,13 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PeakItemComponent} from './peak-item.component';
-import {MaterialsModule} from "../../shared/gui/materials.module";
-import {ParameterItemSimpleComponent} from "../parameters/parameter-item-simple/parameter-item-simple.component";
-import {PeakService} from "../../shared/peak.service";
+import {MaterialsModule} from "../../../shared/gui/materials.module";
+import {ParameterItemSimpleComponent} from "../../inline/parameter-item-simple/parameter-item-simple.component";
+import {PeakService} from "../../../shared/peak.service";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {BrowseIndexComponent} from "../browse-index/browse-index.component";
+import {BrowseIndexComponent} from "../../inline/browse-index/browse-index.component";
 
 describe('PeakItemComponent', () => {
   let modelService: PeakService;

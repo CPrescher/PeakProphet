@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {MousePositionComponent} from './mouse-position.component';
 import {MatCardModule} from "@angular/material/card";
-import {MousePositionService} from "../../shared/mouse-position.service";
+import {MousePositionService} from "../../../shared/mouse-position.service";
 
 describe('MousePositionComponent', () => {
   let component: MousePositionComponent;

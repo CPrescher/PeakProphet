@@ -5,17 +5,18 @@ import {AppRoutingModule} from './app-routing.module';
 import {MaterialsModule} from "./shared/gui/materials.module";
 
 import {AppComponent} from './app.component';
-import {ParameterItemSimpleComponent} from './widgets/parameters/parameter-item-simple/parameter-item-simple.component';
+import {ParameterItemSimpleComponent} from './widgets/inline/parameter-item-simple/parameter-item-simple.component';
 import {MainViewComponent} from './views/main/main-view.component';
 import {NumbersOnlyDirective} from './shared/directives/numbers-only.directive';
-import {PeakItemComponent} from './widgets/peak-item/peak-item.component';
+import {PeakItemComponent} from './widgets/control/peak-item/peak-item.component';
 import {PeakService} from "./shared/peak.service";
-import {PeakControlComponent} from './widgets/peak-control/peak-control.component';
-import {PlotComponent} from './widgets/plot/plot.component';
-import { DataControlComponent } from './widgets/data-control/data-control.component';
-import { BrowseIndexComponent } from './widgets/browse-index/browse-index.component';
-import { BkgControlComponent } from './widgets/bkg-control/bkg-control.component';
-import { MousePositionComponent } from './widgets/mouse-position/mouse-position.component';
+import {PeakControlComponent} from './widgets/control/peak-control/peak-control.component';
+import {PlotComponent} from './widgets/display/plot/plot.component';
+import { DataControlComponent } from './widgets/control/data-control/data-control.component';
+import { BrowseIndexComponent } from './widgets/inline/browse-index/browse-index.component';
+import { BkgControlComponent } from './widgets/control/bkg-control/bkg-control.component';
+import { MousePositionComponent } from './widgets/display/mouse-position/mouse-position.component';
+import { FitControlComponent } from './widgets/control/fit-control/fit-control.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MousePositionComponent } from './widgets/mouse-position/mouse-position.
     DataControlComponent,
     BrowseIndexComponent,
     BkgControlComponent,
-    MousePositionComponent
+    MousePositionComponent,
+    FitControlComponent
   ],
   imports: [
     BrowserModule,

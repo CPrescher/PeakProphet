@@ -1,13 +1,13 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {PeakService} from "../../shared/peak.service";
+import {PeakService} from "../../../shared/peak.service";
 
 import {PeakControlComponent} from './peak-control.component';
-import {MaterialsModule} from "../../shared/gui/materials.module";
+import {MaterialsModule} from "../../../shared/gui/materials.module";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
-import {GaussianModel} from "../../shared/models/peaks/gaussian.model";
-import {LorentzianModel} from "../../shared/models/peaks/lorentzian.model";
-import {PseudoVoigtModel} from "../../shared/models/peaks/pseudo-voigt.model";
+import {GaussianModel} from "../../../shared/models/peaks/gaussian.model";
+import {LorentzianModel} from "../../../shared/models/peaks/lorentzian.model";
+import {PseudoVoigtModel} from "../../../shared/models/peaks/pseudo-voigt.model";
 import {MatSelectHarness} from "@angular/material/select/testing";
 import {MatFormFieldHarness} from "@angular/material/form-field/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";

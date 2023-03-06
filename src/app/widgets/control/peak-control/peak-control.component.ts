@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PeakService} from "../../shared/peak.service";
+import {PeakService} from "../../../shared/peak.service";
 
 @Component({
   selector: 'app-peak-control',

@@ -1,13 +1,13 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import PatternPlot from "../../lib/plotting/pattern-plot";
-import LineItem from "../../lib/plotting/items/lineItem";
+import PatternPlot from "../../../lib/plotting/pattern-plot";
+import LineItem from "../../../lib/plotting/items/lineItem";
 import * as _ from 'lodash';
-import {PatternService} from "../../shared/pattern.service";
-import {PeakService} from "../../shared/peak.service";
-import {Model} from "../../shared/models/model.interface";
-import {Item} from "../../lib/plotting/items/item";
-import {BkgService} from "../../shared/bkg.service";
-import {MousePositionService} from "../../shared/mouse-position.service";
+import {PatternService} from "../../../shared/pattern.service";
+import {PeakService} from "../../../shared/peak.service";
+import {Model} from "../../../shared/models/model.interface";
+import {Item} from "../../../lib/plotting/items/item";
+import {BkgService} from "../../../shared/bkg.service";
+import {MousePositionService} from "../../../shared/mouse-position.service";
 
 @Component({
   selector: 'app-plot',

@@ -1,10 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PlotComponent} from './plot.component';
-import {PeakService} from "../../shared/peak.service";
-import {PatternService} from "../../shared/pattern.service";
-import {BkgService} from "../../shared/bkg.service";
-import {Pattern} from "../../shared/data/pattern";
+import {PeakService} from "../../../shared/peak.service";
+import {PatternService} from "../../../shared/pattern.service";
+import {BkgService} from "../../../shared/bkg.service";
+import {Pattern} from "../../../shared/data/pattern";
 
 describe('PlotComponent', () => {
   let component: PlotComponent;

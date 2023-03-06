@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BkgService} from "../../shared/bkg.service";
+import {BkgService} from "../../../shared/bkg.service";
 
 @Component({
   selector: 'app-bkg-control',

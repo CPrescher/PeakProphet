@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FitModelService} from "../../shared/fit-model.service";
+import {FitModelService} from "../../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
 
 @Component({

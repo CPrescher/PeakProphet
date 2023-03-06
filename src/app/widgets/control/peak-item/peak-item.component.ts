@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ClickModel} from "../../shared/models/model.interface";
-import {PeakService} from "../../shared/peak.service";
+import {ClickModel} from "../../../shared/models/model.interface";
+import {PeakService} from "../../../shared/peak.service";
 
 @Component({
   selector: 'app-peak-item',

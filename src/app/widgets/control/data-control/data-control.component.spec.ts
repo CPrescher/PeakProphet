@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DataControlComponent} from './data-control.component';
-import {MaterialsModule} from "../../shared/gui/materials.module";
-import {BrowseIndexComponent} from "../browse-index/browse-index.component";
-import {FitModelService} from "../../shared/fit-model.service";
+import {MaterialsModule} from "../../../shared/gui/materials.module";
+import {BrowseIndexComponent} from "../../inline/browse-index/browse-index.component";
+import {FitModelService} from "../../../shared/fit-model.service";
 
 describe('PatternControlComponent', () => {
   let component: DataControlComponent;

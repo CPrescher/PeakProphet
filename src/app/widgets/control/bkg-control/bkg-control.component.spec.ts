@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BkgControlComponent} from './bkg-control.component';
-import {BkgService} from "../../shared/bkg.service";
-import {QuadraticModel} from "../../shared/models/bkg/quadratic.model";
-import {MaterialsModule} from "../../shared/gui/materials.module";
+import {BkgService} from "../../../shared/bkg.service";
+import {QuadraticModel} from "../../../shared/models/bkg/quadratic.model";
+import {MaterialsModule} from "../../../shared/gui/materials.module";
 
 describe('BkgControlComponent', () => {
   let component: BkgControlComponent;
