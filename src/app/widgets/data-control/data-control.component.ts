@@ -3,11 +3,11 @@ import {FitModelService} from "../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
 
 @Component({
-  selector: 'app-fit-control',
-  templateUrl: './fit-control.component.html',
-  styleUrls: ['./fit-control.component.css']
+  selector: 'app-data-control',
+  templateUrl: './data-control.component.html',
+  styleUrls: ['./data-control.component.css']
 })
-export class FitControlComponent {
+export class DataControlComponent {
 
   public modelNum = 0;
   public selectedModelIndex = 0;

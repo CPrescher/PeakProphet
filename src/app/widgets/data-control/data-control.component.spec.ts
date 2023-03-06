@@ -1,25 +1,25 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FitControlComponent} from './fit-control.component';
+import {DataControlComponent} from './data-control.component';
 import {MaterialsModule} from "../../shared/gui/materials.module";
 import {BrowseIndexComponent} from "../browse-index/browse-index.component";
 import {FitModelService} from "../../shared/fit-model.service";
 
 describe('PatternControlComponent', () => {
-  let component: FitControlComponent;
-  let fixture: ComponentFixture<FitControlComponent>;
+  let component: DataControlComponent;
+  let fixture: ComponentFixture<DataControlComponent>;
   let fitModelService: FitModelService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FitControlComponent, BrowseIndexComponent],
+      declarations: [DataControlComponent, BrowseIndexComponent],
       imports: [MaterialsModule]
     })
       .compileComponents();
 
     fitModelService = TestBed.inject(FitModelService);
 
-    fixture = TestBed.createComponent(FitControlComponent);
+    fixture = TestBed.createComponent(DataControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
