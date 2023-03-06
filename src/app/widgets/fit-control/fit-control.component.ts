@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FitModelService} from "../../shared/fit-model.service";
+import {MatSelectionListChange} from "@angular/material/list";
 
 @Component({
   selector: 'app-fit-control',
@@ -11,7 +12,9 @@ export class FitControlComponent {
   public modelNum = 0;
   public selectedModelIndex = 0;
 
-  public fitModelName: string = '';
+  public selectedFitModelName: string = '';
+
+  public fitModelNames: string[] = [];
 
   constructor(private fitModelService: FitModelService) {
 
@@ -21,8 +24,15 @@ export class FitControlComponent {
       if (index !== undefined) {
         this.selectedModelIndex = index;
         this.modelNum = this.fitModelService.fitModels.length;
-        this.fitModelName = this.fitModelService.fitModels[index].name;
+        this.selectedFitModelName = this.fitModelService.fitModels[index].name;
       }
+    });
+
+    fitModelService.fitModels$.subscribe((fitModels) => {
+      this.fitModelNames = fitModels.map(fitModel => fitModel.name);
+      // this.selectedFitModelName = fitModels[this.selectedModelIndex].name;
+      console.log('fitModelNames', this.fitModelNames)
+      console.log('selectedFitModelName', this.selectedFitModelName)
     });
   }
 
@@ -37,4 +47,9 @@ export class FitControlComponent {
     }
   }
 
+  onListSelectionChanged(event: MatSelectionListChange) {
+    const selectedName = event.source.selectedOptions.selected[0].value;
+    const index = this.fitModelNames.indexOf(selectedName);
+    this.fitModelService.selectFitModel(index);
+  }
 }

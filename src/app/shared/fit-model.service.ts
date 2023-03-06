@@ -16,6 +16,8 @@ import {readXY} from "./data/input";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
+  private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
+  public fitModels$ = this.fitModelsSubject.asObservable();
   private bkgSubscription: Subscription = new Subscription();
 
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
@@ -45,6 +47,7 @@ export class FitModelService {
     this.fitModels.push(fitModel);
     this.patternService.addPattern(fitModel.pattern.name, fitModel.pattern.x, fitModel.pattern.y);
     this.peakService.setPeaks(fitModel.peaks);
+    this.fitModelsSubject.next(this.fitModels);
     this.selectFitModel(this.fitModels.length - 1);
   }
 
