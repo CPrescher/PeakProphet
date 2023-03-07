@@ -4,7 +4,7 @@ import {Parameter} from "../parameter.model";
 export class PolynomialModel implements GuessModel {
   parameters: Parameter[];
   degree: number;
-  name: string;
+  type: string;
 
   constructor(degree: number = 2, ...coefficients: number[]) {
     this.degree = degree;
@@ -12,7 +12,7 @@ export class PolynomialModel implements GuessModel {
     for(let i = 0; i <= degree; i++) {
       this.parameters.push(new Parameter(`c${i}`, coefficients[i]));
     }
-    this.name = 'polynomial';
+    this.type = 'polynomial';
   }
 
   getParameter(name: string): Parameter {

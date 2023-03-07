@@ -3,7 +3,7 @@ import {Parameter} from "../parameter.model";
 import {gaussian, lorentzian} from "./model-functions";
 
 export class PseudoVoigtModel implements ClickModel {
-  name: string;
+  type: string;
   parameters: Parameter[];
 
   clickSteps = 2;
@@ -16,7 +16,7 @@ export class PseudoVoigtModel implements ClickModel {
       new Parameter("Amplitude", amplitude),
       new Parameter("Eta", eta),
     ];
-    this.name = "Pseudo-Voigt";
+    this.type = "Pseudo-Voigt";
   }
 
   getParameter(name: string): Parameter {

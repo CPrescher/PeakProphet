@@ -4,7 +4,7 @@ import {lorentzian} from "./model-functions";
 
 export class LorentzianModel implements ClickModel {
   parameters: Parameter[];
-  name: string;
+  type: string;
   clickSteps = 2;
   currentStep = 0;
 
@@ -14,7 +14,7 @@ export class LorentzianModel implements ClickModel {
       new Parameter("FWHM", fwhm),
       new Parameter("Amplitude", intensity),
     ];
-    this.name = "Lorentzian";
+    this.type = "Lorentzian";
   }
 
   getParameter(name: string): Parameter {

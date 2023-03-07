@@ -39,13 +39,13 @@ describe('ModelService', () => {
   it('Should remove the first peak', () => {
     service.removePeak(0);
     expect(service.getPeaks().length).toBe(1);
-    expect(service.getPeaks()[0].name).toBe("Lorentzian");
+    expect(service.getPeaks()[0].type).toBe("Lorentzian");
   });
 
   it('Should remove the second peak', () => {
     service.removePeak(1);
     expect(service.getPeaks().length).toBe(1);
-    expect(service.getPeaks()[0].name).toBe("Gaussian");
+    expect(service.getPeaks()[0].type).toBe("Gaussian");
   });
 
   it('Should throw an error when adding an invalid peak', () => {
@@ -69,7 +69,7 @@ describe('ModelService', () => {
     service.selectPeak(0);
     service.selectedPeak$.subscribe(peak => {
       if (peak === undefined) return;
-      expect(peak.name).toBe("Gaussian");
+      expect(peak.type).toBe("Gaussian");
       done();
     });
   });
@@ -94,7 +94,7 @@ describe('ModelService', () => {
 
   it("should send addedPeak when adding a peak", (done: DoneFn) => {
     service.addedPeak$.subscribe(peak => {
-      expect(peak.name).toBe("Gaussian");
+      expect(peak.type).toBe("Gaussian");
       done();
     });
     service.addPeak("Gaussian");

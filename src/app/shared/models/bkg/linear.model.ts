@@ -3,14 +3,14 @@ import {GuessModel} from "../model.interface";
 
 export class LinearModel implements GuessModel {
   parameters: Parameter[];
-  name: string;
+  type: string;
 
-  constructor(m: number = 0, b: number = 1) {
+  constructor(intercept: number = 0, slope: number = 1) {
     this.parameters = [
-      new Parameter('m', m),
-      new Parameter('b', b)
+      new Parameter('intercept', intercept),
+      new Parameter('slope', slope)
     ];
-    this.name = 'linear';
+    this.type = 'linear';
   }
 
   getParameter(name: string): Parameter {
@@ -23,16 +23,16 @@ export class LinearModel implements GuessModel {
   }
 
   evaluate(x: number[]): number[] {
-    const m = this.getParameter('m').value;
-    const b = this.getParameter('b').value;
-    return x.map(x => m * x + b);
+    const intercept = this.getParameter('intercept').value;
+    const slope = this.getParameter('slope').value;
+    return x.map(x => slope * x + intercept);
   }
 
   guess(x: number[], y: number[]): void {
     const numPoints = x.length;
     const m = (y[numPoints-1] - y[0]) / (x[numPoints-1] - x[0]);
     const b = y[0] - m * x[0];
-    this.getParameter('m').value = m;
-    this.getParameter('b').value = b;
+    this.getParameter('slope').value = m;
+    this.getParameter('intercept').value = b;
   }
 }

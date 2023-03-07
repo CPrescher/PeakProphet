@@ -3,7 +3,7 @@ import {Parameter} from "../parameter.model";
 
 export class QuadraticModel implements GuessModel {
   parameters: Parameter[];
-  name: string;
+  type: string;
 
   constructor(a: number = 0, b: number = 1, c: number = 0) {
     this.parameters = [
@@ -11,7 +11,7 @@ export class QuadraticModel implements GuessModel {
       new Parameter('b', b),
       new Parameter('c', c)
     ];
-    this.name = 'quadratic';
+    this.type = 'quadratic';
   }
 
   getParameter(name: string): Parameter {

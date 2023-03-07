@@ -4,7 +4,7 @@ import {gaussian} from "./model-functions";
 
 export class GaussianModel implements ClickModel {
   parameters: Parameter[];
-  name: string;
+  type: string;
 
   clickSteps = 2;
   currentStep = 0;
@@ -15,7 +15,7 @@ export class GaussianModel implements ClickModel {
       new Parameter("FWHM", fwhm),
       new Parameter("Amplitude", amplitude),
     ];
-    this.name = "Gaussian";
+    this.type = "Gaussian";
   }
 
   getParameter(name: string): Parameter {

@@ -18,7 +18,7 @@ export class BkgControlComponent implements OnInit {
   ngOnInit() {
     this.bkgService.bkgModel$.subscribe((bkgModel) => {
       if (bkgModel) {
-        this.selectedBkgType = bkgModel.name;
+        this.selectedBkgType = bkgModel.type;
       }
     });
   }
