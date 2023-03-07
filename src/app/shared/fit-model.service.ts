@@ -21,15 +21,18 @@ export class FitModelService {
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
 
+  private selectedFitModelSubject = new BehaviorSubject<FitModel | undefined>(undefined);
+  public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
+
   constructor(
     private patternService: PatternService,
     private peakService: PeakService,
     private bkgService: BkgService,
   ) {
     const patterns = [
-      createRandomPattern("Random Pattern 1", 10, [0, 100]),
-      createRandomPattern("Random Pattern 2", 13, [0, 100]),
-      createRandomPattern("Random Pattern 3", 50, [0, 100]),
+      createRandomPattern("Random Pattern 1", 3, [0, 10]),
+      createRandomPattern("Random Pattern 2", 4, [0, 10]),
+      createRandomPattern("Random Pattern 3", 5, [0, 10]),
     ];
     for (let i = 0; i < patterns.length; i++) {
       const peaks = [
@@ -77,6 +80,7 @@ export class FitModelService {
       const fitModel = this.fitModels[index];
       this.updateSubServices(fitModel);
       this.selectedIndexSubject.next(index);
+      this.selectedFitModelSubject.next(fitModel);
 
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
