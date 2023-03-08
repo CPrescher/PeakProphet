@@ -10,6 +10,7 @@ import {BehaviorSubject} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
+import {io, Socket} from "socket.io-client";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,9 @@ export class FitModelService {
 
   private selectedFitModelSubject = new BehaviorSubject<FitModel | undefined>(undefined);
   public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
+
+  private sioClient: Socket;
+  private sid: string;
 
   constructor(
     private patternService: PatternService,
@@ -98,6 +102,20 @@ export class FitModelService {
       }
     }
     fileReader.readAsText(file);
+  }
+
+  fitData() {
+    const selectedIndex = this.selectedIndexSubject.value;
+    if (selectedIndex !== undefined) {
+      const selectedFitModel = this.fitModels[selectedIndex];
+      const json_data = JSON.stringify(selectedFitModel)
+      this.selectFitModel(selectedIndex);
+      this.sioClient = io('http://localhost:8000');
+      this.sioClient.on('connect', () => {
+        this.sid = this.sioClient.id;
+        this.sioClient.emit('fit', json_data);
+      });
+    }
   }
 
   removeFitModel(index: number) {

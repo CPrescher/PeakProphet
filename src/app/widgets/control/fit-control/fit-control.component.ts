@@ -18,5 +18,6 @@ export class FitControlComponent {
 
   fit(): void {
     console.log(JSON.stringify(this.selectedFitModel));
+    this.fitModelService.fitData()
   }
 }
