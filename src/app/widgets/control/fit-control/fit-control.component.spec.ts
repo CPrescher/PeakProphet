@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FitControlComponent } from './fit-control.component';
+import {MatCardModule} from "@angular/material/card";
 
 describe('FitControlComponent', () => {
   let component: FitControlComponent;
@@ -8,7 +9,8 @@ describe('FitControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FitControlComponent ]
+      declarations: [ FitControlComponent ],
+      imports: [MatCardModule]
     })
     .compileComponents();
 
