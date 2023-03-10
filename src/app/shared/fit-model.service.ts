@@ -11,6 +11,7 @@ import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
 import {io, Socket} from "socket.io-client";
+import {updateFitModel} from "./models/updating";
 
 @Injectable({
   providedIn: 'root'
@@ -117,7 +118,12 @@ export class FitModelService {
       });
 
       this.sioClient.on('fit_result', (payload) => {
-        console.log(payload.result);
+        try {
+          updateFitModel(selectedFitModel, payload.result)
+          this.selectFitModel(selectedIndex);
+        } catch (e) {
+          console.log(e);
+        }
         this.sioClient.disconnect();
       });
     }
