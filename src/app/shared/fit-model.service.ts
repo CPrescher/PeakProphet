@@ -35,9 +35,9 @@ export class FitModelService {
     private bkgService: BkgService,
   ) {
     const patterns = [
-      createRandomPattern("Random Pattern 1", 3, [0, 10]),
-      createRandomPattern("Random Pattern 2", 4, [0, 10]),
-      createRandomPattern("Random Pattern 3", 5, [0, 10]),
+      createRandomPattern("Random Pattern 1", 1, [0, 10]),
+      createRandomPattern("Random Pattern 2", 2, [0, 10]),
+      createRandomPattern("Random Pattern 3", 3, [0, 10]),
     ];
     for (let i = 0; i < patterns.length; i++) {
       const peaks = [

@@ -36,7 +36,7 @@ export class PseudoVoigtModel implements ClickModel {
 
     const gauss = gaussian(x, position, fwhm, amplitude);
     const lorentz = lorentzian(x, position, fwhm, amplitude);
-    return x.map((v, i) => fraction * gauss[i] + (1 - fraction) * lorentz[i]);
+    return x.map((v, i) => (1 - fraction) * gauss[i] + fraction * lorentz[i]);
   }
 
   defineModel(x: number, y: number): void {
