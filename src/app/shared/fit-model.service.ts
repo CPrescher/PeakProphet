@@ -6,12 +6,11 @@ import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, take, throttleTime} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
-import {io, Socket} from "socket.io-client";
-import {updateFitModel} from "./models/updating";
+import {FitService} from "./fit.service";
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +25,11 @@ export class FitModelService {
   private selectedFitModelSubject = new BehaviorSubject<FitModel | undefined>(undefined);
   public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
 
-  private sioClient: Socket;
-  private sid: string;
-
   constructor(
     private patternService: PatternService,
     private peakService: PeakService,
     private bkgService: BkgService,
+    private fitService: FitService
   ) {
     const patterns = [
       createRandomPattern("Random Pattern 1", 1, [0, 10]),
@@ -108,23 +105,19 @@ export class FitModelService {
   fitData() {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
-      const selectedFitModel = this.fitModels[selectedIndex];
-      const json_data = JSON.stringify(selectedFitModel)
-      this.selectFitModel(selectedIndex);
-      this.sioClient = io('http://localhost:8000');
-      this.sioClient.on('connect', () => {
-        this.sid = this.sioClient.id;
-        this.sioClient.emit('fit', json_data);
-      });
+      this.fitService.fitModel(this.fitModels[selectedIndex]);
 
-      this.sioClient.on('fit_result', (payload) => {
-        try {
-          updateFitModel(selectedFitModel, payload.result)
-          this.selectFitModel(selectedIndex);
-        } catch (e) {
-          console.log(e);
-        }
-        this.sioClient.disconnect();
+
+      let progressSub = this.fitService.fitProgress$.pipe(
+        throttleTime(30)).subscribe(() => {
+        console.log("Progress")
+        this.selectFitModel(selectedIndex);
+      })
+
+      this.fitService.fitFinished$.pipe(take(1)).subscribe((fitModel) => {
+        console.log("Finished");
+        this.selectFitModel(selectedIndex);
+        progressSub.unsubscribe();
       });
     }
   }
