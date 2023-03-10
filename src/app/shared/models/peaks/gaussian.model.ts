@@ -11,9 +11,9 @@ export class GaussianModel implements ClickModel {
 
   constructor(center = 0.0, fwhm = 0.5, amplitude = 1.0) {
     this.parameters = [
-      new Parameter("Center", center),
-      new Parameter("FWHM", fwhm),
-      new Parameter("Amplitude", amplitude),
+      new Parameter("center", center),
+      new Parameter("fwhm", fwhm),
+      new Parameter("amplitude", amplitude),
     ];
     this.type = "Gaussian";
   }
@@ -30,28 +30,28 @@ export class GaussianModel implements ClickModel {
   evaluate(x: number[]): number[] {
     return gaussian(
       x,
-      this.getParameter("Center").value,
-      this.getParameter("FWHM").value,
-      this.getParameter("Amplitude").value
+      this.getParameter("center").value,
+      this.getParameter("fwhm").value,
+      this.getParameter("amplitude").value
     )
   }
 
   defineModel(x: number, y: number): void {
     switch (this.currentStep) {
       case 0:
-        this.getParameter("Center").value = x;
-        this.getParameter("Amplitude").value = y * 1.0644089904549099*this.getParameter("FWHM").value
+        this.getParameter("center").value = x;
+        this.getParameter("amplitude").value = y * 1.0644089904549099*this.getParameter("fwhm").value
         break;
       case 1:
-        const position = this.getParameter("Center").value;
-        const old_fwhm = this.getParameter("FWHM").value;
-        const old_amplitude = this.getParameter("Amplitude").value;
+        const position = this.getParameter("center").value;
+        const old_fwhm = this.getParameter("fwhm").value;
+        const old_amplitude = this.getParameter("amplitude").value;
         let new_fwhm = Math.abs(x - position) * 2;
         if(new_fwhm==0) {
             new_fwhm = 0.5
         }
-        this.getParameter("FWHM").value = new_fwhm;
-        this.getParameter("Amplitude").value = old_amplitude * new_fwhm / old_fwhm;
+        this.getParameter("fwhm").value = new_fwhm;
+        this.getParameter("amplitude").value = old_amplitude * new_fwhm / old_fwhm;
         break;
     }
   }

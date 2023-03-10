@@ -10,9 +10,9 @@ export class LorentzianModel implements ClickModel {
 
   constructor(center=0.0, fwhm=0.5, intensity=1.0) {
     this.parameters = [
-      new Parameter("Center", center),
-      new Parameter("FWHM", fwhm),
-      new Parameter("Amplitude", intensity),
+      new Parameter("center", center),
+      new Parameter("fwhm", fwhm),
+      new Parameter("amplitude", intensity),
     ];
     this.type = "Lorentzian";
   }
@@ -29,9 +29,9 @@ export class LorentzianModel implements ClickModel {
   evaluate(x: number[]): number[] {
     return lorentzian(
       x,
-      this.getParameter("Center").value,
-      this.getParameter("FWHM").value,
-      this.getParameter("Amplitude").value
+      this.getParameter("center").value,
+      this.getParameter("fwhm").value,
+      this.getParameter("amplitude").value
     )
   }
 
@@ -39,19 +39,19 @@ export class LorentzianModel implements ClickModel {
   defineModel(x: number, y: number): void {
     switch (this.currentStep) {
       case 0:
-        this.getParameter("Center").value = x;
-        this.getParameter("Amplitude").value = y * this.getParameter("FWHM").value * Math.PI * 0.5;
+        this.getParameter("center").value = x;
+        this.getParameter("amplitude").value = y * this.getParameter("fwhm").value * Math.PI * 0.5;
         break;
       case 1:
-        const position = this.getParameter("Center").value;
-        const old_fwhm = this.getParameter("FWHM").value;
-        const old_intensity = this.getParameter("Amplitude").value;
+        const position = this.getParameter("center").value;
+        const old_fwhm = this.getParameter("fwhm").value;
+        const old_intensity = this.getParameter("amplitude").value;
         let new_fwhm = Math.abs(x - position) * 2;
         if(new_fwhm==0) {
             new_fwhm = 0.5
         }
-        this.getParameter("FWHM").value = new_fwhm;
-        this.getParameter("Amplitude").value = old_intensity * new_fwhm / old_fwhm;
+        this.getParameter("fwhm").value = new_fwhm;
+        this.getParameter("amplitude").value = old_intensity * new_fwhm / old_fwhm;
         break;
     }
   }

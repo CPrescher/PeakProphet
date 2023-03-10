@@ -15,24 +15,24 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Gaussian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         }
       ]
     }
 
     updateModel(peak, peak_update_json);
-    expect(peak.getParameter("Center").value).toEqual(36);
-    expect(peak.getParameter("FWHM").value).toEqual(1.3);
-    expect(peak.getParameter("Amplitude").value).toEqual(7.0);
+    expect(peak.getParameter("center").value).toEqual(36);
+    expect(peak.getParameter("fwhm").value).toEqual(1.3);
+    expect(peak.getParameter("amplitude").value).toEqual(7.0);
   });
   it("should throw an error if a parameter is missing", () => {
     let peak = new GaussianModel();
@@ -40,11 +40,11 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Gaussian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         }
       ]
@@ -58,15 +58,15 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Gaussian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         },
         {
@@ -84,15 +84,15 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Gaussian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         },
         {
@@ -110,15 +110,15 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Lorentzian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         }
       ]
@@ -132,24 +132,24 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "Lorentzian",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         }
       ]
     }
 
     updateModel(peak, peak_update_json);
-    expect(peak.getParameter("Center").value).toEqual(36);
-    expect(peak.getParameter("FWHM").value).toEqual(1.3);
-    expect(peak.getParameter("Amplitude").value).toEqual(7.0);
+    expect(peak.getParameter("center").value).toEqual(36);
+    expect(peak.getParameter("fwhm").value).toEqual(1.3);
+    expect(peak.getParameter("amplitude").value).toEqual(7.0);
   });
 
   it("should update a pseudo voigt model", () => {
@@ -158,29 +158,29 @@ describe("Updating Models from backend JSON responses", () => {
       "type": "PseudoVoigt",
       "parameters": [
         {
-          "name": "Center",
+          "name": "center",
           "value": 36,
         },
         {
-          "name": "FWHM",
+          "name": "fwhm",
           "value": 1.3,
         },
         {
-          "name": "Amplitude",
+          "name": "amplitude",
           "value": 7.0,
         },
         {
-          "name": "Fraction",
+          "name": "fraction",
           "value": 0.8,
         }
       ]
     }
 
     updateModel(peak, peak_update_json);
-    expect(peak.getParameter("Center").value).toEqual(36);
-    expect(peak.getParameter("FWHM").value).toEqual(1.3);
-    expect(peak.getParameter("Amplitude").value).toEqual(7.0);
-    expect(peak.getParameter("Fraction").value).toEqual(0.8);
+    expect(peak.getParameter("center").value).toEqual(36);
+    expect(peak.getParameter("fwhm").value).toEqual(1.3);
+    expect(peak.getParameter("amplitude").value).toEqual(7.0);
+    expect(peak.getParameter("fraction").value).toEqual(0.8);
   });
 
   it("should update a linear background model", () => {
@@ -289,7 +289,7 @@ describe("Updating Models from backend JSON responses", () => {
 });
 
 
-fdescribe("update a FitModel from backend JSON response", () => {
+describe("update a FitModel from backend JSON response", () => {
   it("should update a fit model", () => {
     const updateJson =
       {
@@ -311,15 +311,15 @@ fdescribe("update a FitModel from backend JSON response", () => {
             "type": "Gaussian",
             "parameters": [
               {
-                "name": "Center",
+                "name": "center",
                 "value": 36.2,
               },
               {
-                "name": "FWHM",
+                "name": "fwhm",
                 "value": 1.6,
               },
               {
-                "name": "Amplitude",
+                "name": "amplitude",
                 "value": 7,
               }
             ]
@@ -328,15 +328,15 @@ fdescribe("update a FitModel from backend JSON response", () => {
             "type": "Gaussian",
             "parameters": [
               {
-                "name": "Center",
+                "name": "center",
                 "value": 46.6,
               },
               {
-                "name": "FWHM",
+                "name": "fwhm",
                 "value": 1.9,
               },
               {
-                "name": "Amplitude",
+                "name": "amplitude",
                 "value": 7,
               }
             ]
@@ -353,12 +353,12 @@ fdescribe("update a FitModel from backend JSON response", () => {
     updateFitModel(fitModel, updateJson);
     expect(fitModel.background.getParameter("intercept").value).toEqual(6.2);
     expect(fitModel.background.getParameter("slope").value).toEqual(-0.12);
-    expect(fitModel.peaks[0].getParameter("Center").value).toEqual(36.2);
-    expect(fitModel.peaks[0].getParameter("FWHM").value).toEqual(1.6);
-    expect(fitModel.peaks[0].getParameter("Amplitude").value).toEqual(7);
-    expect(fitModel.peaks[1].getParameter("Center").value).toEqual(46.6);
-    expect(fitModel.peaks[1].getParameter("FWHM").value).toEqual(1.9);
-    expect(fitModel.peaks[1].getParameter("Amplitude").value).toEqual(7);
+    expect(fitModel.peaks[0].getParameter("center").value).toEqual(36.2);
+    expect(fitModel.peaks[0].getParameter("fwhm").value).toEqual(1.6);
+    expect(fitModel.peaks[0].getParameter("amplitude").value).toEqual(7);
+    expect(fitModel.peaks[1].getParameter("center").value).toEqual(46.6);
+    expect(fitModel.peaks[1].getParameter("fwhm").value).toEqual(1.9);
+    expect(fitModel.peaks[1].getParameter("amplitude").value).toEqual(7);
   });
 
   it(" should throw an error if the number of peaks is different", () => {
@@ -382,15 +382,15 @@ fdescribe("update a FitModel from backend JSON response", () => {
             "type": "Gaussian",
             "parameters": [
               {
-                "name": "Center",
+                "name": "center",
                 "value": 36.2,
               },
               {
-                "name": "FWHM",
+                "name": "fwhm",
                 "value": 1.6,
               },
               {
-                "name": "Amplitude",
+                "name": "amplitude",
                 "value": 7,
               }
             ]
@@ -399,15 +399,15 @@ fdescribe("update a FitModel from backend JSON response", () => {
             "type": "Gaussian",
             "parameters": [
               {
-                "name": "Center",
+                "name": "center",
                 "value": 46.6,
               },
               {
-                "name": "FWHM",
+                "name": "fwhm",
                 "value": 1.9,
               },
               {
-                "name": "Amplitude",
+                "name": "amplitude",
                 "value": 7,
               }
             ]
