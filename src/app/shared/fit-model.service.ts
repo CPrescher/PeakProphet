@@ -115,6 +115,11 @@ export class FitModelService {
         this.sid = this.sioClient.id;
         this.sioClient.emit('fit', json_data);
       });
+
+      this.sioClient.on('fit_result', (payload) => {
+        console.log(payload.result);
+        this.sioClient.disconnect();
+      });
     }
   }
 
