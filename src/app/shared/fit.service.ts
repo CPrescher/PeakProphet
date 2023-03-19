@@ -1,46 +1,49 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {FitModel} from "./data/fit-model";
-import {io, Socket} from "socket.io-client";
-import {updateFitModel} from "./models/updating";
-import {Subject} from "rxjs";
+import {io} from "socket.io-client";
+import {fromEvent, interval, map, Observable, take, takeUntil} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FitService {
+  constructor() {
+  }
 
-  private sioClient: Socket;
-  private sid: string;
-
-  private fitFinishedSubject = new Subject<void>();
-  public fitFinished$ = this.fitFinishedSubject.asObservable();
-
-  private fitProgressSubject = new Subject<void>();
-  public fitProgress$ = this.fitProgressSubject.asObservable();
-
-
-  constructor() { }
-
-  fitModel(fitModel: FitModel): void {
-    if (this.sioClient) {
-      this.sioClient.disconnect();
-    }
+  fitModel(fitModel: FitModel): [Observable<any>, Observable<any>] {
     const json_data = JSON.stringify(fitModel)
-    this.sioClient = io('http://localhost:8000');
-    this.sioClient.on('connect', () => {
-      this.sid = this.sioClient.id;
-      this.sioClient.emit('fit', json_data);
+    const sioClient = io('http://localhost:8009');
+
+    fromEvent(sioClient, 'connect').subscribe(() => {
+      sioClient.emit('fit', json_data);
+
+      interval(30).pipe(
+        takeUntil(fromEvent(sioClient, 'disconnect')),
+      ).subscribe(() => {
+        sioClient.emit('get_progress', json_data);
+      });
     });
 
-    this.sioClient.on('fit_result', (payload) => {
-      updateFitModel(fitModel, payload.result)
-      this.sioClient.disconnect();
-      this.fitFinishedSubject.next();
+    const sioDisconnect$ = fromEvent(sioClient, 'disconnect');
+
+    const fitResult$ = fromEvent(sioClient, 'fit_result').pipe(
+      take(1),
+      map((payload) => payload.result),
+    );
+
+    const fitProgress$ = fromEvent(sioClient, 'fit_progress').pipe(
+      takeUntil(sioDisconnect$),
+      map((payload) => payload.result),
+    );
+
+    fitResult$.subscribe({
+      complete: () => {
+        setTimeout(() => {
+          sioClient.disconnect();
+        }, 200);
+      }
     });
 
-    this.sioClient.on('fit_progress', (payload) => {
-      updateFitModel(fitModel, payload.result)
-      this.fitProgressSubject.next();
-    });
+    return [fitResult$, fitProgress$]
   }
 }

@@ -6,11 +6,12 @@ import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, take, throttleTime} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
 import {FitService} from "./fit.service";
+import {updateFitModel} from "./models/updating";
 
 @Injectable({
   providedIn: 'root'
@@ -105,19 +106,16 @@ export class FitModelService {
   fitData() {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
-      this.fitService.fitModel(this.fitModels[selectedIndex]);
+      let [fitResult$, fitProgress$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
 
-
-      let progressSub = this.fitService.fitProgress$.pipe(
-        throttleTime(30)).subscribe(() => {
-        console.log("Progress")
+      fitProgress$.subscribe((payload: any) => {
+        updateFitModel(this.fitModels[selectedIndex], payload)
         this.selectFitModel(selectedIndex);
       })
 
-      this.fitService.fitFinished$.pipe(take(1)).subscribe((fitModel) => {
-        console.log("Finished");
+      fitResult$.subscribe((payload) => {
+        updateFitModel(this.fitModels[selectedIndex], payload)
         this.selectFitModel(selectedIndex);
-        progressSub.unsubscribe();
       });
     }
   }
