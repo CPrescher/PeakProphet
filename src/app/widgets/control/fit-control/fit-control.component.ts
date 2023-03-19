@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {FitModel} from "../../../shared/data/fit-model";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-fit-control',
@@ -9,15 +10,21 @@ import {FitModel} from "../../../shared/data/fit-model";
 })
 export class FitControlComponent {
   public selectedFitModel: FitModel | undefined
+  public stopSubject: Subject<void> | undefined = undefined;
 
-  constructor(private fitModelService: FitModelService){
+  constructor(public fitModelService: FitModelService){
     fitModelService.selectedFitModel$.subscribe((fitModel) => {
       this.selectedFitModel = fitModel;
     });
   }
 
   fit(): void {
-    // console.log(JSON.stringify(this.selectedFitModel));
-    this.fitModelService.fitData()
+    this.stopSubject = this.fitModelService.fitData()
+  }
+
+  stopFit():void {
+    if(this.stopSubject){
+      this.stopSubject.next()
+    }
   }
 }

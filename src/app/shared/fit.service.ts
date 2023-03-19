@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FitModel} from "./data/fit-model";
 import {io} from "socket.io-client";
-import {fromEvent, interval, map, Observable, take, takeUntil} from "rxjs";
+import {fromEvent, interval, map, Observable, Subject, take, takeUntil} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class FitService {
   constructor() {
   }
 
-  fitModel(fitModel: FitModel): [Observable<any>, Observable<any>] {
+  fitModel(fitModel: FitModel): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = JSON.stringify(fitModel)
     const sioClient = io('http://localhost:8009');
 
@@ -44,6 +44,12 @@ export class FitService {
       }
     });
 
-    return [result, progress]
+    let stopper$ = new Subject<void>();
+    stopper$.subscribe(() => {
+      console.log('stopping fit')
+      sioClient.emit('stop')
+    });
+
+    return [result, progress, stopper$]
   }
 }

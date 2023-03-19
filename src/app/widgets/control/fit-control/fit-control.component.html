@@ -3,7 +3,18 @@
     <mat-card-title>Fit</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <button mat-raised-button color="primary" (click)="fit()">Fit</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="fit()"
+      *ngIf = !fitModelService.fitting
+    >Fit</button>
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="stopFit()"
+      *ngIf = fitModelService.fitting
+    >Stop</button>
 
 
   </mat-card-content>

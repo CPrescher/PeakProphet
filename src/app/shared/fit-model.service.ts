@@ -6,7 +6,7 @@ import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -18,6 +18,7 @@ import {updateFitModel} from "./models/updating";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
+  public fitting = false;
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
@@ -103,10 +104,11 @@ export class FitModelService {
     fileReader.readAsText(file);
   }
 
-  fitData() {
+  fitData(): Subject<void> | undefined {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
-      let [result$, progress$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
+      this.fitting = true;
+      let [result$, progress$, stopper$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
 
       progress$.subscribe((payload: any) => {
         updateFitModel(this.fitModels[selectedIndex], payload)
@@ -116,8 +118,12 @@ export class FitModelService {
       result$.subscribe((payload) => {
         updateFitModel(this.fitModels[selectedIndex], payload)
         this.selectFitModel(selectedIndex);
+        this.fitting = false;
       });
+
+      return stopper$;
     }
+    return undefined;
   }
 
   removeFitModel(index: number) {
