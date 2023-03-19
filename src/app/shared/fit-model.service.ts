@@ -106,14 +106,14 @@ export class FitModelService {
   fitData() {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
-      let [fitResult$, fitProgress$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
+      let [result$, progress$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
 
-      fitProgress$.subscribe((payload: any) => {
+      progress$.subscribe((payload: any) => {
         updateFitModel(this.fitModels[selectedIndex], payload)
         this.selectFitModel(selectedIndex);
       })
 
-      fitResult$.subscribe((payload) => {
+      result$.subscribe((payload) => {
         updateFitModel(this.fitModels[selectedIndex], payload)
         this.selectFitModel(selectedIndex);
       });

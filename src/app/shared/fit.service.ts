@@ -20,23 +20,23 @@ export class FitService {
       interval(30).pipe(
         takeUntil(fromEvent(sioClient, 'disconnect')),
       ).subscribe(() => {
-        sioClient.emit('get_progress', json_data);
+        sioClient.emit('request_progress', json_data);
       });
     });
 
     const sioDisconnect$ = fromEvent(sioClient, 'disconnect');
 
-    const fitResult$ = fromEvent(sioClient, 'fit_result').pipe(
+    const result = fromEvent(sioClient, 'result').pipe(
       take(1),
       map((payload) => payload.result),
     );
 
-    const fitProgress$ = fromEvent(sioClient, 'fit_progress').pipe(
+    const progress = fromEvent(sioClient, 'progress').pipe(
       takeUntil(sioDisconnect$),
       map((payload) => payload.result),
     );
 
-    fitResult$.subscribe({
+    result.subscribe({
       complete: () => {
         setTimeout(() => {
           sioClient.disconnect();
@@ -44,6 +44,6 @@ export class FitService {
       }
     });
 
-    return [fitResult$, fitProgress$]
+    return [result, progress]
   }
 }
