@@ -15,6 +15,30 @@
       (click)="stopFit()"
       *ngIf = fitModelService.fitting
     >Stop</button>
+<!--    <mat-list class="fit-output-list">-->
+<!--      <app-progress-item *ngFor="let item of fitProgressData.reverse()" [iter]="item.iter" [chi2]="item.chi2"></app-progress-item>-->
+<!--    </mat-list>-->
+
+    <div class="fit-output-list">
+      <table mat-table [dataSource]="fitProgressData$">
+        <ng-container matColumnDef="iter">
+          <mat-header-cell *matHeaderCellDef>Iter</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.iter}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="chi2">
+          <mat-header-cell *matHeaderCellDef>Chi2</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.chi2 | number}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="red_chi2">
+          <mat-header-cell *matHeaderCellDef>rChi2</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.red_chi2 | number}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </table>
+    </div>
+
 
 
   </mat-card-content>

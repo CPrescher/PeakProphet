@@ -14,6 +14,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {MatListModule} from "@angular/material/list";
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
-    MatListModule
+    MatListModule,
+    MatTableModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -47,7 +49,8 @@ import {MatListModule} from "@angular/material/list";
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
-    MatListModule
+    MatListModule,
+    MatTableModule
   ]
 })
 export class MaterialsModule {

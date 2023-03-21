@@ -31,7 +31,7 @@ import { FitControlComponent } from './widgets/control/fit-control/fit-control.c
     BrowseIndexComponent,
     BkgControlComponent,
     MousePositionComponent,
-    FitControlComponent
+    FitControlComponent,
   ],
   imports: [
     BrowserModule,

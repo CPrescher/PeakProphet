@@ -27,6 +27,10 @@ export class FitModelService {
   public fitting = false;
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
+
+  private fitProgressSubject = new Subject<any>();
+  public fitProgress$ = this.fitProgressSubject.asObservable();
+
   private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
   public selectedIndex$ = this.selectedIndexSubject.asObservable();
 
@@ -142,8 +146,9 @@ export class FitModelService {
       let [result$, progress$, stopper$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
 
       progress$.subscribe((payload: any) => {
-        updateFitModel(this.fitModels[selectedIndex], payload)
+        updateFitModel(this.fitModels[selectedIndex], payload.result)
         this.selectFitModel(selectedIndex);
+        this.fitProgressSubject.next(payload);
       })
 
       result$.subscribe((payload) => {

@@ -1,0 +1,49 @@
+.fit-output-list {
+  margin-top: 10px;
+  flex-grow: 1;
+  overflow: auto;
+  height: 120px;
+  box-shadow: inset -5px -5px 50px #303030;
+  border-radius: 4px;
+}
+
+.mdc-data-table__header-cell {
+  font-size: 11px;
+  text-align: right;
+  display: inline;
+  word-wrap: unset;
+  padding: 0 8px 0 8px;
+}
+.mdc-data-table__header-row {
+  height: 15px;
+  min-height: 15px;
+}
+
+.mdc-data-table__row {
+  height: 15px;
+  min-height: 15px;
+}
+
+.mdc-data-table__cell {
+  text-align: right;
+  display: inline;
+  word-wrap: unset;
+  padding: 0 8px 0 8px;
+}
+
+.mat-mdc-table {
+  background: None;
+}
+
+.mat-column-iter {
+  flex: 0 0 25%;
+}
+
+.mat-column-chi2 {
+  flex: 0 0 40%;
+}
+
+.mat-column-red_chi2 {
+  flex: 0 0 35%;
+}
+
