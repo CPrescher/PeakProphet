@@ -1,5 +1,12 @@
 import {GaussianModel} from "../models/peaks/gaussian.model";
 
+
+/**
+ * Create a random Gaussian peak, with parameters inside the given ranges.
+ * @param positionRange - range of the position
+ * @param fwhmRange - range of the FWHM
+ * @param intensityRange - range of the intensity
+ */
 export function createRandomGaussian(positionRange: [number, number] = [0, 100],
                                      fwhmRange: [number, number] = [0.5, 2],
                                      intensityRange: [number, number] = [1, 20]) {

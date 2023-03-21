@@ -1,3 +1,7 @@
+/**
+ * Reads a string representation of aan XY data set and returns an object with x and y arrays.
+ * @param data - The string representation of the data set.
+ */
 export function readXY(data: string): { x: number[], y: number[] } {
   const lines = data.split('\n');
   let x: number[] = [];

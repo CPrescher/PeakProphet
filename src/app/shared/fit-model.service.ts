@@ -13,6 +13,12 @@ import {readXY} from "./data/input";
 import {FitService} from "./fit.service";
 import {updateFitModel} from "./models/updating";
 
+
+/**
+ * A FitModelService is a service that manages the list of FitModels.
+ * It enables adding, removing, and selecting FitModels, and updates the current FitModel.
+ * It also enables fitting the current FitModel.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -60,6 +66,13 @@ export class FitModelService {
     });
   }
 
+  /**
+   * Add a FitModel to the list of FitModels.
+   * @param name - name of the FitModel
+   * @param pattern - pattern of the FitModel
+   * @param peaks - peaks of the FitModel
+   * @param silent - if true, the FitModel will not be selected and no signals sent to sub-services
+   */
   addFitModel(name: string, pattern: Pattern, peaks: ClickModel[], silent = false) {
     const bkg = new LinearModel();
     bkg.guess(pattern.x, pattern.y)
@@ -73,12 +86,21 @@ export class FitModelService {
     }
   }
 
+  /**
+   * Remove a FitModel from the list of FitModels.
+   * @param fitModel - FitModel to remove
+   * @private
+   */
   private updateSubServices(fitModel: FitModel) {
     this.patternService.setPattern(fitModel.pattern);
     this.peakService.setPeaks(fitModel.peaks);
     this.bkgService.setBkgModel(fitModel.background);
   }
 
+  /**
+   * Select a FitModel from the list of FitModels. This will send notifications to subscribers.
+   * @param index - index of the FitModel to select
+   */
   selectFitModel(index: number) {
     if (index < this.fitModels.length && index >= 0) {
       const fitModel = this.fitModels[index];
@@ -91,6 +113,11 @@ export class FitModelService {
     }
   }
 
+  /**
+   * Reads an XY-file and adds a FitModel with the corresponding pattern to the list of FitModels.
+   * @param file - file to read
+   * @param silent - if true, the FitModel will not be selected and no signals sent to sub-services
+   */
   readData(file: File, silent = false) {
     const fileReader = new FileReader();
     fileReader.onload = (_) => {
@@ -104,6 +131,10 @@ export class FitModelService {
     fileReader.readAsText(file);
   }
 
+  /**
+   * Fit the current FitModel.
+   * @returns a Subject that can be used to stop the fitting process
+   */
   fitData(): Subject<void> | undefined {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
@@ -126,6 +157,10 @@ export class FitModelService {
     return undefined;
   }
 
+  /**
+   * Remove a FitModel from the list of FitModels.
+   * @param index - index of the FitModel to remove
+   */
   removeFitModel(index: number) {
     this.fitModels.splice(index, 1);
     if (index === this.fitModels.length && index > 0) {

@@ -2,6 +2,11 @@ import {Injectable} from '@angular/core';
 import {Pattern} from "./data/pattern";
 import {BehaviorSubject} from "rxjs";
 
+
+/**
+ * A PatternService is a service that manages the pattern.
+ * It enables changing the pattern, and updates the current pattern.
+ */
 @Injectable({
   providedIn: 'root'
 })

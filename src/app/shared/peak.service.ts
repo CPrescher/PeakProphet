@@ -6,6 +6,11 @@ import {PseudoVoigtModel} from "./models/peaks/pseudo-voigt.model";
 import {BehaviorSubject, Subject, Subscription} from "rxjs";
 import {MousePositionService} from "./mouse-position.service";
 
+
+/**
+ * Service for managing peaks.
+ * It enables adding, removing, and updating peaks of a FitModel. It also enables selecting a peak.
+ */
 @Injectable({
   providedIn: 'root'
 })

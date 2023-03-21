@@ -5,6 +5,10 @@ import {PolynomialModel} from "./models/bkg/polynomial.model";
 import {GuessModel} from "./models/model.interface";
 import {BehaviorSubject} from "rxjs";
 
+/**
+ * A BkgService is a service that manages the background model.
+ * It enables changing background type and setting the background model, and updates the current background model.
+ */
 @Injectable({
   providedIn: 'root'
 })
