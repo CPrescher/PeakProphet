@@ -1,5 +1,6 @@
 import {Parameter} from "../parameter.model";
 import {GuessModel} from "../model.interface";
+import {averageAroundIndex, indexOfSmallest} from "../util";
 
 export class LinearModel implements GuessModel {
   parameters: Parameter[];
@@ -30,8 +31,20 @@ export class LinearModel implements GuessModel {
 
   guess(x: number[], y: number[]): void {
     const numPoints = x.length;
-    const m = (y[numPoints-1] - y[0]) / (x[numPoints-1] - x[0]);
-    const b = y[0] - m * x[0];
+    const midPoint = Math.ceil(numPoints/2)
+
+    const leftSideY = y.slice(0, midPoint)
+    const rightSideY = y.slice(midPoint, numPoints)
+    const leftMinIndex = indexOfSmallest(leftSideY)
+    const rightMinIndex = indexOfSmallest(rightSideY) + midPoint
+
+    const x0 = x[leftMinIndex]
+    const y0 = averageAroundIndex(y, leftMinIndex, 1)
+    const x1 = x[rightMinIndex]
+    const y1 = averageAroundIndex(y, rightMinIndex, 1)
+
+    const m = (y1 - y0) / (x1 - x0);
+    const b = y0 - m * x0;
     this.getParameter('slope').value = m;
     this.getParameter('intercept').value = b;
   }
