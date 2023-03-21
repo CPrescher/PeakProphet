@@ -1,5 +1,6 @@
 .fit-output-list {
-  margin-top: 10px;
+  margin-top: 6px;
+  margin-bottom: 10px;
   flex-grow: 1;
   overflow: auto;
   height: 120px;
@@ -45,5 +46,50 @@
 
 .mat-column-red_chi2 {
   flex: 0 0 35%;
+}
+
+.control-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.undefined-dot {
+  background-color: #000000;
+  border-radius: 50%;
+  display: inline-block;
+  height: 10px;
+  margin: 0 5px;
+  width: 10px;
+}
+
+.green-dot {
+  background: radial-gradient(#00ff00, #00a000);
+  border-radius: 50%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin: 0 5px;
+}
+
+.red-dot {
+  background: radial-gradient(#ff0000, #a00000);
+  border-radius: 50%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin: 0 5px;
+}
+
+.yellow-dot {
+  background: radial-gradient(#fff200, #9ba000);
+  border-radius: 50%;
+  display: inline-block;
+  height: 10px;
+  margin: 0 5px;
+  width: 10px;
 }
 

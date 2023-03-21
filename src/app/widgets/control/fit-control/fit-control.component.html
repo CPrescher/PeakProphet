@@ -3,18 +3,6 @@
     <mat-card-title>Fit</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="fit()"
-      *ngIf = !fitModelService.fitting
-    >Fit</button>
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="stopFit()"
-      *ngIf = fitModelService.fitting
-    >Stop</button>
 <!--    <mat-list class="fit-output-list">-->
 <!--      <app-progress-item *ngFor="let item of fitProgressData.reverse()" [iter]="item.iter" [chi2]="item.chi2"></app-progress-item>-->
 <!--    </mat-list>-->
@@ -38,6 +26,31 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </table>
     </div>
+
+    <div class="control-row">
+      <app-progress-circle *ngIf="fitModelService.fitting"></app-progress-circle>
+      <div *ngIf="!fitModelService.fitting">
+        <span [ngClass]="{
+          'green-dot': fitModelService.fitSuccess,
+          'red-dot': !fitModelService.fitSuccess
+        }"></span>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="fit()"
+        *ngIf = !fitModelService.fitting
+      >Start</button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="stopFit()"
+        *ngIf = fitModelService.fitting
+      >Stop</button>
+
+    </div>
+    <div class="fit-message">{{fitModelService.fitMessage}}</div>
 
 
 

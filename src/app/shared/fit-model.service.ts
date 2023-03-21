@@ -25,6 +25,8 @@ import {updateFitModel} from "./models/updating";
 export class FitModelService {
   public fitModels: FitModel[] = [];
   public fitting = false;
+  public fitSuccess = false;
+  public fitMessage = ""
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
 
@@ -152,9 +154,12 @@ export class FitModelService {
       })
 
       result$.subscribe((payload) => {
-        updateFitModel(this.fitModels[selectedIndex], payload)
+        updateFitModel(this.fitModels[selectedIndex], payload.result)
         this.selectFitModel(selectedIndex);
         this.fitting = false;
+        this.fitMessage = payload.message;
+        this.fitSuccess = payload.success;
+        console.log(payload)
       });
 
       return stopper$;

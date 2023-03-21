@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FitModel} from "./data/fit-model";
 import {io} from "socket.io-client";
-import {distinctUntilChanged, fromEvent, interval, map, Observable, Subject, take, takeUntil} from "rxjs";
+import {distinctUntilChanged, fromEvent, interval, Observable, Subject, take, takeUntil} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,6 @@ export class FitService {
 
     const result = fromEvent(sioClient, 'result').pipe(
       take(1),
-      map((payload) => payload.result),
     );
 
     const progress = fromEvent(sioClient, 'progress').pipe(
