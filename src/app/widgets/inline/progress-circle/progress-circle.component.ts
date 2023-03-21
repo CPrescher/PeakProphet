@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-progress-circle',
-  templateUrl: './progress-circle.component.html',
+  template: '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>',
   styleUrls: ['./progress-circle.component.css']
 })
 export class ProgressCircleComponent {
