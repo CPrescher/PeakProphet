@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "peakprophet": {
+      "hosting": {
+        "peakprophet": [
+          "peakprophet"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "peakprophet"
+  }
+}
