@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FitModel} from "./data/fit-model";
 import {io} from "socket.io-client";
-import {distinctUntilChanged, filter, fromEvent, interval, Observable, Subject, take, takeUntil, tap} from "rxjs";
+import {distinctUntilChanged, filter, fromEvent, interval, Observable, Subject, take, takeUntil} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,8 @@ export class FitService {
 
   fitModel(fitModel: FitModel): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = JSON.stringify(fitModel)
-    const sioClient = io('http://localhost:8009');
+    // const sioClient = io('http://localhost:8009');
+    const sioClient = io('https://peakprophet.com:8009');
 
     fromEvent(sioClient, 'connect').subscribe(() => {
       sioClient.emit('fit', json_data);
@@ -33,7 +34,6 @@ export class FitService {
     const progress = fromEvent(sioClient, 'progress').pipe(
       filter( payload  => payload !== undefined),
       takeUntil(sioDisconnect$),
-      tap((data) => {console.log(data)}),
       distinctUntilChanged((prev, current) => prev.iter === current.iter),
     );
 

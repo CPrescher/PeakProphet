@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {PatternService} from "./pattern.service";
 import {FitModel} from "./data/fit-model";
 import {createRandomPattern} from "./data/pattern-generation";
-import {createRandomGaussian} from "./data/peak-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
@@ -51,11 +50,7 @@ export class FitModelService {
       createRandomPattern("Random Pattern 3", 3, [0, 10]),
     ];
     for (let i = 0; i < patterns.length; i++) {
-      const peaks = [
-        createRandomGaussian(),
-        createRandomGaussian(),
-      ]
-      this.addFitModel(`Fit Model ${i}`, patterns[i], peaks);
+      this.addFitModel(`Fit Model ${i}`, patterns[i]);
     }
 
 
@@ -79,7 +74,7 @@ export class FitModelService {
    * @param peaks - peaks of the FitModel
    * @param silent - if true, the FitModel will not be selected and no signals sent to sub-services
    */
-  addFitModel(name: string, pattern: Pattern, peaks: ClickModel[], silent = false) {
+  addFitModel(name: string, pattern: Pattern, peaks: ClickModel[] = [], silent = false) {
     const bkg = new LinearModel();
     bkg.guess(pattern.x, pattern.y)
     const fitModel = new FitModel(name, pattern, peaks, bkg);
