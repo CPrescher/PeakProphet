@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Injectable, isDevMode} from '@angular/core';
 import {FitModel} from "./data/fit-model";
-import {io} from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 import {distinctUntilChanged, filter, fromEvent, interval, Observable, Subject, take, takeUntil} from "rxjs";
 
 @Injectable({
@@ -12,8 +12,14 @@ export class FitService {
 
   fitModel(fitModel: FitModel): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = JSON.stringify(fitModel)
-    const sioClient = io('http://localhost:8009');
-    // const sioClient = io('https://peakprophet.com:8009');
+
+
+    let sioClient: Socket;
+    if (isDevMode()) {
+      sioClient = io('http://localhost:8009');
+    } else {
+      sioClient = io('https://peakprophet.com:8009');
+    }
 
     fromEvent(sioClient, 'connect').subscribe(() => {
       sioClient.emit('fit', json_data);
