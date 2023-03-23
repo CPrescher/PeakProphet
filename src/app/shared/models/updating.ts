@@ -24,6 +24,7 @@ export function updateModel(model: Model, newModelJson): Model {
   model.parameters.forEach((parameter) => {
     const new_parameter = newModelJson.parameters.find((p) => p.name === parameter.name);
     parameter.value = new_parameter.value;
+    parameter.error = new_parameter.error;
   });
   return model;
 }
