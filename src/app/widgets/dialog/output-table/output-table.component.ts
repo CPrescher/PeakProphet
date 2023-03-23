@@ -23,9 +23,7 @@ export class OutputTableComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit()
-    :
-    void {
+  ngOnInit(): void {
     this.sub = this.fitModelService.fitModels$.subscribe((fitModels) => {
       let output: any[] = [];
       let peakNum = 0;

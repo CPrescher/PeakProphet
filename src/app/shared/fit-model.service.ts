@@ -143,7 +143,7 @@ export class FitModelService {
       let [result$, progress$, stopper$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
 
       progress$.subscribe((payload: any) => {
-        updateFitModel(this.fitModels[selectedIndex], payload.result)
+        updateFitModel(this.fitModels[selectedIndex], payload.result);
         this.selectFitModel(selectedIndex);
         this.fitProgressSubject.next(payload);
       })
@@ -154,6 +154,11 @@ export class FitModelService {
         this.fitting = false;
         this.fitMessage = payload.message;
         this.fitSuccess = payload.success;
+        this.fitProgressSubject.next({
+          iter: 'final',
+          chi2: payload.chi2,
+          red_chi2: payload.red_chi2,
+        });
       });
 
       return stopper$;

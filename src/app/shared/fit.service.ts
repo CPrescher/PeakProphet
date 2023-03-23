@@ -27,17 +27,19 @@ export class FitService {
 
     const sioDisconnect$ = fromEvent(sioClient, 'disconnect');
 
-    const result = fromEvent(sioClient, 'result').pipe(
+    const result$ = fromEvent(sioClient, 'result').pipe(
+      takeUntil(sioDisconnect$),
       take(1),
     );
 
     const progress = fromEvent(sioClient, 'progress').pipe(
       filter( payload  => payload !== undefined),
       takeUntil(sioDisconnect$),
+      takeUntil(result$),
       distinctUntilChanged((prev, current) => prev.iter === current.iter),
     );
 
-    result.subscribe({
+    result$.subscribe({
       complete: () => {
         setTimeout(() => {
           sioClient.disconnect();
@@ -51,6 +53,6 @@ export class FitService {
       sioClient.emit('stop')
     });
 
-    return [result, progress, stopper$]
+    return [result$, progress, stopper$]
   }
 }
