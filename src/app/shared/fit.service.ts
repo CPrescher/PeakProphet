@@ -12,8 +12,8 @@ export class FitService {
 
   fitModel(fitModel: FitModel): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = JSON.stringify(fitModel)
-    // const sioClient = io('http://localhost:8009');
-    const sioClient = io('https://peakprophet.com:8009');
+    const sioClient = io('http://localhost:8009');
+    // const sioClient = io('https://peakprophet.com:8009');
 
     fromEvent(sioClient, 'connect').subscribe(() => {
       sioClient.emit('fit', json_data);

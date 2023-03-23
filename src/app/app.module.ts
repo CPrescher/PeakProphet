@@ -18,6 +18,7 @@ import { BkgControlComponent } from './widgets/control/bkg-control/bkg-control.c
 import { MousePositionComponent } from './widgets/display/mouse-position/mouse-position.component';
 import { FitControlComponent } from './widgets/control/fit-control/fit-control.component';
 import { ProgressCircleComponent } from './widgets/inline/progress-circle/progress-circle.component';
+import { OutputControlComponent } from './widgets/control/output-control/output-control.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ProgressCircleComponent } from './widgets/inline/progress-circle/progre
     MousePositionComponent,
     FitControlComponent,
     ProgressCircleComponent,
+    OutputControlComponent,
   ],
   imports: [
     BrowserModule,

@@ -24,6 +24,11 @@
   width: 250px;
 }
 
+.left-content > *:not(:last-child), .right-content > :not(:last-child) {
+  margin-bottom: 12px;
+  display: block;
+}
+
 .central-content {
   flex: 1;
   margin: 0 24px;
