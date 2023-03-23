@@ -13,7 +13,6 @@ export class FitService {
   fitModel(fitModel: FitModel): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = JSON.stringify(fitModel)
 
-
     let sioClient: Socket;
     if (isDevMode()) {
       sioClient = io('http://localhost:8009');
@@ -25,13 +24,14 @@ export class FitService {
       sioClient.emit('fit', json_data);
 
       interval(30).pipe(
-        takeUntil(fromEvent(sioClient, 'disconnect')),
+        takeUntil(sioDisconnect$),
+        takeUntil(result$),
       ).subscribe(() => {
         sioClient.emit('request_progress', json_data);
       });
     });
 
-    const sioDisconnect$ = fromEvent(sioClient, 'disconnect');
+    const sioDisconnect$ = fromEvent(sioClient, 'disconnect').pipe(take(1));
 
     const result$ = fromEvent(sioClient, 'result').pipe(
       takeUntil(sioDisconnect$),
