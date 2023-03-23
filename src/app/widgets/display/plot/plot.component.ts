@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import PatternPlot from "../../../lib/plotting/pattern-plot";
 import LineItem from "../../../lib/plotting/items/lineItem";
-import * as _ from 'lodash';
 import {PatternService} from "../../../shared/pattern.service";
 import {PeakService} from "../../../shared/peak.service";
 import {Model} from "../../../shared/models/model.interface";
 import {Item} from "../../../lib/plotting/items/item";
 import {BkgService} from "../../../shared/bkg.service";
 import {MousePositionService} from "../../../shared/mouse-position.service";
+import {fromEvent, throttleTime} from "rxjs";
 
 @Component({
   selector: 'app-plot',
@@ -18,9 +18,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   @ViewChild('container') plotContainer!: ElementRef;
 
-
-  throttleImageMouseMoved;
-
   plot!: PatternPlot;
   mainLine!: LineItem;
   bkgLine!: LineItem;
@@ -28,8 +25,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
   private peakGroup: Item;
   private modelSumGroup: Item;
   peakLines: LineItem[] = [];
-
-  throttleResize;
 
   constructor(
     private patternService: PatternService,
@@ -53,7 +48,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this._initModelSumLine();
   }
 
-  _initPlot(): void {
+  private _initPlot(): void {
     this.plot = new PatternPlot(
       '#pattern-plot',
       500, 200,
@@ -63,25 +58,30 @@ export class PlotComponent implements OnInit, AfterViewInit {
 
   }
 
-  _initResizeHandling(): void {
-    this.throttleResize = _.throttle(() => {
+  private _initResizeHandling(): void {
+    setTimeout(() => this._autoResize(), 50);
+
+    fromEvent(window, 'resize').pipe(
+      throttleTime(30)
+    ).subscribe(() => {
       const width = this.plotContainer.nativeElement.clientWidth;
       const height = this.plotContainer.nativeElement.clientHeight;
       this.plot.resize(width, height);
-    }, 50);
+    })
+  }
 
-    setTimeout(() => this.throttleResize(), 50);
+  private _autoResize(): void {
+    const width = this.plotContainer.nativeElement.clientWidth;
+    const height = this.plotContainer.nativeElement.clientHeight;
+    this.plot.resize(width, height);
   }
 
   _initMouseEvents(): void {
-    this.throttleImageMouseMoved = _.throttle((x, y) => {
-      this.mouseService.updatePatternMousePosition(x, y);
-    }, 100);
 
-    this.plot.mouseMoved.subscribe({
-      next: ({x, y}) => {
-        this.throttleImageMouseMoved(x, y);
-      }
+    this.plot.mouseMoved.pipe(
+      throttleTime(30)
+    ).subscribe(({x, y}) => {
+      this.mouseService.updatePatternMousePosition(x, y);
     });
 
     this.plot.mouseClicked.subscribe({
@@ -91,10 +91,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
     });
   }
 
-  @HostListener('window:resize')
-  onResize(): void {
-    this.throttleResize();
-  }
 
   _initMainLine(): void {
     this.mainLine = new LineItem();
