@@ -424,7 +424,7 @@ describe("update a FitModel from backend JSON response", () => {
     expect(fitModel.background.getParameter("intercept").value).not.toBe(6.2); // check that the model was not updated
   });
 
-  fit("should update error values", () => {
+  it("should update error values", () => {
     const updateJson =
       {
         "background": {

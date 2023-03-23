@@ -15,6 +15,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
 import {MatTableModule} from "@angular/material/table";
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import {MatTableModule} from "@angular/material/table";
     MatSelectModule,
     MatTooltipModule,
     MatListModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -50,7 +52,11 @@ import {MatTableModule} from "@angular/material/table";
     MatSelectModule,
     MatTooltipModule,
     MatListModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule
+  ],
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
 })
 export class MaterialsModule {

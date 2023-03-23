@@ -8,11 +8,11 @@ export class LorentzianModel implements ClickModel {
   clickSteps = 2;
   currentStep = 0;
 
-  constructor(center=0.0, fwhm=0.5, intensity=1.0) {
+  constructor(center=0.0, fwhm=0.5, amplitude=1.0) {
     this.parameters = [
       new Parameter("center", center),
       new Parameter("fwhm", fwhm),
-      new Parameter("amplitude", intensity),
+      new Parameter("amplitude", amplitude),
     ];
     this.type = "Lorentzian";
   }

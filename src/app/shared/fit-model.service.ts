@@ -154,7 +154,6 @@ export class FitModelService {
         this.fitting = false;
         this.fitMessage = payload.message;
         this.fitSuccess = payload.success;
-        console.log(payload)
       });
 
       return stopper$;

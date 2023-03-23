@@ -26,12 +26,7 @@ export class FitControlComponent {
       this.fitProgressData.push({"iter": progress.iter, "chi2": progress.chi2, "red_chi2": progress.red_chi2})
       this.fitProgressData$.next(
         this.fitProgressData.sort((a, b) => (a.iter < b.iter ? -1 : 1)).reverse())
-      // console.log(this.fitProgressData)
     })
-    // this.fitModelService.fitComplete$.subscribe((fitModel) => {
-    //   this.fitProgressData = []
-    //   this.fitProgressData$.next(this.fitProgressData)
-    // }
   }
 
   fit(): void {

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {OutputTableComponent} from "../../dialog/output-table/output-table.component";
 
 @Component({
   selector: 'app-output-control',
@@ -7,4 +9,12 @@ import { Component } from '@angular/core';
 })
 export class OutputControlComponent {
 
+  public output: string;
+
+  constructor(public dialog: MatDialog) {
+  }
+
+  public openDialog(): void {
+    this.dialog.open(OutputTableComponent, {width: '90%', hasBackdrop: true});
+  }
 }

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FitControlComponent } from './fit-control.component';
+import {FitControlComponent} from './fit-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
 
 describe('FitControlComponent', () => {
@@ -9,10 +9,10 @@ describe('FitControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FitControlComponent ],
+      declarations: [FitControlComponent],
       imports: [MaterialsModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(FitControlComponent);
     component = fixture.componentInstance;
