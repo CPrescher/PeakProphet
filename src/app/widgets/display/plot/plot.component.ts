@@ -22,6 +22,8 @@ export class PlotComponent implements OnInit, AfterViewInit {
   mainLine!: LineItem;
   bkgLine!: LineItem;
   sumLine!: LineItem;
+
+  private dataGroup: Item;
   private peakGroup: Item;
   private modelSumGroup: Item;
   peakLines: LineItem[] = [];
@@ -41,7 +43,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this._initPlot();
     this._initResizeHandling();
     this._initMouseEvents();
-    this._initLineGroups(); // group for all model lines, needs to be created before main line to be behind it
+    this._initLineGroups(); // groups for arranging the z depth of the lines
     this._initMainLine();
     this._initPeakLines();
     this._initBkgLine();
@@ -92,10 +94,20 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
 
+  _initLineGroups(): void {
+    this.peakGroup = new Item();
+    this.plot.addItem(this.peakGroup);
+    this.dataGroup = new Item();
+    this.plot.addItem(this.dataGroup);
+    this.modelSumGroup = new Item();
+    this.plot.addItem(this.modelSumGroup);
+  }
+
+
   _initMainLine(): void {
     this.mainLine = new LineItem();
     this.mainLine.autoRanged = true;
-    this.plot.addItem(this.mainLine);
+    this.plot.addItem(this.mainLine, this.dataGroup.root);
 
     this.patternService.pattern$.subscribe((pattern) => {
       if (pattern) {
@@ -104,13 +116,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
     });
   }
 
-  _initLineGroups(): void {
-    this.peakGroup = new Item();
-    this.plot.addItem(this.peakGroup);
-    this.modelSumGroup = new Item();
-    this.plot.addItem(this.modelSumGroup);
-
-  }
 
   _initPeakLines(): void {
     this.peakService.addedPeak$.subscribe((peak: Model) => {
@@ -144,10 +149,29 @@ export class PlotComponent implements OnInit, AfterViewInit {
       }
       this.updateSumLine();
     });
+
+    this.peakService.selectedPeakIndex$.subscribe((index: number|undefined) => {
+      if (index === undefined) {
+        this.peakLines.forEach((line) => {
+          line.setColor("green");
+          line.setStrokeWidth(2);
+        });
+        return;
+      }
+      this.peakLines.forEach((line, i) => {
+        if (i === index) {
+          line.setColor("orange");
+          line.setStrokeWidth(2.5);
+        } else {
+          line.setColor("green");
+          line.setStrokeWidth(2);
+        }
+      });
+    });
   }
 
   addModelLine(): LineItem {
-    const line = new LineItem("green");
+    const line = new LineItem("green", 2, true);
     this.plot.addItem(line, this.peakGroup.root);
     this.peakLines.push(line);
     return line;
@@ -172,7 +196,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   _initModelSumLine(): void {
-    this.sumLine = new LineItem("red");
+    this.sumLine = new LineItem("red", 2, false);
     this.plot.addItem(this.sumLine, this.modelSumGroup.root);
 
     this.bkgService.bkgModel$.subscribe(() => {
