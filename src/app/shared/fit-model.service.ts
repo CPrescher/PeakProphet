@@ -172,14 +172,42 @@ export class FitModelService {
    */
   removeFitModel(index: number) {
     this.fitModels.splice(index, 1);
+    this.fitModelsSubject.next(this.fitModels);
+
     if (index === this.fitModels.length && index > 0) {
       this.selectFitModel(index - 1);
     } else if (index < this.fitModels.length) {
       this.selectFitModel(index);
+    } else {
+      this.selectedIndexSubject.next(undefined);
+      this.selectedFitModelSubject.next(undefined);
     }
-    if (this.fitModels.length === 0) {
-      this.peakService.clearPeaks();
-      this.patternService.clearPattern();
+  }
+
+  clearFitModels() {
+    this.fitModels = [];
+    this.fitModelsSubject.next(this.fitModels);
+    this.selectedIndexSubject.next(undefined);
+    this.selectedFitModelSubject.next(undefined);
+  }
+
+  moveModelUp(index: number) {
+    if (index > 0) {
+      const model = this.fitModels[index];
+      this.fitModels.splice(index, 1);
+      this.fitModels.splice(index - 1, 0, model);
+      this.fitModelsSubject.next(this.fitModels);
+      this.selectFitModel(index - 1);
+    }
+  }
+
+  moveModelDown(index: number) {
+    if (index < this.fitModels.length - 1) {
+      const model = this.fitModels[index];
+      this.fitModels.splice(index, 1);
+      this.fitModels.splice(index + 1, 0, model);
+      this.fitModelsSubject.next(this.fitModels);
+      this.selectFitModel(index + 1);
     }
   }
 }

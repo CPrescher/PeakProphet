@@ -44,6 +44,21 @@ export class DataControlComponent {
     }
   }
 
+  moveModelUp() {
+    this.fitModelService.moveModelUp(this.selectedModelIndex);
+  }
+  moveModelDown() {
+    this.fitModelService.moveModelDown(this.selectedModelIndex);
+  }
+
+  removeModel() {
+    this.fitModelService.removeFitModel(this.selectedModelIndex);
+  }
+
+  clearModels() {
+    this.fitModelService.clearFitModels();
+  }
+
   onListSelectionChanged(event: MatSelectionListChange) {
     const selectedName = event.source.selectedOptions.selected[0].value;
     const index = this.fitModelNames.indexOf(selectedName);

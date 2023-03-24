@@ -5,7 +5,6 @@ mat-card {
 }
 
 .fit-model-list {
-  margin-top: 10px;
   flex-grow: 1;
   overflow: auto;
   height: 150px;
@@ -35,13 +34,14 @@ mat-card {
 }
 
 
-:host /deep/.mat-mdc-list-option .mdc-radio__outer-circle {
+:host /deep/ .mat-mdc-list-option .mdc-radio__outer-circle {
   top: 3px;
   left: 3px;
   height: 14px;
   width: 14px
 }
-:host /deep/.mat-mdc-list-option .mdc-radio__inner-circle {
+
+:host /deep/ .mat-mdc-list-option .mdc-radio__inner-circle {
   top: 3px;
   left: 3px;
   border-width: 7px;
@@ -52,4 +52,54 @@ mat-card {
 :host /deep/ .mdc-list-item--with-trailing-radio .mdc-list-item__end {
   width: 30px;
   margin-left: 0;
+}
+
+.small-icon-button {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+}
+.small-icon-button > *[role=img] {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.small-icon-button > *[role=img] svg {
+  width: 16px;
+  height: 16px;
+}
+
+
+.mat-mdc-button-touch-target {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.fit-model-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  margin-top: 12px;
+}
+
+.fit-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  margin: 0 3px;
+}
+
+.fit-button-container > *:not(:last-child) {
+  margin-bottom: 6px;
+}
+
+.vertical-spacer {
+  flex-grow: 1;
 }
