@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 import {PeakService} from "../../../shared/peak.service";
 
 @Component({
@@ -21,4 +21,6 @@ export class PeakControlComponent implements OnInit {
     this.modelService.addPeak(this.selectedPeakType);
     this.modelService.clickDefinePeak()
   }
+
+  a
 }

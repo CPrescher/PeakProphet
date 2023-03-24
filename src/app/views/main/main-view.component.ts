@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ShortcutService} from "../../shared/shortcut.service";
 
 @Component({
   selector: 'app-main',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./main-view.component.css']
 })
 export class MainViewComponent {
+  constructor(
+    private _shortcutService: ShortcutService,
+  ){}
 
 }
