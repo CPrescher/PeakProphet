@@ -34,7 +34,14 @@
           class="parameter-item">
         </app-parameter-item-simple>
       </div>
-      <button mat-raised-button color="primary" (click)="definePeak()">Define</button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="definePeak()"
+        matTooltip="Define parameters by clicking into the pattern."
+        matTooltipShowDelay="500"
+        matTooltipPosition="above"
+      >Define</button>
     </div>
     <ng-template #elseBlock class="not-selectable">
       <span class="not-selectable">No peaks defined for this pattern. </span>
