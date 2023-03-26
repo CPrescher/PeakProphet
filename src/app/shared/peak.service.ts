@@ -38,6 +38,7 @@ export class PeakService {
   private removedPeakSubject = new Subject<number>();
   public removedPeak$ = this.removedPeakSubject.asObservable();
 
+
   constructor(
     private mousePositionService: MousePositionService,
     private bkgService: BkgService,
@@ -175,6 +176,7 @@ export class PeakService {
         this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
       });
   }
+
 
   selectClosestPeak(x: number, y: number) {
     let minDistance = Number.MAX_VALUE;

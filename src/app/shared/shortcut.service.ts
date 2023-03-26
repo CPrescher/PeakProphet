@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {fromEvent, withLatestFrom} from "rxjs";
+import {filter, fromEvent, withLatestFrom} from "rxjs";
 import {PeakService} from "./peak.service";
 import {MousePositionService} from "./mouse-position.service";
+import {BkgService} from "./bkg.service";
 
 
 @Injectable({
@@ -9,13 +10,18 @@ import {MousePositionService} from "./mouse-position.service";
 })
 export class ShortcutService {
 
+
+  autoSelectClosestPeakToggle = false;
+
   constructor(
     private peakService: PeakService,
     private mousePositionService: MousePositionService,
+    private bkgService: BkgService,
   ) {
+    this._initAutoSelectClosestPeak()
+
     fromEvent<KeyboardEvent>(document, 'keydown').pipe(
-      withLatestFrom(this.mousePositionService.patternMousePosition$)
-    ).subscribe(([event, pos]) => {
+    ).subscribe((event,) => {
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
@@ -39,11 +45,24 @@ export class ShortcutService {
           this.peakService.removePeak()
           break;
         case 's':
-          this.peakService.selectClosestPeak(pos.x, pos.y);
+          this.autoSelectClosestPeakToggle = !this.autoSelectClosestPeakToggle;
           break;
         default:
           break;
       }
+    });
+  }
+
+
+  private _initAutoSelectClosestPeak() {
+    this.mousePositionService.patternMousePosition$.pipe(
+      withLatestFrom(this.bkgService.bkgModel$),
+      filter((_) => this.autoSelectClosestPeakToggle)
+    ).subscribe(([mousePosition, bkgModel]) => {
+      const x = mousePosition.x;
+      const y = mousePosition.y;
+      const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
+      this.peakService.selectClosestPeak(x, y - y_bkg);
     });
   }
 }
