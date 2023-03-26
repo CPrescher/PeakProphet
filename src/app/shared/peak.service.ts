@@ -102,7 +102,13 @@ export class PeakService {
     this.selectPeak(this.peaks.length - 1);
   }
 
-  removePeak(index: number) {
+  removePeak(index?: number | undefined) {
+    if (index === undefined) {
+      index = this.selectedPeakIndexSubject.getValue();
+      if(index === undefined) {
+        return;
+      }
+    }
     if (index < this.peaks.length && index >= 0) {
       this.peaks.splice(index, 1);
       this.removedPeakSubject.next(index);
@@ -168,6 +174,24 @@ export class PeakService {
         this.peaks[index].currentStep++;
         this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
       });
+  }
+
+  selectClosestPeak(x: number, y: number) {
+    let minDistance = Number.MAX_VALUE;
+    let minIndex = 0;
+    for (let i = 0; i < this.peaks.length; i++) {
+      const distance = this.distanceToPeak(x, y, i);
+      if (distance < minDistance) {
+        minDistance = distance;
+        minIndex = i;
+      }
+    }
+    this.selectPeak(minIndex);
+  }
+
+  private distanceToPeak(x: number, y: number, index: number) {
+    const y_val = this.peaks[index].evaluate([x])[0];
+    return Math.abs(y - y_val);
   }
 
 }

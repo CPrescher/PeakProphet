@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {fromEvent} from "rxjs";
+import {fromEvent, withLatestFrom} from "rxjs";
 import {PeakService} from "./peak.service";
+import {MousePositionService} from "./mouse-position.service";
 
 
 @Injectable({
@@ -10,8 +11,11 @@ export class ShortcutService {
 
   constructor(
     private peakService: PeakService,
+    private mousePositionService: MousePositionService,
   ) {
-    fromEvent<KeyboardEvent>(document, 'keydown').subscribe((event) => {
+    fromEvent<KeyboardEvent>(document, 'keydown').pipe(
+      withLatestFrom(this.mousePositionService.patternMousePosition$)
+    ).subscribe(([event, pos]) => {
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
@@ -32,6 +36,10 @@ export class ShortcutService {
           this.peakService.clickDefinePeak();
           break;
         case 'r':
+          this.peakService.removePeak()
+          break;
+        case 's':
+          this.peakService.selectClosestPeak(pos.x, pos.y);
           break;
         default:
           break;
