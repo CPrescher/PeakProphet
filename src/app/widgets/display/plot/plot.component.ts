@@ -131,7 +131,11 @@ export class PlotComponent implements OnInit, AfterViewInit {
     });
 
     this.peakService.updatedPeak$.subscribe((data: { "index": number, model: Model }) => {
-      this.peakLines[data.index].setData(this.mainLine.x, data.model.evaluate(this.mainLine.x));
+      let y = data.model.evaluate(this.mainLine.x);
+      if (this.bkgLine) {
+        y = y.map((v, i) => v + this.bkgLine.y[i]);
+      }
+      this.peakLines[data.index].setData(this.mainLine.x, y);
       this.updateSumLine();
     });
 
@@ -147,11 +151,15 @@ export class PlotComponent implements OnInit, AfterViewInit {
       }
 
       for (let i = 0; i < peaks.length; i++) {
-        this.peakLines[i].setData(this.mainLine.x, peaks[i].evaluate(this.mainLine.x));
+        let y = peaks[i].evaluate(this.mainLine.x);
+        if (this.bkgLine) {
+          y = y.map((v, i) => v + this.bkgLine.y[i]);
+        }
+        this.peakLines[i].setData(this.mainLine.x, y);
       }
     });
 
-    this.peakService.selectedPeakIndex$.subscribe((index: number|undefined) => {
+    this.peakService.selectedPeakIndex$.subscribe((index: number | undefined) => {
       if (index === undefined) {
         this.peakLines.forEach((line) => {
           line.setColor("green");
@@ -206,8 +214,9 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   updateSumLine(): void {
+    const nPeakLines = this.peakLines.length;
     const sum = this.bkgLine.y.map((y, i) => {
-      return y + this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
+      return y * (1 - nPeakLines) + this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
     });
     this.sumLine.setData(this.mainLine.x, sum);
   }

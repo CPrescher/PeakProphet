@@ -3,7 +3,7 @@ import {ClickModel, Model} from "./models/model.interface";
 import {GaussianModel} from "./models/peaks/gaussian.model";
 import {LorentzianModel} from "./models/peaks/lorentzian.model";
 import {PseudoVoigtModel} from "./models/peaks/pseudo-voigt.model";
-import {BehaviorSubject, Subject, Subscription} from "rxjs";
+import {BehaviorSubject, Subject, Subscription, take, takeWhile, withLatestFrom} from "rxjs";
 import {MousePositionService} from "./mouse-position.service";
 import {BkgService} from "./bkg.service";
 
@@ -39,7 +39,8 @@ export class PeakService {
   public removedPeak$ = this.removedPeakSubject.asObservable();
 
   constructor(
-    private mousePositionService: MousePositionService
+    private mousePositionService: MousePositionService,
+    private bkgService: BkgService,
   ) {
     this.peaks = [
       new GaussianModel(),
@@ -139,23 +140,33 @@ export class PeakService {
     // Reset the peak steps
     this.peaks[index].currentStep = 0;
 
+    const mouseClickObservable =
+      this.mousePositionService.patternClickPosition$.pipe(
+      withLatestFrom(this.bkgService.bkgModel$),
+      take(this.peaks[index].clickSteps)
+    );
+
     this.mousePositionSubscription =
-      this.mousePositionService.patternMousePosition$.subscribe((mousePosition) => {
+      this.mousePositionService.patternMousePosition$.pipe(
+        withLatestFrom(this.bkgService.bkgModel$),
+        takeWhile(() => this.peaks[index].currentStep < this.peaks[index].clickSteps)
+      ).subscribe(([mousePosition, bkgModel]) => {
         const x = mousePosition.x;
         const y = mousePosition.y;
-        this.peaks[index].defineModel(x, y);
+        const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
+
+        this.peaks[index].defineModel(x, y - y_bkg);
         this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
       });
 
-    this.mouseClickSubscription =
-      this.mousePositionService.patternClickPosition$.subscribe((mousePosition) => {
-        this.peaks[index].defineModel(mousePosition.x, mousePosition.y);
+    this.mouseClickSubscription = mouseClickObservable.subscribe(([mousePosition, bkgModel]) => {
+        const x = mousePosition.x;
+        const y = mousePosition.y;
+        const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
+
+        this.peaks[index].defineModel(x, y - y_bkg);
         this.peaks[index].currentStep++;
         this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
-        if (this.peaks[index].currentStep === this.peaks[index].clickSteps) {
-          this.mousePositionSubscription.unsubscribe();
-          this.mouseClickSubscription.unsubscribe();
-        }
       });
   }
 

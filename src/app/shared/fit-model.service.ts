@@ -53,7 +53,7 @@ export class FitModelService {
       this.addFitModel(`Fit Model ${i}`, patterns[i]);
     }
 
-    this.clearFitModels();
+    // this.clearFitModels();
     this._setupObservables();
   }
 

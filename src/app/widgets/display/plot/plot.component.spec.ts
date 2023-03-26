@@ -80,7 +80,7 @@ describe('PlotComponent', () => {
     expect(component.bkgLine.y).toEqual([]);
   });
 
-  fit("loading data after clearing the pattern", () => {
+  it("loading data after clearing the pattern", () => {
     patternService.clearPattern();
     patternService.setPattern(new Pattern("RandomData", [2, 3, 4], [2, 3, 4, 5]));
     expect(component.mainLine.x).toEqual([2, 3, 4]);
