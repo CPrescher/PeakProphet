@@ -290,6 +290,11 @@ export default class BasePlot {
 
 
   _updateAxes(duration = 400): void {
+    // in case of empty data the axis will be set from 0 to 10
+    if(this.plotDomainX[0] === Infinity && this.plotDomainX[1] === -Infinity) {
+      this._updateDomain(0, 10, 0, 10)
+    }
+
     this.xAxis
       .transition()
       .duration(duration)

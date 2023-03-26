@@ -5,6 +5,7 @@ import {LorentzianModel} from "./models/peaks/lorentzian.model";
 import {PseudoVoigtModel} from "./models/peaks/pseudo-voigt.model";
 import {BehaviorSubject, Subject, Subscription} from "rxjs";
 import {MousePositionService} from "./mouse-position.service";
+import {BkgService} from "./bkg.service";
 
 
 /**
@@ -37,7 +38,9 @@ export class PeakService {
   private removedPeakSubject = new Subject<number>();
   public removedPeak$ = this.removedPeakSubject.asObservable();
 
-  constructor(private mousePositionService: MousePositionService) {
+  constructor(
+    private mousePositionService: MousePositionService
+  ) {
     this.peaks = [
       new GaussianModel(),
       new LorentzianModel(),

@@ -45,9 +45,9 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this._initMouseEvents();
     this._initLineGroups(); // groups for arranging the z depth of the lines
     this._initMainLine();
-    this._initPeakLines();
     this._initBkgLine();
     this._initModelSumLine();
+    this._initPeakLines();
   }
 
   private _initPlot(): void {
@@ -112,6 +112,8 @@ export class PlotComponent implements OnInit, AfterViewInit {
     this.patternService.pattern$.subscribe((pattern) => {
       if (pattern) {
         this.mainLine.setData(pattern.x, pattern.y);
+      } else {
+        this.mainLine.setData([], []);
       }
     });
   }
@@ -147,7 +149,6 @@ export class PlotComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < peaks.length; i++) {
         this.peakLines[i].setData(this.mainLine.x, peaks[i].evaluate(this.mainLine.x));
       }
-      this.updateSumLine();
     });
 
     this.peakService.selectedPeakIndex$.subscribe((index: number|undefined) => {

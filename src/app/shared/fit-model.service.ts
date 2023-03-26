@@ -5,7 +5,7 @@ import {createRandomPattern} from "./data/pattern-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, map, Subject} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -53,6 +53,20 @@ export class FitModelService {
       this.addFitModel(`Fit Model ${i}`, patterns[i]);
     }
 
+    this.clearFitModels();
+    this._setupObservables();
+  }
+
+  private _setupObservables() {
+    this.selectedIndex$.pipe(
+      map((index) => {
+        if (index !== undefined) {
+          return this.fitModels[index];
+        }
+        return undefined;
+      })
+    ).subscribe(this.selectedFitModelSubject);
+
 
     this.bkgService.bkgTypeChanged$.subscribe((bkgModel) => {
       if (bkgModel) {
@@ -82,8 +96,8 @@ export class FitModelService {
     this.fitModelsSubject.next(this.fitModels);
 
     if (!silent) {
-      this.updateSubServices(fitModel);
       this.selectFitModel(this.fitModels.length - 1);
+      this.updateSubServices(fitModel);
     }
   }
 
@@ -98,6 +112,12 @@ export class FitModelService {
     this.bkgService.setBkgModel(fitModel.background);
   }
 
+  private clearSubServices() {
+    this.patternService.clearPattern();
+    this.peakService.setPeaks([]);
+    this.bkgService.clearBkgModel();
+  }
+
   /**
    * Select a FitModel from the list of FitModels. This will send notifications to subscribers.
    * @param index - index of the FitModel to select
@@ -107,8 +127,6 @@ export class FitModelService {
       const fitModel = this.fitModels[index];
       this.updateSubServices(fitModel);
       this.selectedIndexSubject.next(index);
-      this.selectedFitModelSubject.next(fitModel);
-
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }
@@ -180,7 +198,9 @@ export class FitModelService {
       this.selectFitModel(index);
     } else {
       this.selectedIndexSubject.next(undefined);
-      this.selectedFitModelSubject.next(undefined);
+    }
+    if (this.fitModels.length === 0) {
+      this.clearSubServices();
     }
   }
 
@@ -188,10 +208,10 @@ export class FitModelService {
     this.fitModels = [];
     this.fitModelsSubject.next(this.fitModels);
     this.selectedIndexSubject.next(undefined);
-    this.selectedFitModelSubject.next(undefined);
+    this.clearSubServices();
   }
 
-  moveModelUp(index: number) {
+  moveFitModelUp(index: number) {
     if (index > 0) {
       const model = this.fitModels[index];
       this.fitModels.splice(index, 1);
@@ -201,7 +221,7 @@ export class FitModelService {
     }
   }
 
-  moveModelDown(index: number) {
+  moveFitModelDown(index: number) {
     if (index < this.fitModels.length - 1) {
       const model = this.fitModels[index];
       this.fitModels.splice(index, 1);

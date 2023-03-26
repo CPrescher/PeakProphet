@@ -67,4 +67,23 @@ describe('PlotComponent', () => {
     expect(component.bkgLine.x).toBeTruthy();
     expect(component.bkgLine.y).toBeTruthy();
   });
+
+  it("handles clearing the pattern", () => {
+    patternService.clearPattern();
+    expect(component.mainLine.x).toEqual([]);
+    expect(component.mainLine.y).toEqual([]);
+  });
+
+  it("handles clearing the background pattern", () => {
+    bkgService.clearBkgModel();
+    expect(component.bkgLine.x).toEqual([]);
+    expect(component.bkgLine.y).toEqual([]);
+  });
+
+  fit("loading data after clearing the pattern", () => {
+    patternService.clearPattern();
+    patternService.setPattern(new Pattern("RandomData", [2, 3, 4], [2, 3, 4, 5]));
+    expect(component.mainLine.x).toEqual([2, 3, 4]);
+    expect(component.mainLine.y).toEqual([2, 3, 4, 5])
+  });
 });

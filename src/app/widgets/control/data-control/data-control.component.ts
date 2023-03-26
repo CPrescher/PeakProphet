@@ -45,10 +45,10 @@ export class DataControlComponent {
   }
 
   moveModelUp() {
-    this.fitModelService.moveModelUp(this.selectedModelIndex);
+    this.fitModelService.moveFitModelUp(this.selectedModelIndex);
   }
   moveModelDown() {
-    this.fitModelService.moveModelDown(this.selectedModelIndex);
+    this.fitModelService.moveFitModelDown(this.selectedModelIndex);
   }
 
   removeModel() {

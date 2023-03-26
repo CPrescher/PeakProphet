@@ -42,8 +42,8 @@ export default class LineItem extends Item {
     this.xRange.max = Math.max(...x);
     this.yRange.min = Math.min(...y);
     this.yRange.max = Math.max(...y);
-    this.update();
     this.dataChanged.next([]);
+    this.update();
   }
 
   createLineElement(): void {
@@ -53,41 +53,37 @@ export default class LineItem extends Item {
       .x(d => this.xScale(d.x))
       // @ts-ignore
       .y(d => this.yScale(d.y));
+    // return
   }
 
   updateLine(): void {
     // Create line
-    const path = this.root.selectAll('path').data([this.XY]);
-    if(this.dashed) {
-      path
-        .transition()
-        .duration(0)
-        .attr('stroke-dasharray', '5,5')
-        .attr('stroke-linecap', 'round');
-    } else {
-      path
-        .transition()
-        .duration(0)
-        .attr('stroke-dasharray', 'none')
-        .attr('stroke-linecap', 'butt');
-    }
-    path
-      .transition()
-      .duration(0)
-      .attr('d', this.lineElement)
-      .attr('fill', 'none')
-      .attr('stroke', this.color)
-      .attr('stroke-width', this.strokeWidth)
-      .attr('pointer-events', 'none');
-
+    const path = this.root.selectAll('path').data([this.XY], d => this.xScale(d.x));
 
     path
       .enter()
       .append('path')
+      .merge(path)
+      .transition()
+      .duration(0)
+
       .attr('fill', 'none')
       .attr('stroke', this.color)
+      .attr('stroke-width', this.strokeWidth)
+      .attr('pointer-events', 'none')
       .attr('d', this.lineElement);
-    path.exit().remove();
+
+    if(this.dashed) {
+      path
+        .attr('stroke-dasharray', '5,5')
+        .attr('stroke-linecap', 'round');
+    } else {
+      path
+        .attr('stroke-dasharray', 'none')
+        .attr('stroke-linecap', 'butt');
+    }
+
+    // path.exit().remove();
   }
 
   override update(): void {

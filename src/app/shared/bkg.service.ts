@@ -36,4 +36,8 @@ export class BkgService {
   setBkgModel(bkgModel: GuessModel): void {
     this.bkgModelSubject.next(bkgModel);
   }
+
+  clearBkgModel(): void {
+    this.bkgModelSubject.next(undefined);
+  }
 }
