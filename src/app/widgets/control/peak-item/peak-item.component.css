@@ -14,3 +14,14 @@
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
 }
+
+.browse-row {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+}
+
+.spacer {
+  flex-grow: 1;
+}

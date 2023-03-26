@@ -80,11 +80,19 @@ mat-card {
   height: 24px !important;
 }
 
-.fit-model-container {
+.fit-model-inner-container {
   display: flex;
   flex-direction: row;
   height: 100%;
+}
+
+.fit-model-outer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
   margin-top: 12px;
+
 }
 
 .fit-button-container {
@@ -100,6 +108,14 @@ mat-card {
   margin-bottom: 6px;
 }
 
-.vertical-spacer {
+.spacer {
   flex-grow: 1;
+}
+
+.browse-row {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  margin: 2px 0;
 }

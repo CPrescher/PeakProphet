@@ -2,21 +2,6 @@
   <mat-card-header>
     <mat-card-title>
       <div *ngIf="selectedPeakIndex !== undefined">
-
-        <app-browse-index
-          [index]="selectedPeakIndex"
-          [max]="peakNum"
-          [min]="0"
-          [add]="1"
-          (indexChange)="selectPeak($event)"></app-browse-index>
-
-        <button
-          mat-mini-fab
-          data-test="remove-button"
-          color="primary"
-          (click)="removePeak()"
-        >-
-        </button>
         <span
           *ngIf="peak"
           data-test="peak-type"
@@ -27,6 +12,22 @@
   </mat-card-header>
   <mat-card-content>
     <div *ngIf="peak !== undefined; else elseBlock">
+      <div class="browse-row" *ngIf="selectedPeakIndex !== undefined">
+        <app-browse-index
+          [index]="selectedPeakIndex"
+          [max]="peakNum"
+          [min]="0"
+          [add]="1"
+          (indexChange)="selectPeak($event)"></app-browse-index>
+        <div class="spacer"></div>
+        <button
+          mat-mini-fab
+          data-test="remove-button"
+          color="primary"
+          (click)="removePeak()"
+        >-
+        </button>
+      </div>
       <div *ngFor="let param of peak.parameters" class="parameter-item-container">
         <app-parameter-item-simple
           [parameter]="param"

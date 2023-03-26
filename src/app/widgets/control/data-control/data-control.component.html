@@ -8,68 +8,78 @@
       <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" multiple>
     </div>
 
-    <app-browse-index
-      [index]="selectedModelIndex"
-      [min]="0"
-      [max]="modelNum"
-      [add]="1"
-      (indexChange)="selectModel($event)"
-    ></app-browse-index>
     <div data-test="fit-model-name">{{selectedFitModelName}}</div>
 
-    <div class="fit-model-container mat-elevation-z6">
-      <div class="fit-button-container">
-        <button
-          type="button"
-          class="small-icon-button"
-          mat-icon-button
-          (click)="moveModelUp()"
-          matTooltip="Move the selected model up in the list."
-          matTooltipShowDelay="1000"
-          matTooltipPosition="above"
-        ><mat-icon>arrow_upward</mat-icon>
-        </button>
-        <button
-          type="button"
-          class="small-icon-button"
-          mat-icon-button
-          (click)="moveModelDown()"
+    <div class="fit-model-outer-container mat-elevation-z6">
+      <div class="fit-model-inner-container">
+        <div class="fit-button-container">
+          <button
+            type="button"
+            class="small-icon-button"
+            mat-icon-button
+            (click)="moveModelUp()"
+            matTooltip="Move the selected model up in the list."
+            matTooltipShowDelay="1000"
+            matTooltipPosition="above"
+          >
+            <mat-icon>arrow_upward</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="small-icon-button"
+            mat-icon-button
+            (click)="moveModelDown()"
 
-          matTooltip="Move the selected model down in the list."
-          matTooltipShowDelay="1000"
-          matTooltipPosition="below"
-        ><mat-icon>arrow_downward</mat-icon>
-        </button>
-        <div class="vertical-spacer"></div>
-        <button
-          type="button"
-          class="small-icon-button"
-          mat-icon-button
-          (click)="removeModel()"
-          matTooltip="Remove the selected model from the list."
-          matTooltipShowDelay="1000"
-          matTooltipPosition="above"
-        ><mat-icon>delete</mat-icon>
-        </button>
-        <button
-          type="button"
-          class="small-icon-button"
-          mat-icon-button
-          (click)="clearModels()"
-          matTooltip="Remove all loaded models."
-          matTooltipShowDelay="1000"
-          matTooltipPosition="below"
-        ><mat-icon>delete_sweep</mat-icon>
-        </button>
+            matTooltip="Move the selected model down in the list."
+            matTooltipShowDelay="1000"
+            matTooltipPosition="below"
+          >
+            <mat-icon>arrow_downward</mat-icon>
+          </button>
+          <div class="spacer"></div>
+          <button
+            type="button"
+            class="small-icon-button"
+            mat-icon-button
+            (click)="removeModel()"
+            matTooltip="Remove the selected model from the list."
+            matTooltipShowDelay="1000"
+            matTooltipPosition="above"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="small-icon-button"
+            mat-icon-button
+            (click)="clearModels()"
+            matTooltip="Remove all loaded models."
+            matTooltipShowDelay="1000"
+            matTooltipPosition="below"
+          >
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
+        </div>
+
+        <div class="fit-model-list">
+          <mat-selection-list [multiple]="false" (selectionChange)="onListSelectionChanged($event)">
+            <mat-list-option *ngFor="let name of fitModelNames; let i = index" [value]=name
+                             [selected]="i===selectedModelIndex">
+              <span class="list-option">{{name}}</span>
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
       </div>
 
-      <div class="fit-model-list">
-        <mat-selection-list [multiple]="false" (selectionChange)="onListSelectionChanged($event)">
-          <mat-list-option *ngFor="let name of fitModelNames; let i = index" [value]=name
-                           [selected]="i===selectedModelIndex">
-            <span class="list-option">{{name}}</span>
-          </mat-list-option>
-        </mat-selection-list>
+      <div class="browse-row">
+        <div class="spacer"></div>
+        <app-browse-index
+          [index]="selectedModelIndex"
+          [min]="0"
+          [max]="modelNum"
+          [add]="1"
+          (indexChange)="selectModel($event)"
+        ></app-browse-index>
       </div>
 
     </div>

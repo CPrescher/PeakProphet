@@ -1,18 +1,23 @@
-<button
-  mat-button
-  data-test="decrease-button"
-  (click)="decreaseIndex()"
-  [disabled]="index<=min">
-  <
-</button>
-<span
-  data-test="peak-index"
-  class="not-selectable"
->{{index+add}}</span>
-<button
-  mat-button
-  data-test="increase-button"
-  (click)="increaseIndex()"
-  [disabled]="index>=max-1">
-  >
-</button>
+<div class="container">
+  <button
+    mat-icon-button
+    class="medium-icon-button"
+    data-test="decrease-button"
+    (click)="decreaseIndex()"
+    [disabled]="index<=min">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <span
+    data-test="peak-index"
+    class="not-selectable"
+  >{{index + add}}</span>
+  <button
+    mat-icon-button
+    class="medium-icon-button"
+    data-test="increase-button"
+    (click)="increaseIndex()"
+    [disabled]="index>=max-1">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+
