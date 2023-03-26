@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BrowseIndexComponent } from './browse-index.component';
+import {BrowseIndexComponent} from './browse-index.component';
+import {MatIconModule} from "@angular/material/icon";
 
 describe('BrowseIndexComponent', () => {
   let component: BrowseIndexComponent;
@@ -8,9 +9,10 @@ describe('BrowseIndexComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BrowseIndexComponent ]
+      declarations: [BrowseIndexComponent],
+      imports: [MatIconModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(BrowseIndexComponent);
     component = fixture.componentInstance;
