@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-data-control',
@@ -11,6 +12,8 @@ export class DataControlComponent {
 
   public modelNum = 0;
   public selectedModelIndex = 0;
+
+  public disabledBrowser = false;
 
   public selectedFitModelName: string = '';
 
@@ -25,6 +28,10 @@ export class DataControlComponent {
         this.selectedModelIndex = index;
         this.modelNum = this.fitModelService.fitModels.length;
         this.selectedFitModelName = this.fitModelService.fitModels[index].name;
+        this.disabledBrowser = false;
+      } else {
+        this.selectedFitModelName = '';
+        this.disabledBrowser = true;
       }
     });
 
@@ -39,14 +46,21 @@ export class DataControlComponent {
 
   onFileSelected(event: any) {
     const files = event.target.files;
+    let readingFinished$: Observable<void> | undefined = undefined;
     for (let i = 0; i < files.length; i++) {
-      this.fitModelService.readData(files[i], i>0);
+      readingFinished$ = this.fitModelService.readData(files[i], i > 0);
+    }
+    if(readingFinished$) {
+      readingFinished$.subscribe(() => {
+        this.modelNum = this.fitModelService.fitModels.length;
+      })
     }
   }
 
   moveModelUp() {
     this.fitModelService.moveFitModelUp(this.selectedModelIndex);
   }
+
   moveModelDown() {
     this.fitModelService.moveFitModelDown(this.selectedModelIndex);
   }

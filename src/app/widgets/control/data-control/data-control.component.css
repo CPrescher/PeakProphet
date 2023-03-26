@@ -1,7 +1,26 @@
+.file-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.file-container > *:not(:last-child) {
+  margin-right: 6px;
+}
+
 mat-card {
   max-height: 350px;
   display: flex;
   flex-direction: column;
+}
+
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 .fit-model-list {
@@ -101,7 +120,7 @@ mat-card {
   justify-content: center;
   align-items: center;
   width: 24px;
-  margin: 0 3px;
+  margin: 3px;
 }
 
 .fit-button-container > *:not(:last-child) {
@@ -119,3 +138,12 @@ mat-card {
   align-items: center;
   margin: 2px 0;
 }
+
+.fit-model-name, .list-option {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: right;
+}
+

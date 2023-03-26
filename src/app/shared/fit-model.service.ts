@@ -5,7 +5,7 @@ import {createRandomPattern} from "./data/pattern-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, map, Subject} from "rxjs";
+import {BehaviorSubject, fromEvent, map, Observable, Subject, tap} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -53,7 +53,6 @@ export class FitModelService {
       this.addFitModel(`Fit Model ${i}`, patterns[i]);
     }
 
-    // this.clearFitModels();
     this._setupObservables();
   }
 
@@ -137,7 +136,7 @@ export class FitModelService {
    * @param file - file to read
    * @param silent - if true, the FitModel will not be selected and no signals sent to sub-services
    */
-  readData(file: File, silent = false) {
+  readData(file: File, silent = false): Observable<void> {
     const fileReader = new FileReader();
     fileReader.onload = (_) => {
       const data = fileReader.result;
@@ -148,6 +147,11 @@ export class FitModelService {
       }
     }
     fileReader.readAsText(file);
+    return fromEvent(fileReader, 'loadend').pipe(
+      tap((ev) => {
+        console.log(ev);
+      }),
+      map(() => {}));
   }
 
   /**
