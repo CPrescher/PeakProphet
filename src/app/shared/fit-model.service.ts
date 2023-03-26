@@ -108,14 +108,14 @@ export class FitModelService {
    */
   private updateSubServices(fitModel: FitModel) {
     this.patternService.setPattern(fitModel.pattern);
-    this.peakService.setPeaks(fitModel.peaks);
     this.bkgService.setBkgModel(fitModel.background);
+    this.peakService.setPeaks(fitModel.peaks);
   }
 
   private clearSubServices() {
     this.patternService.clearPattern();
-    this.peakService.setPeaks([]);
     this.bkgService.clearBkgModel();
+    this.peakService.setPeaks([]);
   }
 
   /**

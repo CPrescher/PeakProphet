@@ -157,6 +157,7 @@ export class PlotComponent implements OnInit, AfterViewInit {
         }
         this.peakLines[i].setData(this.mainLine.x, y);
       }
+      this.updateSumLine();
     });
 
     this.peakService.selectedPeakIndex$.subscribe((index: number | undefined) => {
@@ -192,11 +193,11 @@ export class PlotComponent implements OnInit, AfterViewInit {
   }
 
   _initBkgLine(): void {
-    this.bkgLine = new LineItem("orange");
+    this.bkgLine = new LineItem("yellow");
     this.plot.addItem(this.bkgLine, this.peakGroup.root);
 
     this.bkgService.bkgModel$.subscribe((bkgModel: Model | undefined) => {
-      if (!bkgModel) {
+      if (bkgModel === undefined) {
         this.bkgLine.setData([], []);
         return;
       }
