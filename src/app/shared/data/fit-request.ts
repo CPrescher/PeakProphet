@@ -26,7 +26,7 @@ export class FitRequest {
     this.stopper$ = new Subject<void>();
   }
 
-  public fit(): [Observable<any>, Observable<any>, Subject<void>] {
+  public fit(): [Observable<any>, ReplaySubject<any>, Subject<void>] {
     const json_data = this._createJSONData(this.fitModel)
 
     this._connectToSocketIO();
@@ -103,9 +103,7 @@ export class FitRequest {
 
   private _createStopper() {
     this.stopper$.subscribe(() => {
-      console.log('stopping fit')
       this.sioClient.emit('stop')
-      this.sioClient.disconnect();
     });
   }
 }

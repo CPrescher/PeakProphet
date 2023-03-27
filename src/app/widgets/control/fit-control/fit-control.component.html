@@ -3,9 +3,9 @@
     <mat-card-title>Fit</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-<!--    <mat-list class="fit-output-list">-->
-<!--      <app-progress-item *ngFor="let item of fitProgressData.reverse()" [iter]="item.iter" [chi2]="item.chi2"></app-progress-item>-->
-<!--    </mat-list>-->
+    <!--    <mat-list class="fit-output-list">-->
+    <!--      <app-progress-item *ngFor="let item of fitProgressData.reverse()" [iter]="item.iter" [chi2]="item.chi2"></app-progress-item>-->
+    <!--    </mat-list>-->
 
     <div class="fit-output-list">
       <table mat-table [dataSource]="fitProgressData$">
@@ -28,11 +28,11 @@
     </div>
 
     <div class="control-row">
-      <app-progress-circle *ngIf="fitModelService.fitting"></app-progress-circle>
-      <div *ngIf="!fitModelService.fitting">
+      <app-progress-circle *ngIf="(selectedFitModel$ | async)?.fitting"></app-progress-circle>
+      <div *ngIf="!(selectedFitModel$ | async)?.fitting">
         <span [ngClass]="{
-          'green-dot': fitModelService.fitSuccess,
-          'red-dot': !fitModelService.fitSuccess
+          'green-dot': (selectedFitModel$ | async)?.fitSuccess,
+          'red-dot': !(selectedFitModel$ | async)?.fitSuccess
         }"></span>
       </div>
 
@@ -40,18 +40,19 @@
         mat-raised-button
         color="primary"
         (click)="fit()"
-        *ngIf = !fitModelService.fitting
-      >Start</button>
+        *ngIf="!(selectedFitModel$ | async)?.fitting"
+      >Start
+      </button>
       <button
         mat-raised-button
         color="warn"
         (click)="stopFit()"
-        *ngIf = fitModelService.fitting
-      >Stop</button>
+        *ngIf="(selectedFitModel$ | async)?.fitting"
+      >Stop
+      </button>
 
     </div>
-    <div class="fit-message">{{fitModelService.fitMessage}}</div>
-
+    <div class="fit-message">{{(selectedFitModel$ | async)?.fitMessage}}</div>
 
 
   </mat-card-content>

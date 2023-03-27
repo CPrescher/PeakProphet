@@ -5,11 +5,10 @@ import {createRandomPattern} from "./data/pattern-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, fromEvent, map, Observable, Subject, tap} from "rxjs";
+import {BehaviorSubject, fromEvent, map, Observable, Subject, tap, withLatestFrom} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
-import {updateFitModel} from "./models/updating";
 
 
 /**
@@ -22,10 +21,6 @@ import {updateFitModel} from "./models/updating";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
-
-  public fitting = false;
-  public fitSuccess = false;
-  public fitMessage = ""
 
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
@@ -160,30 +155,26 @@ export class FitModelService {
    * @returns a Subject that can be used to stop the fitting process
    */
   fitData(): Subject<void> | undefined {
-    const selectedIndex = this.selectedIndexSubject.value;
-    if (selectedIndex !== undefined) {
-      this.fitting = true;
-      const fitModel = this.fitModels[selectedIndex];
+    const fitIndex = this.selectedIndexSubject.value;
+    if (fitIndex !== undefined) {
+      const fitModel = this.fitModels[fitIndex];
 
       let [result$, progress$, stopper$] = fitModel.fit();
 
-      progress$.subscribe((payload: any) => {
-        updateFitModel(this.fitModels[selectedIndex], payload.result);
-        this.selectFitModel(selectedIndex);
-        this.fitProgressSubject.next(payload);
-      })
+      progress$.pipe(
+        withLatestFrom(this.selectedIndex$),
+      ).subscribe(([_, selectedIndex]) => {
+        if (selectedIndex === fitIndex) {
+          this.updateSubServices(fitModel)
+        }
+      });
 
-      result$.subscribe((payload) => {
-        updateFitModel(this.fitModels[selectedIndex], payload.result)
-        this.selectFitModel(selectedIndex);
-        this.fitting = false;
-        this.fitMessage = payload.message;
-        this.fitSuccess = payload.success;
-        this.fitProgressSubject.next({
-          iter: 'final',
-          chi2: payload.chi2,
-          red_chi2: payload.red_chi2,
-        });
+      result$.pipe(
+        withLatestFrom(this.selectedIndex$),
+      ).subscribe(([_, selectedIndex]) => {
+        if (selectedIndex === fitIndex) {
+          this.updateSubServices(fitModel)
+        }
       });
 
       return stopper$;
