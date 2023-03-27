@@ -1,16 +1,26 @@
 import {Pattern} from "./pattern";
 import {ClickModel, GuessModel} from "../models/model.interface";
+import {FitRequest} from "./fit-request";
+import {Observable, Subject} from "rxjs";
 
 /**
  * A FitModel is a Pattern with a list of peaks and a background model.
  */
 export class FitModel {
+
+  public fitRequest: FitRequest;
+
   constructor(
     public name: string,
     public pattern: Pattern,
     public peaks: ClickModel[],
-    public background: GuessModel
+    public background: GuessModel,
   ) {
+    this.fitRequest = new FitRequest(this);
+  }
+
+  public fit(): [Observable<any>, Observable<any>, Subject<void>]  {
+    return this.fitRequest.fit()
   }
 }
 

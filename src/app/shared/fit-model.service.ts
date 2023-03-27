@@ -9,7 +9,6 @@ import {BehaviorSubject, fromEvent, map, Observable, Subject, tap} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
-import {FitService} from "./fit.service";
 import {updateFitModel} from "./models/updating";
 
 
@@ -23,9 +22,11 @@ import {updateFitModel} from "./models/updating";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
+
   public fitting = false;
   public fitSuccess = false;
   public fitMessage = ""
+
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
   public fitModels$ = this.fitModelsSubject.asObservable();
 
@@ -41,8 +42,7 @@ export class FitModelService {
   constructor(
     private patternService: PatternService,
     private peakService: PeakService,
-    private bkgService: BkgService,
-    private fitService: FitService
+    private bkgService: BkgService
   ) {
     const patterns = [
       createRandomPattern("Random Pattern 1", 1, [0, 10]),
@@ -151,7 +151,8 @@ export class FitModelService {
       tap((ev) => {
         console.log(ev);
       }),
-      map(() => {}));
+      map(() => {
+      }));
   }
 
   /**
@@ -162,7 +163,9 @@ export class FitModelService {
     const selectedIndex = this.selectedIndexSubject.value;
     if (selectedIndex !== undefined) {
       this.fitting = true;
-      let [result$, progress$, stopper$] = this.fitService.fitModel(this.fitModels[selectedIndex]);
+      const fitModel = this.fitModels[selectedIndex];
+
+      let [result$, progress$, stopper$] = fitModel.fit();
 
       progress$.subscribe((payload: any) => {
         updateFitModel(this.fitModels[selectedIndex], payload.result);
