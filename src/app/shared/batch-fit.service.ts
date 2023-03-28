@@ -9,6 +9,9 @@ import {updateFitModel} from "./models/updating";
 export class BatchFitService {
   public stop = false;
   public fitting = false;
+
+  public propagateModels = true;
+
   private stopper$: Subject<void> = new Subject<void>();
 
   constructor(private fitModelService: FitModelService) {
@@ -28,7 +31,9 @@ export class BatchFitService {
         this.fitModelService.selectFitModel(index);
         index++;
         if (index < fitModels.length && !this.stop) {
-          updateFitModel(fitModels[index], payload.result)
+          if(this.propagateModels) {
+            updateFitModel(fitModels[index], payload.result)
+          }
           nextSubject.next(index);
         } else {
           this.fitting = false;

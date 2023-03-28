@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {BatchFitService} from "../../../shared/batch-fit.service";
 
 @Component({
@@ -7,9 +7,15 @@ import {BatchFitService} from "../../../shared/batch-fit.service";
   styleUrls: ['./batch-control.component.css']
 })
 export class BatchControlComponent {
+  startIndex = 1;
+  propagateModels = true;
 
   constructor(
     public batchFitService: BatchFitService,
-  ) { }
+  ) {
+  }
 
+  startIndexChange(ev: any) {
+    this.startIndex = Math.floor(ev.target.value);
+  }
 }
