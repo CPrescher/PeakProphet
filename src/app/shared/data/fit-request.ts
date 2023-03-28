@@ -16,7 +16,9 @@ import {isDevMode} from "@angular/core";
 export class FitRequest {
   public result$: Observable<any>;
   public progress$: ReplaySubject<any> = new ReplaySubject<any>(10);
-  public stopper$: Subject<void>;
+  private _requestProgress = true;
+  private _firstProgress = true;
+  public stopper$: Subject<void> = new Subject<void>();
 
   private sioClient: Socket;
   private sioDisconnect$: Observable<any>;
@@ -62,6 +64,8 @@ export class FitRequest {
   private _emitFitRequest(json_data: string) {
     this.sioConnect$.subscribe(() => {
       this.sioClient.emit('fit', json_data);
+      this._requestProgress = true;
+      this._firstProgress = true;
     });
   }
 
@@ -84,10 +88,12 @@ export class FitRequest {
   private _emitProgressRequest(json_data: string) {
     this.sioConnect$.subscribe(() => {
       interval(30).pipe(
+        filter(() => this._requestProgress || this._firstProgress),
         takeUntil(this.sioDisconnect$),
         takeUntil(this.result$),
       ).subscribe(() => {
         this.sioClient.emit('request_progress', json_data);
+        this._requestProgress = false;
       });
     });
   }
@@ -99,12 +105,21 @@ export class FitRequest {
       takeUntil(this.sioDisconnect$),
       takeUntil(this.result$),
       distinctUntilChanged((prev, current) => prev.iter === current.iter),
-    ).subscribe(this.progress$)
+    ).subscribe((payload) => {
+      this.progress$.next(payload);
+      this._requestProgress = true;
+      this._firstProgress = false;
+    });
   }
 
   private _createStopper() {
+    this.stopper$.complete();
+    this.stopper$ = new Subject<void>();
     this.stopper$.subscribe(() => {
-      this.sioClient.emit('stop')
+      this.sioClient.emit('stop');
+      this.sioClient.disconnect()
+      this.sioClient.close();
+      this._requestProgress = true;
     });
   }
 }

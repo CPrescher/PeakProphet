@@ -41,7 +41,9 @@ export class FitModel {
     })
 
     stopper$.subscribe(() => {
+      this.fitting = false;
       this.fitMessage = "Fit stopped by user";
+      this.fitSuccess = false
     })
 
     return [result$, progress$, stopper$]
