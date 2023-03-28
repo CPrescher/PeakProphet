@@ -1,9 +1,8 @@
 <mat-card class="mat-elevation-z24">
-  <mat-card-header>
-    <mat-card-title>Output</mat-card-title>
-  </mat-card-header>
   <mat-card-content>
-
-  <button mat-raised-button (click)="openDialog()">Peak Table</button>
+    <div class="button-row">
+      <button mat-raised-button (click)="saveCSV()">CSV</button>
+      <button mat-raised-button (click)="openTableDialog()">Table</button>
+    </div>
   </mat-card-content>
 </mat-card>
