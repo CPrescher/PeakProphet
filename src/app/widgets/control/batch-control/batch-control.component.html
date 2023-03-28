@@ -1,9 +1,21 @@
 <mat-card class="mat-elevation-z24">
-  <mat-card-header>
-    <mat-card-title>Batch</mat-card-title>
-  </mat-card-header>
   <mat-card-content>
-
-    <button mat-raised-button (click)="batchFit()">fit all</button>
+    <div class="button-row">
+      <div class="spacer"></div>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="batchFitService.batchFit()"
+        *ngIf="!batchFitService.fitting"
+      >Batch
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="batchFitService.stopBatchFit()"
+        *ngIf="batchFitService.fitting"
+      >Stop
+      </button>
+    </div>
   </mat-card-content>
 </mat-card>

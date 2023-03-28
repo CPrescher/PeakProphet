@@ -7,28 +7,41 @@ import {updateFitModel} from "./models/updating";
   providedIn: 'root'
 })
 export class BatchFitService {
+  public stop = false;
+  public fitting = false;
+  private stopper$: Subject<void> = new Subject<void>();
 
   constructor(private fitModelService: FitModelService) {
   }
 
-  public batchFit() {
+  public batchFit(startIndex: number = 0) {
+    this.stop = false;
     const fitModels = this.fitModelService.fitModels;
 
     let nextSubject = new Subject<number>();
 
     nextSubject.subscribe((index) => {
-      let [result$, _, __] = fitModels[index].fit();
+      let [result$, _, stopper$] = fitModels[index].fit();
+      this.stopper$ = stopper$;
 
       result$.subscribe((payload) => {
         this.fitModelService.selectFitModel(index);
         index++;
-        if (index < fitModels.length) {
+        if (index < fitModels.length && !this.stop) {
           updateFitModel(fitModels[index], payload.result)
           nextSubject.next(index);
+        } else {
+          this.fitting = false;
         }
       })
     })
 
-    nextSubject.next(0);
+    this.fitting = true;
+    nextSubject.next(startIndex);
+  }
+
+  public stopBatchFit() {
+    this.stop = true;
+    this.stopper$.next();
   }
 }

@@ -9,12 +9,7 @@ import {BatchFitService} from "../../../shared/batch-fit.service";
 export class BatchControlComponent {
 
   constructor(
-    private batchFitService: BatchFitService,
+    public batchFitService: BatchFitService,
   ) { }
-
-  public batchFit() {
-    console.log('batchFit');
-    this.batchFitService.batchFit();
-  }
 
 }
