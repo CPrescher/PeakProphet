@@ -1,5 +1,5 @@
 import {GaussianModel} from "./peaks/gaussian.model";
-import {updateFitModel, updateModel} from "./updating";
+import {updateFitModel, updateFitModelParameters, updateModel} from "./updating";
 import {LorentzianModel} from "./peaks/lorentzian.model";
 import {PseudoVoigtModel} from "./peaks/pseudo-voigt.model";
 import {LinearModel} from "./bkg/linear.model";
@@ -8,7 +8,7 @@ import {PolynomialModel} from "./bkg/polynomial.model";
 import {FitModel} from "../data/fit-model";
 import {Pattern} from "../data/pattern";
 
-describe("Updating Models from backend JSON responses", () => {
+describe("Updating Model Parameters from backend JSON responses", () => {
   it("should update a gaussian model", () => {
     let peak = new GaussianModel();
     const peak_update_json = {
@@ -350,7 +350,7 @@ describe("update a FitModel from backend JSON response", () => {
       new LinearModel(),
     );
 
-    updateFitModel(fitModel, updateJson);
+    updateFitModelParameters(fitModel, updateJson);
     expect(fitModel.background.getParameter("intercept").value).toEqual(6.2);
     expect(fitModel.background.getParameter("slope").value).toEqual(-0.12);
     expect(fitModel.peaks[0].getParameter("center").value).toEqual(36.2);
@@ -420,7 +420,7 @@ describe("update a FitModel from backend JSON response", () => {
       [new GaussianModel(), new GaussianModel(), new GaussianModel()],
       new LinearModel(),
     );
-    expect(() => updateFitModel(fitModel, updateJson)).toThrowError("Number of peaks does not match");
+    expect(() => updateFitModelParameters(fitModel, updateJson)).toThrowError("Number of peaks does not match");
     expect(fitModel.background.getParameter("intercept").value).not.toBe(6.2); // check that the model was not updated
   });
 
@@ -491,7 +491,7 @@ describe("update a FitModel from backend JSON response", () => {
       [new GaussianModel(), new GaussianModel()],
       new LinearModel(),
     );
-    updateFitModel(fitModel, updateJson);
+    updateFitModelParameters(fitModel, updateJson);
     expect(fitModel.background.getParameter("intercept").error).toEqual(0.1);
     expect(fitModel.background.getParameter("slope").error).toEqual(0.2);
     expect(fitModel.peaks[0].getParameter("center").error).toEqual(0.3);
@@ -506,3 +506,78 @@ describe("update a FitModel from backend JSON response", () => {
 
 });
 
+describe("updateFitModel", () => {
+  it("should update the fit model", () => {
+    const updateJson =
+      {
+        "background": {
+          "type": "linear",
+          "parameters": [
+            {
+              "name": "intercept",
+              "value": 2.2,
+            },
+            {
+              "name": "slope",
+              "value": -0.32,
+            }
+          ]
+        },
+        "peaks": [
+          {
+            "type": "Gaussian",
+            "parameters": [
+              {
+                "name": "center",
+                "value": 36.2,
+              },
+              {
+                "name": "fwhm",
+                "value": 1.6,
+              },
+              {
+                "name": "amplitude",
+                "value": 7,
+              }
+            ]
+          },
+          {
+            "type": "Lorentzian",
+            "parameters": [
+              {
+                "name": "center",
+                "value": 46.6,
+              },
+              {
+                "name": "fwhm",
+                "value": 1.9,
+              },
+              {
+                "name": "amplitude",
+                "value": 7,
+              }
+            ]
+          }
+        ],
+      }
+    let fitModel = new FitModel(
+      "lala",
+      new Pattern("lala", [1, 2, 3], [1, 2, 3]),
+      [],
+      new QuadraticModel(),
+    );
+    updateFitModel(fitModel, updateJson);
+    expect(fitModel.background.type).toEqual("linear");
+    expect(fitModel.background.getParameter("intercept").value).toEqual(2.2);
+    expect(fitModel.background.getParameter("slope").value).toEqual(-0.32);
+    expect(fitModel.peaks.length).toEqual(2);
+    expect(fitModel.peaks[0].type).toEqual("Gaussian");
+    expect(fitModel.peaks[0].getParameter("center").value).toEqual(36.2);
+    expect(fitModel.peaks[0].getParameter("fwhm").value).toEqual(1.6);
+    expect(fitModel.peaks[0].getParameter("amplitude").value).toEqual(7);
+    expect(fitModel.peaks[1].type).toEqual("Lorentzian");
+    expect(fitModel.peaks[1].getParameter("center").value).toEqual(46.6);
+    expect(fitModel.peaks[1].getParameter("fwhm").value).toEqual(1.9);
+    expect(fitModel.peaks[1].getParameter("amplitude").value).toEqual(7);
+  });
+})

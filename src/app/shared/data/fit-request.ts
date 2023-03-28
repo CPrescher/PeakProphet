@@ -75,7 +75,8 @@ export class FitRequest {
       complete: () => {
         setTimeout(() => {
           this.sioClient.disconnect();
-        }, 200);
+          this.sioClient.close();
+        }, 500);
       }
     });
   }

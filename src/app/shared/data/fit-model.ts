@@ -2,7 +2,7 @@ import {Pattern} from "./pattern";
 import {ClickModel, GuessModel} from "../models/model.interface";
 import {FitRequest} from "./fit-request";
 import {Observable, Subject} from "rxjs";
-import {updateFitModel} from "../models/updating";
+import {updateFitModelParameters} from "../models/updating";
 
 /**
  * A FitModel is a Pattern with a list of peaks and a background model.
@@ -30,11 +30,11 @@ export class FitModel {
     let [result$, progress$, stopper$] = this.fitRequest.fit()
 
     progress$.subscribe((payload) => {
-      updateFitModel(this, payload.result);
+      updateFitModelParameters(this, payload.result);
     });
 
     result$.subscribe((payload) => {
-      updateFitModel(this, payload.result);
+      updateFitModelParameters(this, payload.result);
       this.fitting = false;
       this.fitMessage = payload.message;
       this.fitSuccess = payload.success;

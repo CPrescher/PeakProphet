@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {PatternService} from "./pattern.service";
 import {FitModel} from "./data/fit-model";
-import {createRandomPattern} from "./data/pattern-generation";
+import {createLinearChangingPeakPatterns} from "./data/pattern-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
@@ -39,14 +39,11 @@ export class FitModelService {
     private peakService: PeakService,
     private bkgService: BkgService
   ) {
-    const patterns = [
-      createRandomPattern("Random Pattern 1", 1, [0, 10]),
-      createRandomPattern("Random Pattern 2", 2, [0, 10]),
-      createRandomPattern("Random Pattern 3", 3, [0, 10]),
-    ];
+    const patterns = createLinearChangingPeakPatterns('gold ', 4, 100, [0, 10])
     for (let i = 0; i < patterns.length; i++) {
-      this.addFitModel(`Fit Model ${i}`, patterns[i]);
+      this.addFitModel(`Fit Model ${i+1}`, patterns[i]);
     }
+    this.selectFitModel(0);
 
     this._setupObservables();
   }

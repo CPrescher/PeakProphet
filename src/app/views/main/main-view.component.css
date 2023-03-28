@@ -20,8 +20,12 @@
   padding: 24px;
 }
 
-.left-content {
+.left-content, .right-content {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
   width: 250px;
+  min-width: 250px;
 }
 
 .left-content > *:not(:last-child), .right-content-peaks > :not(:last-child) {
@@ -32,14 +36,6 @@
 .central-content {
   flex: 1;
   margin: 0 24px;
-}
-
-.right-content {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  width: 250px;
-  min-width: 250px;
 }
 
 .spacer {

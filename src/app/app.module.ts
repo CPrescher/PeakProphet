@@ -20,6 +20,7 @@ import {FitControlComponent} from './widgets/control/fit-control/fit-control.com
 import {ProgressCircleComponent} from './widgets/inline/progress-circle/progress-circle.component';
 import {OutputControlComponent} from './widgets/control/output-control/output-control.component';
 import {OutputTableComponent} from './widgets/dialog/output-table/output-table.component';
+import { BatchControlComponent } from './widgets/control/batch-control/batch-control.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {OutputTableComponent} from './widgets/dialog/output-table/output-table.c
     ProgressCircleComponent,
     OutputControlComponent,
     OutputTableComponent,
+    BatchControlComponent,
   ],
   imports: [
     BrowserModule,

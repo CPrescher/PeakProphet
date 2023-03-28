@@ -13,6 +13,8 @@
       <div class="left-content">
         <app-data-control></app-data-control>
         <app-fit-control *ngIf="hasData$ | async"></app-fit-control>
+        <app-batch-control *ngIf="hasData$ | async"></app-batch-control>
+        <div class="spacer"></div>
         <app-output-control *ngIf="hasData$ | async"></app-output-control>
       </div>
       <div class="central-content">
