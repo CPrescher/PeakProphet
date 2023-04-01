@@ -14,8 +14,12 @@ import {io, Socket} from "socket.io-client";
 import {isDevMode} from "@angular/core";
 
 export class FitRequest {
+
+  private resultSubject: Subject<any> = new Subject<any>();
   public result$: Observable<any>;
-  public progress$: ReplaySubject<any> = new ReplaySubject<any>(10);
+
+  private progressSubject: ReplaySubject<any> = new ReplaySubject<any>(10);
+  public progress$: Observable<any> = this.progressSubject.asObservable();
   private _requestProgress = true;
   private _firstProgress = true;
   public stopper$: Subject<void> = new Subject<void>();
@@ -28,14 +32,12 @@ export class FitRequest {
     this.stopper$ = new Subject<void>();
   }
 
-  public fit(): [Observable<any>, ReplaySubject<any>, Subject<void>] {
+  public fit(): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = this._createJSONData(this.fitModel)
 
     this._connectToSocketIO();
     this._emitFitRequest(json_data);
-    this._createResultObservable();
-    this._emitProgressRequest(json_data);
-    this._createProgressObservable();
+    this._emitProgressRequest();
     this._createStopper();
 
     return [this.result$, this.progress$, this.stopper$]
@@ -62,18 +64,21 @@ export class FitRequest {
   }
 
   private _emitFitRequest(json_data: string) {
+    this.resultSubject = new Subject<any>();
+    this.result$ = this.resultSubject.asObservable().pipe(
+      takeUntil(this.sioDisconnect$),
+      take(1),
+    )
+
     this.sioConnect$.subscribe(() => {
-      this.sioClient.emit('fit', json_data);
+      this.sioClient.emit('fit', json_data, (payload) => {
+        this.resultSubject.next(payload);
+        this.resultSubject.complete();
+      });
       this._requestProgress = true;
       this._firstProgress = true;
     });
-  }
 
-  private _createResultObservable() {
-    this.result$ = fromEvent(this.sioClient, 'result').pipe(
-      takeUntil(this.sioDisconnect$),
-      take(1),
-    );
 
     this.result$.subscribe({
       complete: () => {
@@ -85,30 +90,30 @@ export class FitRequest {
     });
   }
 
-  private _emitProgressRequest(json_data: string) {
+  private _emitProgressRequest() {
+    this.progressSubject.complete();
+    this.progressSubject = new ReplaySubject<any>(10)
+
+    this.progress$ = this.progressSubject.asObservable().pipe(
+      filter(payload => payload !== undefined),
+      distinctUntilChanged((prev, current) => prev.iter === current.iter),
+      takeUntil(this.sioDisconnect$),
+      takeUntil(this.result$),
+    )
+
     this.sioConnect$.subscribe(() => {
       interval(30).pipe(
         filter(() => this._requestProgress || this._firstProgress),
         takeUntil(this.sioDisconnect$),
         takeUntil(this.result$),
       ).subscribe(() => {
-        this.sioClient.emit('request_progress', json_data);
+        this.sioClient.emit('request_progress', (payload) => {
+          this.progressSubject.next(payload);
+          this._requestProgress = true;
+          this._firstProgress = false;
+        });
         this._requestProgress = false;
       });
-    });
-  }
-
-  private _createProgressObservable() {
-    this.progress$ = new ReplaySubject<any>(10);
-    fromEvent(this.sioClient, 'progress').pipe(
-      filter(payload => payload !== undefined),
-      takeUntil(this.sioDisconnect$),
-      takeUntil(this.result$),
-      distinctUntilChanged((prev, current) => prev.iter === current.iter),
-    ).subscribe((payload) => {
-      this.progress$.next(payload);
-      this._requestProgress = true;
-      this._firstProgress = false;
     });
   }
 
