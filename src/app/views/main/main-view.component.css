@@ -10,6 +10,8 @@
   z-index: 1;
   flex-grow: 0;
   flex-shrink: 0;
+  font-size: 28px;
+  text-align: right;
 }
 
 .content {
