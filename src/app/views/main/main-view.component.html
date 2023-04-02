@@ -4,32 +4,39 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <mat-toolbar class="toolbar mat-elevation-z10" color="primary">
-<!--      <button mat-icon-button (click)="sidenav.toggle()">-->
-<!--        <mat-icon>menu</mat-icon>-->
-<!--      </button>-->
       <span class="spacer"></span>
       <span class="app-title">Peak Prophet</span>
+      <img class="logo" src="assets/logo.svg" alt="logo">
     </mat-toolbar>
-    <main class="content">
-      <div class="left-content">
-        <app-data-control></app-data-control>
-        <app-fit-control *ngIf="hasData$ | async"></app-fit-control>
-        <app-batch-control *ngIf="hasData$ | async"></app-batch-control>
-        <div class="spacer"></div>
-        <app-output-control *ngIf="hasData$ | async"></app-output-control>
-      </div>
-      <div class="central-content">
-        <app-plot></app-plot>
-      </div>
-      <div class="right-content" >
-        <div *ngIf="hasData$ | async" class="right-content-peaks">
-          <app-peak-control></app-peak-control>
-          <app-peak-item></app-peak-item>
-          <app-bkg-control></app-bkg-control>
+    <main>
+      <div class="content">
+        <div class="left-content">
+          <app-data-control></app-data-control>
+          <app-fit-control *ngIf="hasData$ | async"></app-fit-control>
+          <app-batch-control *ngIf="hasData$ | async"></app-batch-control>
+          <div class="spacer"></div>
+          <app-output-control *ngIf="hasData$ | async"></app-output-control>
         </div>
-        <div class="spacer"></div>
-        <app-mouse-position></app-mouse-position>
+        <div class="central-content">
+          <app-plot></app-plot>
+        </div>
+        <div class="right-content">
+          <div *ngIf="hasData$ | async" class="right-content-peaks">
+            <app-peak-control></app-peak-control>
+            <app-peak-item></app-peak-item>
+            <app-bkg-control></app-bkg-control>
+          </div>
+          <div class="spacer"></div>
+          <app-mouse-position></app-mouse-position>
+        </div>
+
       </div>
+      <mat-toolbar class="footer mat-elevation-z5">
+        <span class="spacer"></span>
+        <span>
+        version: {{version}}
+      </span>
+      </mat-toolbar>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
