@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FitModelService} from "./fit-model.service";
-import {skip, Subject, takeUntil, takeWhile} from "rxjs";
+import {skip, Subject, Subscription, takeUntil, takeWhile} from "rxjs";
 import {updateFitModel} from "./models/updating";
 
 @Injectable({
@@ -11,23 +11,32 @@ export class BatchFitService {
   public fitting = false;
 
   public propagateModels = true;
+  public startFromSelected = true;
 
   private stopper$: Subject<void> = new Subject<void>();
 
+  public selectedIndex = 0;
+  private selectedIndexSubscription = new Subscription();
+
+
   constructor(private fitModelService: FitModelService) {
+    this.selectedIndexSubscription = this.fitModelService.selectedIndex$
+      .subscribe((index) => {
+        this.selectedIndex = index !== undefined ? index : 0;
+      })
   }
 
-  public batchFit(startIndex: number = 0) {
+  public batchFit() {
     this.stop = false;
     const fitModels = this.fitModelService.fitModels;
+    let startIndex = this.startFromSelected ? this.selectedIndex : 0;
 
-    let nextSubject = new Subject<number>();
+    let nextIndexSubject = new Subject<number>();
 
-    nextSubject.subscribe((index) => {
+    nextIndexSubject.subscribe((index) => {
       let [result$, progress$, stopper$] = fitModels[index].fit();
       this.stopper$ = stopper$;
 
-      // let showProgressTimer = timer(1000).subscribe(() => {
       progress$.pipe(
         skip(10),
         takeUntil(result$),
@@ -45,7 +54,7 @@ export class BatchFitService {
             updateFitModel(fitModels[index], payload.result)
           }
           // showProgressTimer.unsubscribe();
-          nextSubject.next(index);
+          nextIndexSubject.next(index);
         } else {
           this.fitting = false;
         }
@@ -53,7 +62,7 @@ export class BatchFitService {
     })
 
     this.fitting = true;
-    nextSubject.next(startIndex);
+    nextIndexSubject.next(startIndex);
   }
 
   public stopBatchFit() {

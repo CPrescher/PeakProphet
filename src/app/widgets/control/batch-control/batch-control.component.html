@@ -1,11 +1,26 @@
 <mat-card class="mat-elevation-z24">
   <mat-card-content class="content">
-    <div class="button-row">
-      <div class="spacer"></div>
+    <div class="option-column">
+      <mat-checkbox
+        [(ngModel)]="batchFitService.propagateModels"
+        matTooltip="Propagate peaks and background models to next datasets"
+        matTooltipShowDelay="500"
+        matTooltipPosition="above"
+      >propagate
+      </mat-checkbox>
+      <mat-checkbox
+        [(ngModel)]="batchFitService.startFromSelected"
+        matTooltip="Start fitting from selected dataset"
+        matTooltipShowDelay="500"
+        matTooltipPosition="above"
+      >from selected
+      </mat-checkbox>
+    </div>
+    <div class="button-column">
       <button
         mat-raised-button
         color="primary"
-        (click)="batchFitService.batchFit(startIndex-1)"
+        (click)="batchFitService.batchFit()"
         *ngIf="!batchFitService.fitting"
       >Batch
       </button>
@@ -17,23 +32,6 @@
       >Stop
       </button>
     </div>
-    <div class="option-row">
-      <mat-checkbox
-        [(ngModel)]="batchFitService.propagateModels"
-        matTooltip="Propagate peaks and background models to next datasets"
-        matTooltipShowDelay="500"
-        matTooltipPosition="above"
-      >propagate
-      </mat-checkbox>
-      <mat-form-field floatLabel="auto" >
-        <mat-label>Start Index</mat-label>
-        <input
-          matInput
-          numbersOnly
-          class="example-right-align"
-          (change)="startIndexChange($event)"
-          [value]="startIndex.toString() | number">
-      </mat-form-field>
-    </div>
+
   </mat-card-content>
 </mat-card>

@@ -1,18 +1,17 @@
 .content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: stretch;
-  height: 100%;
 }
 
 .content > *:not(:last-child) {
   margin-bottom: 12px;
 }
 
-.button-row {
+.button-column {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
@@ -21,14 +20,14 @@
   flex: 1 1 auto;
 }
 
-.option-row {
+.option-column {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.option-row > *:not(:last-child) {
+.option-column > *:not(:last-child) {
   margin-right: 5px;
 }
 
