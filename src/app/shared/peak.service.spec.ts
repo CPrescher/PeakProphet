@@ -74,7 +74,7 @@ describe('ModelService', () => {
     });
   });
 
-  it('send undfined when clearing peaks', (done: DoneFn) => {
+  it('send undefined when clearing peaks', (done: DoneFn) => {
     service.clearPeaks();
     service.selectedPeak$.subscribe(peak => {
       expect(peak).toBe(undefined);

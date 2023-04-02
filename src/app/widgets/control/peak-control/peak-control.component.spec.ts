@@ -16,7 +16,7 @@ describe('PeakControlComponent', () => {
   let component: PeakControlComponent;
   let fixture: ComponentFixture<PeakControlComponent>;
   let loader: HarnessLoader;
-  let modelService: PeakService;
+  let peakService: PeakService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,9 +25,9 @@ describe('PeakControlComponent', () => {
     })
       .compileComponents();
 
-    modelService = TestBed.inject(PeakService);
+    peakService = TestBed.inject(PeakService);
 
-    modelService.peakTypes = {
+    peakService.peakTypes = {
       "DummyBear": GaussianModel,
       "Gaussian": GaussianModel,
       "Lorentzian": LorentzianModel,
@@ -39,7 +39,8 @@ describe('PeakControlComponent', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
     fixture.detectChanges();
 
-    spyOn(modelService, "addPeak").and.callFake(() => {});
+    spyOn(peakService, "addPeak").and.callFake(() => {});
+    spyOn(peakService, "clickDefinePeak").and.callFake(() => {});
 
   });
 
@@ -62,6 +63,7 @@ describe('PeakControlComponent', () => {
   it('calls service add Peak function upon clicking add peak button', async () => {
     const addPeakButton = await loader.getHarness<MatButtonHarness>(MatButtonHarness);
     await addPeakButton.click();
-    expect(modelService.addPeak).toHaveBeenCalled();
+    expect(peakService.addPeak).toHaveBeenCalled();
+    expect(peakService.clickDefinePeak).toHaveBeenCalled();
   });
 });

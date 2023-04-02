@@ -43,14 +43,6 @@ export class PeakService {
     private mousePositionService: MousePositionService,
     private bkgService: BkgService,
   ) {
-    this.peaks = [
-      new GaussianModel(),
-      new LorentzianModel(),
-    ]
-
-    this.selectedPeakIndexSubject.next(1);
-    this.selectedPeakSubject.next(this.peaks[1]);
-    this.peaksSubject.next(this.peaks);
   }
 
   selectPeak(index: number) {
@@ -106,7 +98,7 @@ export class PeakService {
   removePeak(index?: number | undefined) {
     if (index === undefined) {
       index = this.selectedPeakIndexSubject.getValue();
-      if(index === undefined) {
+      if (index === undefined) {
         return;
       }
     }
@@ -149,9 +141,9 @@ export class PeakService {
 
     const mouseClickObservable =
       this.mousePositionService.patternClickPosition$.pipe(
-      withLatestFrom(this.bkgService.bkgModel$),
-      take(this.peaks[index].clickSteps)
-    );
+        withLatestFrom(this.bkgService.bkgModel$),
+        take(this.peaks[index].clickSteps)
+      );
 
     this.mousePositionSubscription =
       this.mousePositionService.patternMousePosition$.pipe(
@@ -167,14 +159,14 @@ export class PeakService {
       });
 
     this.mouseClickSubscription = mouseClickObservable.subscribe(([mousePosition, bkgModel]) => {
-        const x = mousePosition.x;
-        const y = mousePosition.y;
-        const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
+      const x = mousePosition.x;
+      const y = mousePosition.y;
+      const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
 
-        this.peaks[index].defineModel(x, y - y_bkg);
-        this.peaks[index].currentStep++;
-        this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
-      });
+      this.peaks[index].defineModel(x, y - y_bkg);
+      this.peaks[index].currentStep++;
+      this.updatedPeakSubject.next({"index": index, "model": this.peaks[index]});
+    });
   }
 
 
