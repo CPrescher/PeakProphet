@@ -9,9 +9,15 @@
 
 
 .table-container {
+  flex: 1;
   height: 100%;
   width: 100%;
   overflow: auto;
+}
+
+.mdc-dialog__content {
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -54,4 +60,3 @@
 .mdc-data-table__cell {
   font-size: 12px;
 }
-
