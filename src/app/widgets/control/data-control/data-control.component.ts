@@ -1,14 +1,14 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-data-control',
   templateUrl: './data-control.component.html',
   styleUrls: ['./data-control.component.css']
 })
-export class DataControlComponent {
+export class DataControlComponent implements OnDestroy {
 
   public modelNum = 0;
   public selectedModelIndex = 0;
@@ -19,11 +19,14 @@ export class DataControlComponent {
 
   public fitModelNames: string[] = [];
 
+  private _fitModelSubscription = new Subscription();
+  private _selectedIndexSubscription = new Subscription();
+
   constructor(private fitModelService: FitModelService) {
 
     this.modelNum = this.fitModelService.fitModels.length;
 
-    fitModelService.selectedIndex$.subscribe((index: number | undefined) => {
+    this._selectedIndexSubscription = fitModelService.selectedIndex$.subscribe((index: number | undefined) => {
       if (index !== undefined) {
         this.selectedModelIndex = index;
         this.modelNum = this.fitModelService.fitModels.length;
@@ -35,9 +38,14 @@ export class DataControlComponent {
       }
     });
 
-    fitModelService.fitModels$.subscribe((fitModels) => {
+    this._fitModelSubscription = fitModelService.fitModels$.subscribe((fitModels) => {
       this.fitModelNames = fitModels.map(fitModel => fitModel.name);
     });
+  }
+
+  ngOnDestroy(): void {
+    this._fitModelSubscription.unsubscribe();
+    this._selectedIndexSubscription.unsubscribe();
   }
 
   selectModel(index: number) {

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {Subject, Subscription, take} from "rxjs";
 import {FitModel} from "../../../shared/data/fit-model";
@@ -15,13 +15,15 @@ export interface Progress {
   templateUrl: './fit-control.component.html',
   styleUrls: ['./fit-control.component.css']
 })
-export class FitControlComponent {
+export class FitControlComponent implements OnDestroy {
   public stopSubject: Subject<void> | undefined = undefined;
 
   public fitProgressData: Progress[] = []
   public fitProgressData$: Subject<Progress[]> = new Subject<Progress[]>()
 
-  private progressSubscription: Subscription = new Subscription();
+  private _progressSubscription: Subscription = new Subscription();
+  private _fitModelSubscription: Subscription = new Subscription();
+  private _fitModelSubscription2: Subscription = new Subscription();
 
   public displayedColumns = ['iter', 'chi2', 'red_chi2']
 
@@ -29,7 +31,7 @@ export class FitControlComponent {
 
   constructor(public fitModelService: FitModelService) {
 
-    fitModelService.selectedFitModel$.subscribe((fitModel) => {
+    this._fitModelSubscription = fitModelService.selectedFitModel$.subscribe((fitModel) => {
       if (fitModel === undefined) {
         return;
       }
@@ -44,7 +46,9 @@ export class FitControlComponent {
   fit(): void {
     this.fitProgressData = []
     this.stopSubject = this.fitModelService.fitData()
-    this.fitModelService.selectedFitModel$.pipe(
+    this._fitModelSubscription2.unsubscribe()
+
+    this._fitModelSubscription2 = this.fitModelService.selectedFitModel$.pipe(
       take(1)
     ).subscribe((fitModel) => {
       if (fitModel === undefined) {
@@ -55,8 +59,8 @@ export class FitControlComponent {
   }
 
   private _subscribeToProgress(fitModel: FitModel): void {
-    this.progressSubscription.unsubscribe()
-    this.progressSubscription = fitModel.fitRequest.progress$.subscribe((progress) => {
+    this._progressSubscription.unsubscribe()
+    this._progressSubscription = fitModel.fitRequest.progress$.subscribe((progress) => {
       this.fitProgressData.push({"iter": progress.iter, "chi2": progress.chi2, "red_chi2": progress.red_chi2})
       this.fitProgressData$.next(
         this.fitProgressData.sort((a, b) => (a.iter < b.iter ? -1 : 1)).reverse())
@@ -67,5 +71,11 @@ export class FitControlComponent {
     if (this.stopSubject) {
       this.stopSubject.next()
     }
+  }
+
+  ngOnDestroy(): void {
+    this._progressSubscription.unsubscribe()
+    this._fitModelSubscription.unsubscribe()
+    this._fitModelSubscription2.unsubscribe()
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BkgService} from "../../../shared/bkg.service";
 
 @Component({
@@ -6,21 +6,26 @@ import {BkgService} from "../../../shared/bkg.service";
   templateUrl: './bkg-control.component.html',
   styleUrls: ['./bkg-control.component.css']
 })
-export class BkgControlComponent implements OnInit {
+export class BkgControlComponent implements OnInit, OnDestroy {
 
   public selectedBkgType: string = 'linear';
   public bkgTypes;
+  private _bkgSubscription;
 
   constructor(private bkgService: BkgService) {
-    this.bkgTypes =Object.keys(this.bkgService.bkgTypes);
+    this.bkgTypes = Object.keys(this.bkgService.bkgTypes);
   }
 
   ngOnInit() {
-    this.bkgService.bkgModel$.subscribe((bkgModel) => {
+    this._bkgSubscription = this.bkgService.bkgModel$.subscribe((bkgModel) => {
       if (bkgModel) {
         this.selectedBkgType = bkgModel.type;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this._bkgSubscription.unsubscribe();
   }
 
   bkgSelected(bkgType: string): void {

@@ -60,13 +60,14 @@ export default class LineItem extends Item {
     // Create line
     const path = this.root.selectAll('path').data([this.XY], d => this.xScale(d.x));
 
-    path
+    path.exit().remove();
+
+    const pathEnter = path
       .enter()
       .append('path')
-      .merge(path)
-      .transition()
-      .duration(0)
 
+    pathEnter
+      .merge(path)
       .attr('fill', 'none')
       .attr('stroke', this.color)
       .attr('stroke-width', this.strokeWidth)
@@ -74,16 +75,15 @@ export default class LineItem extends Item {
       .attr('d', this.lineElement);
 
     if(this.dashed) {
-      path
+      pathEnter
         .attr('stroke-dasharray', '5,5')
         .attr('stroke-linecap', 'round');
     } else {
-      path
+      pathEnter
         .attr('stroke-dasharray', 'none')
         .attr('stroke-linecap', 'butt');
     }
 
-    // path.exit().remove();
   }
 
   override update(): void {

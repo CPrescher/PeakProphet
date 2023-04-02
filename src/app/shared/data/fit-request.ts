@@ -6,7 +6,7 @@ import {
   interval,
   Observable,
   ReplaySubject,
-  Subject,
+  Subject, Subscription,
   take,
   takeUntil
 } from "rxjs";
@@ -27,6 +27,13 @@ export class FitRequest {
   private sioClient: Socket;
   private sioDisconnect$: Observable<any>;
   private sioConnect$: Observable<any>;
+
+  private _connectSubscription = new Subscription();
+  private _disconnectSubscription = new Subscription();
+  private _resultSubscription = new Subscription();
+  private _progressRequestSubscription = new Subscription();
+  private _progressIntervalSubscription = new Subscription();
+  private _stopperSubscription = new Subscription();
 
   constructor(public fitModel: FitModel) {
     this.stopper$ = new Subject<void>();
@@ -70,23 +77,28 @@ export class FitRequest {
       take(1),
     )
 
-    this.sioConnect$.subscribe(() => {
+    this._connectSubscription = this.sioConnect$.subscribe(() => {
       this.sioClient.emit('fit', json_data, (payload) => {
         this.resultSubject.next(payload);
         this.resultSubject.complete();
       });
+
       this._requestProgress = true;
       this._firstProgress = true;
     });
 
 
-    this.result$.subscribe({
+    this._resultSubscription = this.result$.subscribe({
       complete: () => {
         setTimeout(() => {
           this.sioClient.disconnect();
           this.sioClient.close();
         }, 500);
       }
+    });
+
+    this._disconnectSubscription = this.sioDisconnect$.subscribe(() => {
+      this._resetSubscriptions();
     });
   }
 
@@ -101,8 +113,8 @@ export class FitRequest {
       takeUntil(this.result$),
     )
 
-    this.sioConnect$.subscribe(() => {
-      interval(30).pipe(
+    this._progressRequestSubscription = this.sioConnect$.subscribe(() => {
+      this._progressIntervalSubscription = interval(30).pipe(
         filter(() => this._requestProgress || this._firstProgress),
         takeUntil(this.sioDisconnect$),
         takeUntil(this.result$),
@@ -126,5 +138,13 @@ export class FitRequest {
       this.sioClient.close();
       this._requestProgress = true;
     });
+  }
+
+  private _resetSubscriptions() {
+    this._connectSubscription.unsubscribe();
+    this._disconnectSubscription.unsubscribe();
+    this._progressRequestSubscription.unsubscribe();
+    this._progressIntervalSubscription.unsubscribe();
+    this._stopperSubscription.unsubscribe();
   }
 }

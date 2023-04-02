@@ -1,7 +1,7 @@
 import {Pattern} from "./pattern";
 import {ClickModel, GuessModel} from "../models/model.interface";
 import {FitRequest} from "./fit-request";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {updateFitModelParameters} from "../models/updating";
 
 /**
@@ -15,6 +15,10 @@ export class FitModel {
   public fitSuccess: Boolean = false;
   public fitMessage: string = ""
 
+  private resultSubscription = new Subscription();
+  private progressSubscription = new Subscription();
+  private stopperSubscription = new Subscription();
+
   constructor(
     public name: string,
     public pattern: Pattern,
@@ -25,28 +29,37 @@ export class FitModel {
   }
 
   public fit(): [Observable<any>, Observable<any>, Subject<void>] {
+    this.resetSubscriptions();
 
     this.fitting = true;
     let [result$, progress$, stopper$] = this.fitRequest.fit()
 
-    progress$.subscribe((payload) => {
+    this.progressSubscription = progress$.subscribe((payload) => {
       updateFitModelParameters(this, payload.result);
     });
 
-    result$.subscribe((payload) => {
+    this.resultSubscription = result$.subscribe((payload) => {
       updateFitModelParameters(this, payload.result);
       this.fitting = false;
       this.fitMessage = payload.message;
       this.fitSuccess = payload.success;
+      this.resetSubscriptions();
     })
 
-    stopper$.subscribe(() => {
+    this.stopperSubscription = stopper$.subscribe(() => {
       this.fitting = false;
       this.fitMessage = "Fit stopped by user";
-      this.fitSuccess = false
+      this.fitSuccess = false;
+      this.resetSubscriptions();
     })
 
     return [result$, progress$, stopper$]
+  }
+
+  private resetSubscriptions() {
+    this.resultSubscription.unsubscribe();
+    this.progressSubscription.unsubscribe();
+    this.stopperSubscription.unsubscribe();
   }
 }
 
