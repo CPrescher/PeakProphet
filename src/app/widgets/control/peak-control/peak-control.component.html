@@ -12,7 +12,7 @@
       matTooltipShowDelay="500"
       matTooltipPosition="above"
     >+</button>
-    <mat-form-field class="peak-type">
+    <mat-form-field class="peak-type" color="accent">
       <mat-label>Peak Type</mat-label>
       <mat-select [(ngModel)]="selectedPeakType">
         <mat-option *ngFor="let peak of peakTypes" [value]="peak">

@@ -3,7 +3,7 @@
     <mat-card-title>Background</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <mat-form-field class="peak-type">
+    <mat-form-field class="peak-type" color="accent">
       <mat-label>Type</mat-label>
       <mat-select [(ngModel)]="selectedBkgType" (selectionChange)="bkgSelected($event.value)">
         <mat-option *ngFor="let bkgType of bkgTypes " [value]="bkgType">
