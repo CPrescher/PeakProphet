@@ -3,11 +3,19 @@ import PatternPlot from "../../../lib/plotting/pattern-plot";
 import LineItem from "../../../lib/plotting/items/lineItem";
 import {PatternService} from "../../../shared/pattern.service";
 import {PeakService} from "../../../shared/peak.service";
-import {Model} from "../../../shared/models/model.interface";
+import {ClickModel, Model} from "../../../shared/models/model.interface";
 import {Item} from "../../../lib/plotting/items/item";
 import {BkgService} from "../../../shared/bkg.service";
 import {MousePositionService} from "../../../shared/mouse-position.service";
-import {fromEvent, Subscription, auditTime} from "rxjs";
+import {
+  fromEvent,
+  Subscription,
+  auditTime,
+  combineLatest,
+  throttleTime,
+  debounceTime,
+  distinctUntilChanged
+} from "rxjs";
 
 @Component({
   selector: 'app-plot',
@@ -32,12 +40,11 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   private _mouseMoveSubscription = new Subscription();
   private _mouseClickSubscription = new Subscription();
   private _patternSubscription = new Subscription();
-  private _peaksSubscription = new Subscription();
   private _addedPeakSubscription = new Subscription();
   private _removedPeakSubscription = new Subscription();
   private _updatedPeakSubscription = new Subscription();
   private _selectedPeakSubscription = new Subscription();
-  private _bkgSubscription = new Subscription();
+  private _combinedUpdateSubscription = new Subscription();
 
   constructor(
     private patternService: PatternService,
@@ -59,6 +66,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     this._initBkgLine();
     this._initModelSumLine();
     this._initPeakLines();
+    this._initModelUpdateHandling();
   }
 
   private _initPlot(): void {
@@ -75,7 +83,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this._autoResize(), 50);
 
     this._windowResizeSubscription = fromEvent(window, 'resize').pipe(
-      auditTime(30)
+      throttleTime(30)
     ).subscribe(() => {
       const width = this.plotContainer.nativeElement.clientWidth;
       const height = this.plotContainer.nativeElement.clientHeight;
@@ -92,7 +100,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   _initMouseEvents(): void {
 
     this._mouseMoveSubscription = this.plot.mouseMoved.pipe(
-      auditTime(30)
+      throttleTime(30)
     ).subscribe(({x, y}) => {
       this.mouseService.updatePatternMousePosition(x, y);
     });
@@ -121,7 +129,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     this.plot.addItem(this.mainLine, this.dataGroup.root);
 
     this._patternSubscription = this.patternService.pattern$.pipe(
-      auditTime(30)
+      throttleTime(30, undefined, {leading: true, trailing: true})
     ).subscribe((pattern) => {
       if (pattern) {
         this.mainLine.setData(pattern.x, pattern.y);
@@ -144,7 +152,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this._updatedPeakSubscription = this.peakService.updatedPeak$.pipe(
-      auditTime(30)
+      throttleTime(30, undefined, {leading: true, trailing: true})
     ).subscribe((data: {
       "index": number,
       model: Model
@@ -157,26 +165,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateSumLine();
     });
 
-    this._peaksSubscription = this.peakService.peaks$.subscribe((peaks: Model[]) => {
-      const peakNum = peaks.length;
-      const modelLineNum = this.peakLines.length;
 
-      for (let i = this.peakLines.length; i < peaks.length; i++) {
-        this.addModelLine();
-      }
-      for (let i = peakNum; i < modelLineNum; i++) {
-        this.removeModelLine(0);
-      }
-
-      for (let i = 0; i < peaks.length; i++) {
-        let y = peaks[i].evaluate(this.mainLine.x);
-        if (this.bkgLine) {
-          y = y.map((v, i) => v + this.bkgLine.y[i]);
-        }
-        this.peakLines[i].setData(this.mainLine.x, y);
-      }
-      this.updateSumLine();
-    });
 
     this._selectedPeakSubscription = this.peakService.selectedPeakIndex$.subscribe(
       (index: number | undefined) => {
@@ -214,35 +203,50 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   _initBkgLine(): void {
     this.bkgLine = new LineItem("yellow");
     this.plot.addItem(this.bkgLine, this.peakGroup.root);
-
-    this._bkgSubscription = this.bkgService.bkgModel$.pipe(
-      auditTime(30)
-    ).subscribe((bkgModel: Model | undefined) => {
-      if (bkgModel === undefined) {
-        this.bkgLine.setData([], []);
-        return;
-      }
-      this.bkgLine.setData(this.mainLine.x, bkgModel.evaluate(this.mainLine.x));
-      this.updateSumLine();
-    });
   }
 
   _initModelSumLine(): void {
     this.sumLine = new LineItem("red", 2, false);
     this.plot.addItem(this.sumLine, this.modelSumGroup.root);
+
+  };
+
+  _initModelUpdateHandling(): void {
+    this._combinedUpdateSubscription = combineLatest(this.bkgService.bkgModel$, this.peakService.peaks$).pipe(
+      throttleTime(30, undefined, {leading: true, trailing: true})
+    ).subscribe(([bkgModel, peaks]) => {
+      if (bkgModel === undefined) {
+        this.bkgLine.setData([], []);
+        return;
+      }
+      this.bkgLine.setData(this.mainLine.x, bkgModel.evaluate(this.mainLine.x));
+      this.updatePeaks(peaks);
+      this.updateSumLine();
+    });
+  }
+
+  updatePeaks(peaks: ClickModel[]): void {
+    const peakNum = peaks.length;
+    const modelLineNum = this.peakLines.length;
+
+    for (let i = this.peakLines.length; i < peaks.length; i++) {
+      this.addModelLine();
+    }
+    for (let i = peakNum; i < modelLineNum; i++) {
+      this.removeModelLine(0);
+    }
+
+    for (let i = 0; i < peaks.length; i++) {
+      let y = peaks[i].evaluate(this.mainLine.x);
+      if (this.bkgLine) {
+        y = y.map((v, i) => v + this.bkgLine.y[i]);
+      }
+      this.peakLines[i].setData(this.mainLine.x, y);
+    }
   }
 
   updateSumLine(): void {
     const nPeakLines = this.peakLines.length;
-    if(this.bkgLine.y === undefined && this.mainLine.y === undefined){
-      return
-    } else if (this.bkgLine.y === undefined) {
-      const sum = this.mainLine.y.map((y, i) => {
-        return 100 - this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
-      })
-      this.sumLine.setData(this.mainLine.x, sum);
-      return
-    }
     const sum = this.bkgLine.y.map((y, i) => {
       return y * (1 - nPeakLines) + this.peakLines.reduce((sum, peak) => sum + peak.y[i], 0);
     });
@@ -256,9 +260,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     this._addedPeakSubscription.unsubscribe();
     this._removedPeakSubscription.unsubscribe();
     this._updatedPeakSubscription.unsubscribe();
-    this._peaksSubscription.unsubscribe();
     this._selectedPeakSubscription.unsubscribe();
-    this._bkgSubscription.unsubscribe();
     this._windowResizeSubscription.unsubscribe();
   }
 }
