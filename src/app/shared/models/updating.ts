@@ -31,6 +31,7 @@ export function updateModel(model: Model, newModelJson): Model {
     const new_parameter = newModelJson.parameters.find((p) => p.name === parameter.name);
     parameter.value = new_parameter.value;
     parameter.error = new_parameter.error;
+    parameter.vary = new_parameter.vary;
   });
   return model;
 }

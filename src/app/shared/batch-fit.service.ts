@@ -44,7 +44,6 @@ export class BatchFitService {
       ).subscribe(() => {
         this.fitModelService.selectFitModel(index);
       })
-      // })
 
       result$.subscribe((payload) => {
         this.fitModelService.selectFitModel(index);
