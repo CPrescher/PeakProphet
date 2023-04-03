@@ -59,6 +59,7 @@ function convertToCSV(fitModels: FitModel[]): string {
 
   let headerRow: string[] = [];
   headerRow.push('name');
+
   for (let i = 1; i < peakNum + 1; i++) {
     headerRow.push(`p${i}_type`);
     headerRow.push(`p${i}_center`);
@@ -69,6 +70,18 @@ function convertToCSV(fitModels: FitModel[]): string {
     headerRow.push(`p${i}_amplitude_error`);
     headerRow.push(`p${i}_fraction`);
     headerRow.push(`p${i}_fraction_error`);
+  }
+
+  headerRow.push('bkg_type');
+  let bkgParamsNum = 0;
+  fitModels.forEach((fitModel) => {
+    bkgParamsNum = fitModel.background.parameters.length > bkgParamsNum ?
+      fitModel.background.parameters.length : bkgParamsNum;
+  })
+
+  for (let i = 1; i < bkgParamsNum + 1; i++) {
+    headerRow.push(`bkg_p${i}`);
+    headerRow.push(`bkg_p${i}_error`);
   }
 
   let str = '';

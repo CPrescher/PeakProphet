@@ -47,6 +47,19 @@ export class OutputTableComponent implements OnInit, OnDestroy {
         displayedColumns.push(`p${i}_fraction_error`);
       }
 
+
+      displayedColumns.push('bkg_type');
+      let bkgParamsNum = 0;
+      fitModels.forEach((fitModel) => {
+        bkgParamsNum = fitModel.background.parameters.length > bkgParamsNum ?
+          fitModel.background.parameters.length : bkgParamsNum;
+      })
+
+      for (let i = 1; i < bkgParamsNum + 1; i++) {
+        displayedColumns.push(`bkg_p${i}`);
+        displayedColumns.push(`bkg_p${i}_error`);
+      }
+
       this.displayedColumns = displayedColumns
       this.dataSource = output;
     });
@@ -57,6 +70,13 @@ export class OutputTableComponent implements OnInit, OnDestroy {
     if (columnName.includes('error')) {
       return "\u03C3"; //sigma
     }
+    if (columnName.includes('bkg_type')) {
+      return "Background";
+    }
+    if (columnName.includes('bkg')) {
+      return columnName.split('_')[1].replace("p", "p ")
+    }
+
     if (columnName.includes('type')) {
       return columnName.split('_')[0].replace("p", "Peak ")
     }

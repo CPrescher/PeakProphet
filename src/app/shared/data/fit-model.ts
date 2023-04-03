@@ -67,6 +67,12 @@ export function convertToOutputRow(fitModel: FitModel): any {
   let outputRow = {
     name: fitModel.name,
   };
+  outputRow["bkg_type"] = fitModel.background.type;
+  for (let i = 0; i < fitModel.background.parameters.length; i++) {
+    outputRow[`bkg_p${i + 1}`] = fitModel.background.parameters[i].value;
+    outputRow[`bkg_p${i + 1}_error`] = fitModel.background.parameters[i].error;
+  }
+
   fitModel.peaks.forEach((peak: ClickModel, index) => {
     outputRow[`p${index + 1}_type`] = peak.type;
     outputRow[`p${index + 1}_center`] = peak.getParameter("center").value;
