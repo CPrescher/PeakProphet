@@ -15,7 +15,7 @@ export class ParameterItemSimpleComponent {
   }
 
   inputChange(ev: any) {
-    this.parameter.value = ev.target.value;
+    this.parameter.value = Number(ev.target.value);
     this.parameterChange.emit(this.parameter);
   }
 }
