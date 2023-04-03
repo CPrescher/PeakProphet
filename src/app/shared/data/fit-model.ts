@@ -32,6 +32,7 @@ export class FitModel {
     this.resetSubscriptions();
 
     this.fitting = true;
+    this.fitMessage = "Fitting...";
     let [result$, progress$, stopper$] = this.fitRequest.fit()
 
     this.progressSubscription = progress$.subscribe((payload) => {

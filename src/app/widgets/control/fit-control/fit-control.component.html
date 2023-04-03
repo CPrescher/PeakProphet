@@ -34,7 +34,10 @@
           'green-dot': (selectedFitModel$ | async)?.fitSuccess,
           'red-dot': !(selectedFitModel$ | async)?.fitSuccess
         }"></span>
+
       </div>
+
+      <div class="fit-message">{{(selectedFitModel$ | async)?.fitMessage}}</div>
 
       <button
         mat-raised-button
@@ -52,7 +55,6 @@
       </button>
 
     </div>
-    <div class="fit-message">{{(selectedFitModel$ | async)?.fitMessage}}</div>
 
 
   </mat-card-content>

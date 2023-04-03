@@ -9,6 +9,10 @@
   margin-bottom: 12px;
 }
 
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}
+
 .button-column {
   display: flex;
   flex-direction: column;

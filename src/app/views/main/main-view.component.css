@@ -33,7 +33,7 @@ main {
   overflow: auto;
   display: flex;
   flex-direction: row;
-  padding: 24px;
+  padding: 18px;
 }
 
 .left-content, .right-content {
