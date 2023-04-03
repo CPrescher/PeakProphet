@@ -4,8 +4,6 @@ import ItemInterface from './items/item';
 export default class PatternPlot extends LabeledBasePlot {
   items: ItemInterface[] = [];
 
-  public enableAutoRange = true;
-
   constructor(selector: string, width: number, height: number) {
     super(selector, width, height);
   }

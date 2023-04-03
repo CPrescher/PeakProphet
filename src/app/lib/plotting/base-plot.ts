@@ -37,6 +37,8 @@ export default class BasePlot {
   plotDomainX = [0, 100];
   plotDomainY = [0, 100];
 
+  enableAutoRange = true;
+
   constructor(selector: string, public width: number, public height: number) {
     this.plotWidth = this.width - this.margin.left - this.margin.right;
     this.plotHeight = this.height - this.margin.top - this.margin.bottom;
@@ -115,6 +117,7 @@ export default class BasePlot {
         this.brushContext.select('.brush').call(this.brush.move, null); // this removes the grey brush area as soon as
         // the selection has been done
       }
+      this.enableAutoRange = false;
       this._update();
     };
 
@@ -174,6 +177,8 @@ export default class BasePlot {
       const newRight = right - (right - this.mouseX) * factor;
       const newBottom = bottom + (this.mouseY - bottom) * factor;
       const newTop = top - (top - this.mouseY) * factor;
+
+      this.enableAutoRange = false;
 
       this._updateDomain(newLeft, newRight, newBottom, newTop);
       this._update();
@@ -257,6 +262,7 @@ export default class BasePlot {
           } else {
             // double click
             this.autoRange();
+            this.enableAutoRange = true;
           }
         }
         this.brushContext.node().removeEventListener('mousemove', rightDragMove);
