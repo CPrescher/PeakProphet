@@ -6,7 +6,7 @@ import {LorentzianModel} from "../models/peaks/lorentzian.model";
 import {PseudoVoigtModel} from "../models/peaks/pseudo-voigt.model";
 
 describe('convert To Output row', () => {
-  fit('should convert to output row',
+  it('should convert to output row',
     () => {
       let fitModel = new FitModel(
         'test',
@@ -21,6 +21,8 @@ describe('convert To Output row', () => {
       let outputRow = convertToOutputRow(fitModel);
       expect(outputRow).toEqual({
         name: 'test',
+        chi2: undefined,
+        reduced_chi2: undefined,
         bkg_type: 'linear',
         bkg_p1: 0,
         bkg_p1_error: 0,
