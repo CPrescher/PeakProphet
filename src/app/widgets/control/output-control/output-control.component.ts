@@ -59,6 +59,8 @@ function convertToCSV(fitModels: FitModel[]): string {
 
   let headerRow: string[] = [];
   headerRow.push('name');
+  headerRow.push('chi2');
+  headerRow.push('reduced_chi2');
 
   for (let i = 1; i < peakNum + 1; i++) {
     headerRow.push(`p${i}_type`);

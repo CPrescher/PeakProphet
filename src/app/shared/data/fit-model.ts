@@ -15,6 +15,9 @@ export class FitModel {
   public fitSuccess: Boolean = false;
   public fitMessage: string = ""
 
+  public chi2: number | undefined = undefined;
+  public reducedChi2: number | undefined = undefined;
+
   private resultSubscription = new Subscription();
   private progressSubscription = new Subscription();
   private stopperSubscription = new Subscription();
@@ -33,14 +36,17 @@ export class FitModel {
 
     this.fitting = true;
     this.fitMessage = "Fitting...";
+    this.chi2 = undefined;
+    this.reducedChi2 = undefined;
+
     let [result$, progress$, stopper$] = this.fitRequest.fit()
 
     this.progressSubscription = progress$.subscribe((payload) => {
-      updateFitModelParameters(this, payload.result);
+      this.updateFromPayload(payload)
     });
 
     this.resultSubscription = result$.subscribe((payload) => {
-      updateFitModelParameters(this, payload.result);
+      this.updateFromPayload(payload)
       this.fitting = false;
       this.fitMessage = payload.message;
       this.fitSuccess = payload.success;
@@ -57,6 +63,12 @@ export class FitModel {
     return [result$, progress$, stopper$]
   }
 
+  public updateFromPayload(payload: any) {
+    this.chi2 = payload.chi2;
+    this.reducedChi2 = payload.red_chi2;
+    updateFitModelParameters(this, payload.result);
+  }
+
   private resetSubscriptions() {
     this.resultSubscription.unsubscribe();
     this.progressSubscription.unsubscribe();
@@ -68,11 +80,9 @@ export function convertToOutputRow(fitModel: FitModel): any {
   let outputRow = {
     name: fitModel.name,
   };
-  outputRow["bkg_type"] = fitModel.background.type;
-  for (let i = 0; i < fitModel.background.parameters.length; i++) {
-    outputRow[`bkg_p${i + 1}`] = fitModel.background.parameters[i].value;
-    outputRow[`bkg_p${i + 1}_error`] = fitModel.background.parameters[i].error;
-  }
+
+  outputRow["chi2"] = fitModel.chi2;
+  outputRow["reduced_chi2"] = fitModel.reducedChi2;
 
   fitModel.peaks.forEach((peak: ClickModel, index) => {
     outputRow[`p${index + 1}_type`] = peak.type;
@@ -88,6 +98,13 @@ export function convertToOutputRow(fitModel: FitModel): any {
     } catch (e) {
     }
   });
+
+  outputRow["bkg_type"] = fitModel.background.type;
+  for (let i = 0; i < fitModel.background.parameters.length; i++) {
+    outputRow[`bkg_p${i + 1}`] = fitModel.background.parameters[i].value;
+    outputRow[`bkg_p${i + 1}_error`] = fitModel.background.parameters[i].error;
+  }
+
   return outputRow;
 
 }

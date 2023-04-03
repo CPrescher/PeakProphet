@@ -31,9 +31,9 @@
 
 .mdc-data-table__header-cell {
   font-size: 12px;
-  text-align: left;
   line-height: 15px;
   vertical-align: bottom;
+  text-align: right;
   padding: 0 8px 0 8px;
 }
 

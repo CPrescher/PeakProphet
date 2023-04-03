@@ -9,9 +9,6 @@ import {convertToOutputRow} from "../../../shared/data/fit-model";
   styleUrls: ['./output-table.component.css']
 })
 export class OutputTableComponent implements OnInit, OnDestroy {
-  // displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  // dataSource = [...ELEMENT_DATA];
-
   displayedColumns: string[] = []
   dataSource: any[] = []
 
@@ -35,6 +32,10 @@ export class OutputTableComponent implements OnInit, OnDestroy {
 
       let displayedColumns: string[] = [];
       displayedColumns.push('name');
+
+      displayedColumns.push('chi2');
+      displayedColumns.push('reduced_chi2');
+
       for (let i = 1; i < peakNum + 1; i++) {
         displayedColumns.push(`p${i}_type`);
         displayedColumns.push(`p${i}_center`);
@@ -80,6 +81,16 @@ export class OutputTableComponent implements OnInit, OnDestroy {
     if (columnName.includes('type')) {
       return columnName.split('_')[0].replace("p", "Peak ")
     }
+
+    if (columnName.includes('reduced_chi2')) {
+      // return "red \u03C7\u00B2 ";
+      return "rChi2"
+    }
+    if (columnName.includes('chi2')) {
+      // return "\u03C7\u00B2";
+      return "Chi2"
+    }
+
     return columnName.split('_')[1]
       .replace("amplitude", "amp")
       .replace("fraction", "frac")
@@ -87,8 +98,7 @@ export class OutputTableComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnDestroy():
-    void {
+  ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
 }
