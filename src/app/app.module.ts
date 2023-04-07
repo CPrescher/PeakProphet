@@ -21,6 +21,7 @@ import {ProgressCircleComponent} from './widgets/inline/progress-circle/progress
 import {OutputControlComponent} from './widgets/control/output-control/output-control.component';
 import {OutputTableComponent} from './widgets/dialog/output-table/output-table.component';
 import { BatchControlComponent } from './widgets/control/batch-control/batch-control.component';
+import { NumberInputComponent } from './widgets/inline/number-input/number-input.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { BatchControlComponent } from './widgets/control/batch-control/batch-con
     OutputControlComponent,
     OutputTableComponent,
     BatchControlComponent,
+    NumberInputComponent,
   ],
   imports: [
     BrowserModule,

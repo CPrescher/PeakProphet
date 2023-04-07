@@ -1,0 +1,5 @@
+<mat-form-field floatLabel="auto" #parameterInput color="accent">
+  <mat-label>{{label}}:</mat-label>
+  <input matInput numbersOnly class="align-right" (change)="inputChange($event)"
+         [value]="value.toString() | number">
+</mat-form-field>

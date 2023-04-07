@@ -1,17 +1,25 @@
-mat-form-field {
-  min-width: 80px;
-  max-width: 150px
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.example-right-align {
-  text-align: right;
+mat-checkbox {
+  display: block;
+  margin-right: 0;
+  flex: 0;
 }
 
-td {
-  text-align: right;
+
+app-number-input {
+  flex: 1;
 }
+
 
 input.example-right-align::-webkit-outer-spin-button,
 input.example-right-align::-webkit-inner-spin-button {
-  display: none;
+  display: block;
 }
