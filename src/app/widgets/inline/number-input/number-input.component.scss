@@ -1,8 +1,78 @@
-mat-form-field {
-  min-width: 80px;
-  max-width: 150px;
+@use 'sass:map';
+@use '@angular/material' as mat;
+@import '../../../../theme.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: right;
+  width: 100%;
 }
 
 .align-right {
   text-align: right;
+}
+
+.container {
+  position: relative;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+
+
+input {
+  border: none;
+  color: white;
+  background-color: #494949;
+  border-bottom: 1px solid #c0c0c0;
+  box-sizing: border-box;
+  padding: 12px 12px 6px 12px;
+  flex: 1;
+}
+
+
+.label-text {
+  color: #c7c7c7;
+}
+
+input:focus + .label .label-text {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: mat.get-color-from-palette($my-accent, 500);
+  font-weight: bold;
+  transform: translateY(-75%);
+}
+
+input:focus {
+  outline: none;
+  color: mat.get-color-from-palette($my-accent, 500);
+  border-color: mat.get-color-from-palette($my-accent, 500);
+}
+
+
+.label .label-text {
+  transition: all 0.1s ease-in-out;
+}
+
+input::placeholder {
+  color: #c7c7c7;
+}
+
+input:-ms-input-placeholder {
+  color: #c7c7c7;
+}
+
+input::-ms-input-placeholder {
+  color: #c7c7c7;
 }
