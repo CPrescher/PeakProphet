@@ -8,6 +8,8 @@ import {HarnessLoader} from "@angular/cdk/testing";
 import {MatButtonHarness} from "@angular/material/button/testing";
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {BrowseIndexComponent} from "../../inline/browse-index/browse-index.component";
+import {NumberInputComponent} from "../../inline/number-input/number-input.component";
+import {By} from "@angular/platform-browser";
 
 describe('PeakItemComponent', () => {
   let modelService: PeakService;
@@ -18,7 +20,7 @@ describe('PeakItemComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MaterialsModule],
-      declarations: [PeakItemComponent, ParameterItemSimpleComponent, BrowseIndexComponent]
+      declarations: [PeakItemComponent, ParameterItemSimpleComponent, BrowseIndexComponent, NumberInputComponent]
     })
       .compileComponents();
 
@@ -76,5 +78,20 @@ describe('PeakItemComponent', () => {
     fixture.detectChanges();
     const peakTypeElement = fixture.debugElement.nativeElement.querySelector('[data-test="peak-type"]');
     expect(peakTypeElement.innerHTML).toEqual("Lorentzian");
+  });
+
+  it("updates parameter value", () => {
+    modelService.selectPeak(0);
+    fixture.detectChanges();
+    let parameterComponents = fixture.debugElement.queryAll(By.directive(ParameterItemSimpleComponent))
+    let centerParameterComponent: ParameterItemSimpleComponent = parameterComponents[0].componentInstance;
+    let widthParameterComponent: ParameterItemSimpleComponent = parameterComponents[1].componentInstance;
+    let amplitudeParameterComponent: ParameterItemSimpleComponent = parameterComponents[2].componentInstance;
+    centerParameterComponent.valueChange(90)
+    widthParameterComponent.valueChange(10)
+    amplitudeParameterComponent.valueChange(100)
+    expect(modelService.getPeaks()[0].parameters[0].value).toEqual(90);
+    expect(modelService.getPeaks()[0].parameters[1].value).toEqual(10);
+    expect(modelService.getPeaks()[0].parameters[2].value).toEqual(100);
   });
 });

@@ -14,8 +14,8 @@ export class ParameterItemSimpleComponent {
     this.parameter = new Parameter("Peak Position");
   }
 
-  inputChange(ev: any) {
-    this.parameter.value = Number(ev.target.value);
+  valueChange(newValue: any) {
+    this.parameter.value = Number(newValue);
     this.parameterChange.emit(this.parameter);
   }
 }
