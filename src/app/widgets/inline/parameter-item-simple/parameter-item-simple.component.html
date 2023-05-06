@@ -1,14 +1,16 @@
 
 <div class="container">
-
-  <app-number-input
-    class="number_input"
-    [label]="parameter.name"
-    [value]="parameter.value"
-    (valueChange)="inputChange($event)"
-  ></app-number-input>
+  <div class="number-container">
+    <app-number-input
+      class="number_input"
+      [label]="parameter.name"
+      [value]="parameter.value"
+      (valueChange)="inputChange($event)"
+    ></app-number-input>
+  </div>
 
   <mat-checkbox
+    class="mat_checkbox"
     [(ngModel)]="parameter.vary"
     matTooltip="Vary?"
     matTooltipShowDelay="500"

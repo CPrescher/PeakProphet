@@ -1,6 +1,11 @@
 <div class="container">
-  <input id="input" numbersOnly class="align-right" (change)="inputChange($event)"
-         [value]="value.toString() | number">
+  <input
+    id="input"
+    numbersOnly
+    class="align-right"
+    autocomplete="off"
+    (change)="inputChange($event)"
+    [value]="value.toString() | number">
   <label class="label" for="input">
     <div class="label-text">{{label}}</div>
   </label>
