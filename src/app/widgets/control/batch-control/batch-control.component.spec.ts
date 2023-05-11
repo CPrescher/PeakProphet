@@ -1,7 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
+import {provideMockStore} from "@ngrx/store/testing";
 import {BatchControlComponent} from './batch-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
+
 
 describe('BatchControlComponent', () => {
   let component: BatchControlComponent;
@@ -10,7 +12,10 @@ describe('BatchControlComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [BatchControlComponent],
-      imports: [MaterialsModule]
+      imports: [MaterialsModule],
+      providers: [
+        provideMockStore({})
+      ]
     })
       .compileComponents();
 

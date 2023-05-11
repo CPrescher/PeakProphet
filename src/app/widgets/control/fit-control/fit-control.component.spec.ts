@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FitControlComponent} from './fit-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
+import {provideMockStore} from "@ngrx/store/testing";
 
 describe('FitControlComponent', () => {
   let component: FitControlComponent;
@@ -10,7 +11,10 @@ describe('FitControlComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [FitControlComponent],
-      imports: [MaterialsModule]
+      imports: [MaterialsModule],
+      providers: [
+        provideMockStore({})
+      ]
     })
       .compileComponents();
 

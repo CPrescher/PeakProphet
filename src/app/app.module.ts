@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, isDevMode} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -22,6 +22,9 @@ import {OutputControlComponent} from './widgets/control/output-control/output-co
 import {OutputTableComponent} from './widgets/dialog/output-table/output-table.component';
 import { BatchControlComponent } from './widgets/control/batch-control/batch-control.component';
 import { NumberInputComponent } from './widgets/inline/number-input/number-input.component';
+import {PlotModule} from "./plot/plot.module";
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { NumberInputComponent } from './widgets/inline/number-input/number-input
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MaterialsModule
+    MaterialsModule,
+    PlotModule,
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
     PeakService,

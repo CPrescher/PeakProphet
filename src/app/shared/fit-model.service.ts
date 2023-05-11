@@ -9,6 +9,9 @@ import {BehaviorSubject, fromEvent, map, Observable, Subject, tap, withLatestFro
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
+import {PlotState} from "../plot/plot.reducers";
+import {Store} from "@ngrx/store";
+import {setCurrentPattern} from "../plot/plot.actions";
 
 
 /**
@@ -35,6 +38,7 @@ export class FitModelService {
   public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
 
   constructor(
+    private plotStore: Store<PlotState>,
     private patternService: PatternService,
     private peakService: PeakService,
     private bkgService: BkgService
@@ -98,13 +102,13 @@ export class FitModelService {
    * @private
    */
   private updateSubServices(fitModel: FitModel) {
-    this.patternService.setPattern(fitModel.pattern);
+    this.plotStore.dispatch(setCurrentPattern({pattern: fitModel.pattern}));
     this.peakService.setPeaks(fitModel.peaks);
     this.bkgService.setBkgModel(fitModel.background);
   }
 
   private clearSubServices() {
-    this.patternService.clearPattern();
+    this.plotStore.dispatch(setCurrentPattern({pattern: undefined}));
     this.bkgService.clearBkgModel();
     this.peakService.setPeaks([]);
   }

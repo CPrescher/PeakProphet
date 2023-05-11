@@ -4,8 +4,9 @@ import {DataControlComponent} from './data-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
 import {BrowseIndexComponent} from "../../inline/browse-index/browse-index.component";
 import {FitModelService} from "../../../shared/fit-model.service";
+import {provideMockStore} from "@ngrx/store/testing";
 
-describe('PatternControlComponent', () => {
+describe('DataControlComponent', () => {
   let component: DataControlComponent;
   let fixture: ComponentFixture<DataControlComponent>;
   let fitModelService: FitModelService;
@@ -13,7 +14,10 @@ describe('PatternControlComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DataControlComponent, BrowseIndexComponent],
-      imports: [MaterialsModule]
+      imports: [MaterialsModule],
+      providers: [
+        provideMockStore({})
+      ]
     })
       .compileComponents();
 

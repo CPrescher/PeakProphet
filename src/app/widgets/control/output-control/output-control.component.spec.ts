@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OutputControlComponent} from './output-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
+import {provideMockStore} from "@ngrx/store/testing";
 
 describe('OutputControlComponent', () => {
   let component: OutputControlComponent;
@@ -10,7 +11,10 @@ describe('OutputControlComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OutputControlComponent],
-      imports: [MaterialsModule]
+      imports: [MaterialsModule],
+      providers: [
+        provideMockStore({})
+      ]
     })
       .compileComponents();
 

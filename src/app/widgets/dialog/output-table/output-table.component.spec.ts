@@ -4,6 +4,7 @@ import {OutputTableComponent} from './output-table.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
 import {FitModelService} from "../../../shared/fit-model.service";
 import {createRandomGaussian} from "../../../shared/data/peak-generation";
+import {provideMockStore} from "@ngrx/store/testing";
 
 describe('OutputTableComponent', () => {
   let component: OutputTableComponent;
@@ -13,7 +14,10 @@ describe('OutputTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OutputTableComponent],
-      imports: [MaterialsModule]
+      imports: [MaterialsModule],
+      providers:[
+        provideMockStore({})
+      ]
     })
       .compileComponents();
 

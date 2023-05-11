@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import PatternPlot from "../../../lib/plotting/pattern-plot";
 import LineItem from "../../../lib/plotting/items/lineItem";
-import {PatternService} from "../../../shared/pattern.service";
 import {PeakService} from "../../../shared/peak.service";
 import {ClickModel, Model} from "../../../shared/models/model.interface";
 import {Item} from "../../../lib/plotting/items/item";
@@ -16,6 +15,9 @@ import {
   debounceTime,
   distinctUntilChanged
 } from "rxjs";
+import {PlotState} from "../../../plot/plot.reducers";
+import {Store} from "@ngrx/store";
+import {currentPattern} from "../../../plot/plot.selectors";
 
 @Component({
   selector: 'app-plot',
@@ -47,7 +49,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   private _combinedUpdateSubscription = new Subscription();
 
   constructor(
-    private patternService: PatternService,
+    private store: Store<PlotState>,
     private peakService: PeakService,
     private bkgService: BkgService,
     private mouseService: MousePositionService) {
@@ -128,7 +130,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mainLine.autoRanged = true;
     this.plot.addItem(this.mainLine, this.dataGroup.root);
 
-    this._patternSubscription = this.patternService.pattern$.pipe(
+    this._patternSubscription = this.store.select(currentPattern).pipe(
       throttleTime(30, undefined, {leading: true, trailing: true})
     ).subscribe((pattern) => {
       if (pattern) {

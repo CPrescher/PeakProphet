@@ -2,34 +2,44 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PlotComponent} from './plot.component';
 import {PeakService} from "../../../shared/peak.service";
-import {PatternService} from "../../../shared/pattern.service";
 import {BkgService} from "../../../shared/bkg.service";
 import {Pattern} from "../../../shared/data/pattern";
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {currentPattern} from "../../../plot/plot.selectors";
 
 describe('PlotComponent', () => {
   let component: PlotComponent;
   let fixture: ComponentFixture<PlotComponent>;
   let peakService: PeakService;
-  let patternService: PatternService;
   let bkgService: BkgService;
+  let store: MockStore<{ currentPattern: Pattern | undefined }>
+  let initialPattern: Pattern = new Pattern(
+    "RandomData",
+    [2, 3, 4, 2, 1],
+    [2, 3, 4, 5, 1])
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PlotComponent]
+      declarations: [PlotComponent],
+      providers: [
+        provideMockStore({
+          selectors: [
+            {selector: currentPattern, value: initialPattern}
+          ]
+        })
+      ]
     })
       .compileComponents();
 
     peakService = TestBed.inject(PeakService);
-    patternService = TestBed.inject(PatternService);
-    patternService.setPattern(new Pattern("RandomData", [2, 3, 4, 2, 1], [2, 3, 4, 5, 1]));
-
     bkgService = TestBed.inject(BkgService);
-
+    store = TestBed.inject(MockStore);
 
     fixture = TestBed.createComponent(PlotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  })
+  ;
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -91,7 +101,9 @@ describe('PlotComponent', () => {
   });
 
   it("handles clearing the pattern", (done) => {
-    patternService.clearPattern();
+    store.overrideSelector(currentPattern, undefined);
+    store.refreshState()
+
     setTimeout(() => {
       expect(component.mainLine.x).toEqual([]);
       expect(component.mainLine.y).toEqual([]);
@@ -110,14 +122,21 @@ describe('PlotComponent', () => {
   });
 
   it("loading data after clearing the pattern", (done) => {
-    patternService.clearPattern();
-    patternService.setPattern(new Pattern("RandomData", [2, 3, 4], [2, 3, 4, 5]));
 
-    // This is a hack to wait for the throttleTime to finish
-    setTimeout(() => {
-      expect(component.mainLine.x).toEqual([2, 3, 4]);
-      expect(component.mainLine.y).toEqual([2, 3, 4, 5]);
-      done();
-    }, 200)
-  });
+      store.overrideSelector(currentPattern, new Pattern(
+        "RandomData",
+        [2, 3, 4],
+        [2, 3, 4, 5])
+      );
+      store.refreshState()
+
+      // This is a hack to wait for the throttleTime to finish
+      setTimeout(() => {
+        expect(component.mainLine.x).toEqual([2, 3, 4]);
+        expect(component.mainLine.y).toEqual([2, 3, 4, 5]);
+        done();
+      }, 200)
+    }
+  )
+  ;
 });
