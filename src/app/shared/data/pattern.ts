@@ -5,10 +5,4 @@ export class Pattern {
     public y: number[],
   ) {
   }
-
-  setData(x: number[], y: number[]): void {
-    this.x = x;
-    this.y = y;
-  }
-
 }

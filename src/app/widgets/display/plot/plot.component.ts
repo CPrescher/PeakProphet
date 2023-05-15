@@ -9,11 +9,8 @@ import {MousePositionService} from "../../../shared/mouse-position.service";
 import {
   fromEvent,
   Subscription,
-  auditTime,
   combineLatest,
   throttleTime,
-  debounceTime,
-  distinctUntilChanged
 } from "rxjs";
 import {PlotState} from "../../../plot/plot.reducers";
 import {Store} from "@ngrx/store";

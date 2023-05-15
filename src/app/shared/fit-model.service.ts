@@ -12,6 +12,8 @@ import {readXY} from "./data/input";
 import {PlotState} from "../plot/plot.reducers";
 import {Store} from "@ngrx/store";
 import {setCurrentPattern} from "../plot/plot.actions";
+import {addFitItem, moveFitItem, removeFitItem, selectFitItem, setPeaks} from "../project/store/project.actions";
+import {ProjectState} from "../project/store/project.state";
 
 
 /**
@@ -39,13 +41,14 @@ export class FitModelService {
 
   constructor(
     private plotStore: Store<PlotState>,
+    private projectStore: Store<ProjectState>,
     private patternService: PatternService,
     private peakService: PeakService,
     private bkgService: BkgService
   ) {
-    const patterns = createLinearChangingPeakPatterns('gold ', 4, 100, [0, 10])
+    const patterns = createLinearChangingPeakPatterns('gold ', 4, 10, [0, 10])
     for (let i = 0; i < patterns.length; i++) {
-      this.addFitModel(`Fit Model ${i+1}`, patterns[i]);
+      this.addFitModel(`Dataset ${i+1}`, patterns[i], [], true);
     }
     this.selectFitModel(0);
 
@@ -90,6 +93,9 @@ export class FitModelService {
     this.fitModels.push(fitModel);
     this.fitModelsSubject.next(this.fitModels);
 
+    this.projectStore.dispatch(addFitItem({item:
+        new FitModel(name, new Pattern(name, pattern.x, pattern.y), [], new LinearModel())}));
+
     if (!silent) {
       this.selectFitModel(this.fitModels.length - 1);
       this.updateSubServices(fitModel);
@@ -111,6 +117,9 @@ export class FitModelService {
     this.plotStore.dispatch(setCurrentPattern({pattern: undefined}));
     this.bkgService.clearBkgModel();
     this.peakService.setPeaks([]);
+    if (this.selectedIndexSubject.value !== undefined) {
+      this.projectStore.dispatch(setPeaks({itemIndex: this.selectedIndexSubject.value, peaks: []}));
+    }
   }
 
   /**
@@ -122,6 +131,7 @@ export class FitModelService {
       const fitModel = this.fitModels[index];
       this.updateSubServices(fitModel);
       this.selectedIndexSubject.next(index);
+      this.projectStore.dispatch(selectFitItem({index}));
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
     }
@@ -188,6 +198,7 @@ export class FitModelService {
    * @param index - index of the FitModel to remove
    */
   removeFitModel(index: number) {
+    this.projectStore.dispatch(removeFitItem({index}));
     this.fitModels.splice(index, 1);
     this.fitModelsSubject.next(this.fitModels);
 
@@ -217,6 +228,8 @@ export class FitModelService {
       this.fitModels.splice(index - 1, 0, model);
       this.fitModelsSubject.next(this.fitModels);
       this.selectFitModel(index - 1);
+      this.projectStore.dispatch(moveFitItem({index, delta: -1}));
+      this.projectStore.dispatch(selectFitItem({index: index - 1}))
     }
   }
 
@@ -227,6 +240,8 @@ export class FitModelService {
       this.fitModels.splice(index + 1, 0, model);
       this.fitModelsSubject.next(this.fitModels);
       this.selectFitModel(index + 1);
+      this.projectStore.dispatch(moveFitItem({index, delta: 1}));
+      this.projectStore.dispatch(selectFitItem({index: index + 1}))
     }
   }
 }

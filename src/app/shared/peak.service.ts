@@ -6,6 +6,10 @@ import {PseudoVoigtModel} from "./models/peaks/pseudo-voigt.model";
 import {BehaviorSubject, Subject, Subscription, take, takeWhile, withLatestFrom} from "rxjs";
 import {MousePositionService} from "./mouse-position.service";
 import {BkgService} from "./bkg.service";
+import { Store } from '@ngrx/store';
+import {ProjectState} from "../project/store/project.state";
+import {addPeak, addPeakType, setPeaks} from '../project/store/project.actions';
+import {FitModelService} from "./fit-model.service";
 
 
 /**
@@ -40,6 +44,7 @@ export class PeakService {
 
 
   constructor(
+    private projectStore: Store<ProjectState>,
     private mousePositionService: MousePositionService,
     private bkgService: BkgService,
   ) {
@@ -93,6 +98,7 @@ export class PeakService {
     this.peaks.push(peak);
     this.addedPeakSubject.next(peak);
     this.selectPeak(this.peaks.length - 1);
+    this.projectStore.dispatch(addPeakType({peakType: peakTypeName}));
   }
 
   removePeak(index?: number | undefined) {

@@ -1,5 +1,8 @@
 import {Component,OnInit} from '@angular/core';
 import {PeakService} from "../../../shared/peak.service";
+import {Store} from "@ngrx/store";
+import {ProjectState} from "../../../project/store/project.state";
+import {addPeakType} from "../../../project/store/project.actions";
 
 @Component({
   selector: 'app-peak-control',
@@ -10,17 +13,17 @@ export class PeakControlComponent implements OnInit {
   peakTypes: String[] = [];
   selectedPeakType: string = "Gaussian";
 
-  constructor(private modelService: PeakService) {
+  constructor(
+    private projectStore: Store<ProjectState>,
+    private peakService: PeakService) {
   }
 
   ngOnInit() {
-    this.peakTypes = Object.keys(this.modelService.peakTypes);
+    this.peakTypes = Object.keys(this.peakService.peakTypes);
   }
 
   addPeak() {
-    this.modelService.addPeak(this.selectedPeakType);
-    this.modelService.clickDefinePeak()
+    this.peakService.addPeak(this.selectedPeakType);
+    this.peakService.clickDefinePeak()
   }
-
-  a
 }

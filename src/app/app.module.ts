@@ -25,6 +25,7 @@ import { NumberInputComponent } from './widgets/inline/number-input/number-input
 import {PlotModule} from "./plot/plot.module";
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import {ProjectModule} from "./project/project.module";
 
 @NgModule({
   declarations: [
@@ -51,8 +52,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     AppRoutingModule,
     MaterialsModule,
     PlotModule,
+    ProjectModule,
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
+    StoreDevtoolsModule.instrument({ maxAge: 10, logOnly: !isDevMode() })
   ],
   providers: [
     PeakService,

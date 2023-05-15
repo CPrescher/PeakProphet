@@ -1,14 +1,7 @@
-import {isDevMode} from '@angular/core';
-import {
-  ActionReducer,
-  ActionReducerMap,
-  createFeatureSelector, createReducer,
-  createSelector,
-  MetaReducer, on
-} from '@ngrx/store';
-import {Pattern} from "../shared/data/pattern";
-import {PlotActions as ActionTypes} from "./action-types";
+import {createReducer} from '@ngrx/store';
 import {immerOn} from "ngrx-immer/store";
+import {PlotActions as ActionTypes} from "./action-types";
+import {Pattern} from "../shared/data/pattern";
 
 export const plotFeatureKey = 'plot';
 
@@ -37,7 +30,7 @@ export const plotReducer = createReducer(
   }),
 
   immerOn(ActionTypes.setBackgroundPattern, (state, action) => {
-    state.backgroundPattern =  action.pattern
+    state.backgroundPattern = action.pattern
   }),
 
   immerOn(ActionTypes.addPeakPattern, (state, action) => {
