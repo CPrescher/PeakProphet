@@ -1,21 +1,32 @@
 import {Pattern} from "../../shared/data/pattern";
-import {ClickModel} from "../../shared/models/model.interface";
+import {createEntityAdapter, EntityState} from "@ngrx/entity";
+import {Parameter} from "../../shared/models/parameter.model";
 
-export interface ProjectState {
+
+export interface ProjectState extends EntityState<FitItem> {
   name: string,
-  fitItems: FitItem[],
   currentIndex: number | undefined,
-}
-
-export const initialProjectState: ProjectState = {
-  name: '',
-  fitItems: [],
-  currentIndex: undefined,
 }
 
 
 export interface FitItem {
   name: string,
   pattern: Pattern,
-  peaks: ClickModel[],
+  models: EntityState<Model>
 }
+
+
+export interface Model {
+  type: string,
+  parameters: EntityState<Parameter>,
+  clickSteps: number,
+  currentStep: number,
+}
+
+export const adapter = createEntityAdapter<FitItem>();
+export const ModelAdapter = createEntityAdapter<Model>();
+export const ParameterAdapter = createEntityAdapter<Parameter>();
+
+
+export const initialProjectState: ProjectState = adapter.getInitialState({name: '', currentIndex: undefined});
+

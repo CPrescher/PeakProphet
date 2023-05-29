@@ -8,8 +8,7 @@ import {MousePositionService} from "./mouse-position.service";
 import {BkgService} from "./bkg.service";
 import { Store } from '@ngrx/store';
 import {ProjectState} from "../project/store/project.state";
-import {addPeak, addPeakType, setPeaks} from '../project/store/project.actions';
-import {FitModelService} from "./fit-model.service";
+import {addModelType} from '../project/store/project.actions';
 
 
 /**
@@ -98,7 +97,7 @@ export class PeakService {
     this.peaks.push(peak);
     this.addedPeakSubject.next(peak);
     this.selectPeak(this.peaks.length - 1);
-    this.projectStore.dispatch(addPeakType({peakType: peakTypeName}));
+    this.projectStore.dispatch(addModelType({peakType: peakTypeName}));
   }
 
   removePeak(index?: number | undefined) {

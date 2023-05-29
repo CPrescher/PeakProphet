@@ -2,7 +2,6 @@ import {Component,OnInit} from '@angular/core';
 import {PeakService} from "../../../shared/peak.service";
 import {Store} from "@ngrx/store";
 import {ProjectState} from "../../../project/store/project.state";
-import {addPeakType} from "../../../project/store/project.actions";
 
 @Component({
   selector: 'app-peak-control',

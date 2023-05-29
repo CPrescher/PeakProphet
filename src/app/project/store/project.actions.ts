@@ -1,10 +1,10 @@
 import {createAction, props} from "@ngrx/store";
-import {FitModel as FitItem}  from "../../shared/data/fit-model";
 import {ClickModel} from "../../shared/models/model.interface";
+import {Pattern} from "../../shared/data/pattern";
 
 export const addFitItem = createAction(
   "[FIT API] Add Fit Item",
-  props<{ item: FitItem }>()
+  props<{ name: string, pattern: Pattern}>()
 )
 
 export const removeFitItem = createAction(
@@ -31,17 +31,22 @@ export const setName = createAction(
   props<{ name: string }>()
 )
 
-export const addPeak = createAction(
-  "[FIT API] Add Peak",
-  props<{ peak: ClickModel }>()
+export const addModel = createAction(
+  "[FIT API] Add Model",
+  props<{ itemIndex: number, model: ClickModel }>()
 )
 
-export const addPeakType = createAction(
+export const removeModel = createAction(
+  "[FIT API] Remove Model",
+  props<{ itemIndex: number, modelIndex: number }>()
+)
+
+export const addModelType = createAction(
   "[FIT API] Add Peak Type",
   props<{ peakType: string }>()
 )
 
-export const setPeaks = createAction(
+export const setModels = createAction(
   "[FIT API] Set Peaks",
   props<{ itemIndex: number, peaks: ClickModel[] }>()
 )

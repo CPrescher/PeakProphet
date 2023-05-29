@@ -12,8 +12,16 @@ import {readXY} from "./data/input";
 import {PlotState} from "../plot/plot.reducers";
 import {Store} from "@ngrx/store";
 import {setCurrentPattern} from "../plot/plot.actions";
-import {addFitItem, moveFitItem, removeFitItem, selectFitItem, setPeaks} from "../project/store/project.actions";
+import {
+  addFitItem,
+  addModel, clearFitItems,
+  moveFitItem,
+  removeFitItem,
+  selectFitItem,
+  setModels
+} from "../project/store/project.actions";
 import {ProjectState} from "../project/store/project.state";
+import {GaussianModel} from "./models/peaks/gaussian.model";
 
 
 /**
@@ -48,7 +56,7 @@ export class FitModelService {
   ) {
     const patterns = createLinearChangingPeakPatterns('gold ', 4, 10, [0, 10])
     for (let i = 0; i < patterns.length; i++) {
-      this.addFitModel(`Dataset ${i+1}`, patterns[i], [], true);
+      this.addFitModel(`Dataset ${i + 1}`, patterns[i], [new GaussianModel(3.0),], true);
     }
     this.selectFitModel(0);
 
@@ -93,8 +101,21 @@ export class FitModelService {
     this.fitModels.push(fitModel);
     this.fitModelsSubject.next(this.fitModels);
 
-    this.projectStore.dispatch(addFitItem({item:
-        new FitModel(name, new Pattern(name, pattern.x, pattern.y), [], new LinearModel())}));
+    this.projectStore.dispatch(addFitItem(
+      {
+        name: name,
+        pattern: new Pattern(name, pattern.x, pattern.y),
+      }
+    ));
+
+    peaks.forEach(peak => {
+      this.projectStore.dispatch(addModel(
+        {
+          itemIndex: this.fitModels.length - 1,
+          model: peak
+        }
+      ));
+    })
 
     if (!silent) {
       this.selectFitModel(this.fitModels.length - 1);
@@ -118,7 +139,7 @@ export class FitModelService {
     this.bkgService.clearBkgModel();
     this.peakService.setPeaks([]);
     if (this.selectedIndexSubject.value !== undefined) {
-      this.projectStore.dispatch(setPeaks({itemIndex: this.selectedIndexSubject.value, peaks: []}));
+      this.projectStore.dispatch(setModels({itemIndex: this.selectedIndexSubject.value, peaks: []}));
     }
   }
 
@@ -219,6 +240,7 @@ export class FitModelService {
     this.fitModelsSubject.next(this.fitModels);
     this.selectedIndexSubject.next(undefined);
     this.clearSubServices();
+    this.projectStore.dispatch(clearFitItems());
   }
 
   moveFitModelUp(index: number) {
