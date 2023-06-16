@@ -1,10 +1,7 @@
 @use '@angular/material' as mat;
+@use './colors' as colors;
 
 @include mat.core();
-
-$my-accent: mat.define-palette(mat.$orange-palette, 500, 200, 100);
-$my-primary: mat.define-palette(mat.$blue-grey-palette, 700, 100, 900);
-$my-warning: mat.define-palette(mat.$red-palette, 700, 50, 900);
 
 $my-typography: mat.define-typography-config(
   $headline-1: mat.define-typography-level(34px, 50px, 600),
@@ -17,9 +14,9 @@ $my-typography: mat.define-typography-config(
 
 $my-theme: mat.define-dark-theme((
   color: (
-    primary: $my-primary,
-    accent: $my-accent,
-    warn: $my-warning,
+    primary: colors.$my-primary,
+    accent: colors.$my-accent,
+    warn: colors.$my-warning,
   ),
   typography: $my-typography,
   density: 0,
