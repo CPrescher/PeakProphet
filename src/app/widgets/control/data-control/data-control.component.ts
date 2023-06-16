@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
-import {Observable, Subscription} from "rxjs";
+import {firstValueFrom, lastValueFrom, Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-data-control',
@@ -52,17 +52,14 @@ export class DataControlComponent implements OnDestroy {
     this.fitModelService.selectFitModel(index);
   }
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const files = event.target.files;
+    console.log(files)
     let readingFinished$: Observable<void> | undefined = undefined;
     for (let i = 0; i < files.length; i++) {
-      readingFinished$ = this.fitModelService.readData(files[i], i > 0);
+      await firstValueFrom(this.fitModelService.readData(files[i], i > 0));
     }
-    if(readingFinished$) {
-      readingFinished$.subscribe(() => {
-        this.modelNum = this.fitModelService.fitModels.length;
-      })
-    }
+    this.modelNum = this.fitModelService.fitModels.length;
   }
 
   moveModelUp() {

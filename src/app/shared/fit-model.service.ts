@@ -5,7 +5,7 @@ import {createLinearChangingPeakPatterns} from "./data/pattern-generation";
 import {PeakService} from "./peak.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, fromEvent, map, Observable, Subject, tap, withLatestFrom} from "rxjs";
+import {BehaviorSubject, fromEvent, map, Observable, Subject, take, tap, withLatestFrom} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -41,7 +41,7 @@ export class FitModelService {
   ) {
     const patterns = createLinearChangingPeakPatterns('gold ', 4, 100, [0, 10])
     for (let i = 0; i < patterns.length; i++) {
-      this.addFitModel(`Fit Model ${i+1}`, patterns[i]);
+      this.addFitModel(`Fit Model ${i + 1}`, patterns[i]);
     }
     this.selectFitModel(0);
 
@@ -127,6 +127,7 @@ export class FitModelService {
    * Reads an XY-file and adds a FitModel with the corresponding pattern to the list of FitModels.
    * @param file - file to read
    * @param silent - if true, the FitModel will not be selected and no signals sent to sub-services
+   * @returns an Observable that completes when the file has been read
    */
   readData(file: File, silent = false): Observable<void> {
     const fileReader = new FileReader();
@@ -140,9 +141,7 @@ export class FitModelService {
     }
     fileReader.readAsText(file);
     return fromEvent(fileReader, 'loadend').pipe(
-      tap((ev) => {
-        console.log(ev);
-      }),
+      take(1),
       map(() => {
       }));
   }
