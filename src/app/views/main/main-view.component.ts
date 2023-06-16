@@ -11,7 +11,7 @@ import {map, Observable} from "rxjs";
 export class MainViewComponent {
 
   public hasData$: Observable<Boolean>;
-  public version = '0.1.0';
+  public version = '0.1.1';
   constructor(
     private _shortcutService: ShortcutService,
     private fitModelService: FitModelService,
