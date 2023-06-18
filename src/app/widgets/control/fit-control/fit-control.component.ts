@@ -2,6 +2,9 @@ import {Component, OnDestroy} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {Subject, Subscription, take} from "rxjs";
 import {FitModel} from "../../../shared/data/fit-model";
+import {ProjectState} from "../../../project/store/project.state";
+import {Store} from "@ngrx/store";
+import {currentFitItem} from "../../../project/store/project.selectors";
 
 
 export interface Progress {
@@ -27,11 +30,14 @@ export class FitControlComponent implements OnDestroy {
 
   public displayedColumns = ['iter', 'chi2', 'red_chi2']
 
-  public selectedFitModel$ = this.fitModelService.selectedFitModel$;
+  public selectedFitModel$ = this.projectStore.select(currentFitItem);
 
-  constructor(public fitModelService: FitModelService) {
+  constructor(
+    public fitModelService: FitModelService,
+    public projectStore: Store<ProjectState>
+  ) {
 
-    this._fitModelSubscription = fitModelService.selectedFitModel$.subscribe((fitModel) => {
+    this._fitModelSubscription = this.projectStore.select(currentFitItem).subscribe((fitModel) => {
       if (fitModel === undefined) {
         return;
       }
@@ -48,7 +54,7 @@ export class FitControlComponent implements OnDestroy {
     this.stopSubject = this.fitModelService.fitData()
     this._fitModelSubscription2.unsubscribe()
 
-    this._fitModelSubscription2 = this.fitModelService.selectedFitModel$.pipe(
+    this._fitModelSubscription2 = this.projectStore.select(currentFitItem).pipe(
       take(1)
     ).subscribe((fitModel) => {
       if (fitModel === undefined) {
@@ -59,12 +65,13 @@ export class FitControlComponent implements OnDestroy {
   }
 
   private _subscribeToProgress(fitModel: FitModel): void {
-    this._progressSubscription.unsubscribe()
-    this._progressSubscription = fitModel.fitRequest.progress$.subscribe((progress) => {
-      this.fitProgressData.push({"iter": progress.iter, "chi2": progress.chi2, "red_chi2": progress.red_chi2})
-      this.fitProgressData$.next(
-        this.fitProgressData.sort((a, b) => (a.iter < b.iter ? -1 : 1)).reverse())
-    })
+    // TODO: This way of subscription will not work with current implementation
+    // this._progressSubscription.unsubscribe()
+    // this._progressSubscription = fitModel.fitRequest.progress$.subscribe((progress) => {
+    //   this.fitProgressData.push({"iter": progress.iter, "chi2": progress.chi2, "red_chi2": progress.red_chi2})
+    //   this.fitProgressData$.next(
+    //     this.fitProgressData.sort((a, b) => (a.iter < b.iter ? -1 : 1)).reverse())
+    // })
   }
 
   stopFit(): void {

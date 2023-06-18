@@ -22,7 +22,12 @@ export const fitItems =  createSelector(
 
 export const currentModelIndex = createSelector(
   projectState,
-  project => project.entities[project.currentIndex].currentModelIndex
+  project => {
+    if (project.currentIndex === undefined) {
+      return undefined;
+    }
+    return project.entities[project.currentIndex].currentModelIndex
+  }
 );
 
 export const currentModel = createSelector(

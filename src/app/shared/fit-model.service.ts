@@ -5,7 +5,7 @@ import {createLinearChangingPeakPatterns} from "./data/pattern-generation";
 import {ModelService} from "./model.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
-import {BehaviorSubject, fromEvent, map, Observable, Subject, take, tap, withLatestFrom} from "rxjs";
+import {fromEvent, map, Observable, Subject, take, withLatestFrom} from "rxjs";
 import {BkgService} from "./bkg.service";
 import {LinearModel} from "./models/bkg/linear.model";
 import {readXY} from "./data/input";
@@ -36,12 +36,6 @@ import {currentFitItemIndex} from "../project/store/project.selectors";
 export class FitModelService {
   public fitModels: FitModel[] = [];
   public currentFitItemIndex: number | undefined = undefined;
-
-  private fitProgressSubject = new Subject<any>();
-  public fitProgress$ = this.fitProgressSubject.asObservable();
-
-  private selectedFitModelSubject = new BehaviorSubject<FitModel | undefined>(undefined);
-  public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
 
   constructor(
     private plotStore: Store<PlotState>,
