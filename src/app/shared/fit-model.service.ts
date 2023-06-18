@@ -22,7 +22,7 @@ import {
 } from "../project/store/project.actions";
 import {ProjectState} from "../project/store/project.state";
 import {GaussianModel} from "./models/peaks/gaussian.model";
-import {fitItems} from "../project/store/project.selectors";
+import {currentFitItemIndex} from "../project/store/project.selectors";
 
 
 /**
@@ -35,15 +35,10 @@ import {fitItems} from "../project/store/project.selectors";
 })
 export class FitModelService {
   public fitModels: FitModel[] = [];
-
-  private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
-  public fitModels$ = this.projectStore.select(fitItems)
+  public currentFitItemIndex: number | undefined = undefined;
 
   private fitProgressSubject = new Subject<any>();
   public fitProgress$ = this.fitProgressSubject.asObservable();
-
-  private selectedIndexSubject = new BehaviorSubject<number | undefined>(undefined);
-  public selectedIndex$ = this.selectedIndexSubject.asObservable();
 
   private selectedFitModelSubject = new BehaviorSubject<FitModel | undefined>(undefined);
   public selectedFitModel$ = this.selectedFitModelSubject.asObservable();
@@ -65,27 +60,24 @@ export class FitModelService {
   }
 
   private _setupObservables() {
-    this.selectedIndex$.pipe(
-      map((index) => {
-        if (index !== undefined) {
-          return this.fitModels[index];
-        }
-        return undefined;
-      })
-    ).subscribe(this.selectedFitModelSubject);
-
-
-    this.bkgService.bkgTypeChanged$.subscribe((bkgModel) => {
-      if (bkgModel) {
-        const selectedIndex = this.selectedIndexSubject.value;
-        if (selectedIndex !== undefined) {
-          const selectedFitModel = this.fitModels[selectedIndex];
-          bkgModel.guess(selectedFitModel.pattern.x, selectedFitModel.pattern.y);
-          selectedFitModel.background = bkgModel;
-          this.selectFitModel(selectedIndex);
-        }
-      }
+    this.projectStore.select(currentFitItemIndex).subscribe((index: number | undefined) => {
+      this.currentFitItemIndex = index;
     });
+
+
+    this.bkgService.bkgTypeChanged$.pipe(
+      withLatestFrom(this.projectStore.select(currentFitItemIndex)),
+    )
+      .subscribe(([bkgModel, selectedIndex]) => {
+        if (bkgModel) {
+          if (selectedIndex !== undefined) {
+            const selectedFitModel = this.fitModels[selectedIndex];
+            bkgModel.guess(selectedFitModel.pattern.x, selectedFitModel.pattern.y);
+            selectedFitModel.background = bkgModel;
+            this.selectFitModel(selectedIndex);
+          }
+        }
+      });
   }
 
   /**
@@ -138,8 +130,8 @@ export class FitModelService {
     this.plotStore.dispatch(setCurrentPattern({pattern: undefined}));
     this.bkgService.clearBkgModel();
     this.peakService.setPeaks([]);
-    if (this.selectedIndexSubject.value !== undefined) {
-      this.projectStore.dispatch(setModels({itemIndex: this.selectedIndexSubject.value, peaks: []}));
+    if (this.currentFitItemIndex !== undefined) {
+      this.projectStore.dispatch(setModels({itemIndex: this.currentFitItemIndex, peaks: []}));
     }
   }
 
@@ -151,7 +143,6 @@ export class FitModelService {
     if (index < this.fitModels.length && index >= 0) {
       const fitModel = this.fitModels[index];
       this.updateSubServices(fitModel);
-      this.selectedIndexSubject.next(index);
       this.projectStore.dispatch(selectFitItem({index}));
     } else {
       throw new Error(`Cannot select fit model at index ${index}, it does not exist`);
@@ -186,14 +177,13 @@ export class FitModelService {
    * @returns a Subject that can be used to stop the fitting process
    */
   fitData(): Subject<void> | undefined {
-    const fitIndex = this.selectedIndexSubject.value;
+    const fitIndex = this.currentFitItemIndex;
     if (fitIndex !== undefined) {
       const fitModel = this.fitModels[fitIndex];
 
       let [result$, progress$, stopper$] = fitModel.fit();
 
       progress$.pipe(
-        withLatestFrom(this.selectedIndex$),
       ).subscribe(([_, selectedIndex]) => {
         if (selectedIndex === fitIndex) {
           this.updateSubServices(fitModel)
@@ -201,7 +191,7 @@ export class FitModelService {
       });
 
       result$.pipe(
-        withLatestFrom(this.selectedIndex$),
+        withLatestFrom(this.projectStore.select(currentFitItemIndex)),
       ).subscribe(([_, selectedIndex]) => {
         if (selectedIndex === fitIndex) {
           this.updateSubServices(fitModel)
@@ -226,7 +216,7 @@ export class FitModelService {
     } else if (index < this.fitModels.length) {
       this.selectFitModel(index);
     } else {
-      this.selectedIndexSubject.next(undefined);
+      this.projectStore.dispatch(selectFitItem({index: undefined}));
     }
     if (this.fitModels.length === 0) {
       this.clearSubServices();
@@ -235,7 +225,7 @@ export class FitModelService {
 
   clearFitModels() {
     this.fitModels = [];
-    this.selectedIndexSubject.next(undefined);
+    this.projectStore.dispatch(selectFitItem({index: undefined}));
     this.clearSubServices();
     this.projectStore.dispatch(clearFitItems());
   }

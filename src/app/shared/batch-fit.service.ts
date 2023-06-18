@@ -2,6 +2,9 @@ import {Injectable} from '@angular/core';
 import {FitModelService} from "./fit-model.service";
 import {skip, Subject, Subscription, takeUntil, takeWhile} from "rxjs";
 import {updateFitModel} from "./models/updating";
+import {ProjectState} from "../project/store/project.state";
+import {Store} from "@ngrx/store";
+import {currentFitItemIndex} from "../project/store/project.selectors";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +22,11 @@ export class BatchFitService {
   private selectedIndexSubscription = new Subscription();
 
 
-  constructor(private fitModelService: FitModelService) {
-    this.selectedIndexSubscription = this.fitModelService.selectedIndex$
+  constructor(
+    private fitModelService: FitModelService,
+    private projectStore: Store<ProjectState>
+  ) {
+    this.selectedIndexSubscription = this.projectStore.select(currentFitItemIndex)
       .subscribe((index) => {
         this.selectedIndex = index !== undefined ? index : 0;
       })
