@@ -5,6 +5,7 @@ import {GaussianModel} from "../../shared/models/peaks/gaussian.model";
 import {LorentzianModel} from "../../shared/models/peaks/lorentzian.model";
 import {PseudoVoigtModel} from "../../shared/models/peaks/pseudo-voigt.model";
 import {LinearModel} from "../../shared/models/bkg/linear.model";
+import {Parameter} from "../../shared/models/parameter.model";
 
 export const projectFeatureKey = 'project';
 
@@ -29,6 +30,7 @@ export const projectReducer = createReducer(
         pattern: action.pattern,
         models: ModelAdapter.getInitialState(),
         bkg_model: new LinearModel(),
+        currentModelIndex: undefined,
       }
       return adapter.addOne(item, state)
     }
@@ -81,6 +83,18 @@ export const projectReducer = createReducer(
     }
   ),
 
+  on(ActionTypes.selectModel, (state, action) => {
+      const item = state.entities[action.itemIndex];
+      if (item == undefined) {
+        return state;
+      }
+      return adapter.updateOne({
+        id: action.itemIndex,
+        changes: {currentModelIndex: action.modelIndex}
+      }, state)
+    }
+  ),
+
 
   on(ActionTypes.selectFitItem, (state, action) => {
       return {...state, currentIndex: action.index};
@@ -109,6 +123,49 @@ export const projectReducer = createReducer(
 
   on(ActionTypes.clearFitItems, (state, action) => {
     return adapter.removeAll(state);
+  }),
+
+  on(ActionTypes.updateParameter, (state, action) => {
+    const item = state.entities[action.itemIndex];
+    if (item == undefined) {
+      return state;
+    }
+    const model = item.models.entities[action.modelIndex];
+    if (model == undefined) {
+      return state;
+    }
+    if (model.parameters == undefined) {
+      return state;
+    }
+
+    // const parameter = model.parameters.entities[action.parameter.name];
+    // @ts-ignore we check before whether the entities field exists...
+    const parameter = model.parameters.entities[action.parameter.name];
+    if (parameter === undefined) {
+      return state;
+    }
+    // select parameter based on name
+
+    return adapter.updateOne({
+      id: action.itemIndex,
+      changes: {
+        models: ModelAdapter.updateOne({
+          id: action.modelIndex,
+          changes: {
+            parameters: ParameterAdapter.updateOne({
+              id: parameter.name,
+              changes: {
+                value: action.parameter.value,
+                vary: action.parameter.vary,
+                min: action.parameter.min,
+                max: action.parameter.max,
+                error: action.parameter.error
+              }
+            }, model.parameters)
+          }
+        }, item.models)
+      }
+    }, state)
   }),
 )
 

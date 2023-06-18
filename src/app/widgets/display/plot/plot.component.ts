@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import PatternPlot from "../../../lib/plotting/pattern-plot";
 import LineItem from "../../../lib/plotting/items/lineItem";
-import {PeakService} from "../../../shared/peak.service";
+import {ModelService} from "../../../shared/model.service";
 import {ClickModel, Model} from "../../../shared/models/model.interface";
 import {Item} from "../../../lib/plotting/items/item";
 import {BkgService} from "../../../shared/bkg.service";
@@ -47,7 +47,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private store: Store<PlotState>,
-    private peakService: PeakService,
+    private peakService: ModelService,
     private bkgService: BkgService,
     private mouseService: MousePositionService) {
 
@@ -140,7 +140,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   _initPeakLines(): void {
-    this._addedPeakSubscription = this.peakService.addedPeak$.subscribe((peak: Model) => {
+    this._addedPeakSubscription = this.peakService.addedModel$.subscribe((peak: Model) => {
       this.addModelLine().setData(this.mainLine.x, peak.evaluate(this.mainLine.x));
       this.updateSumLine();
     });
@@ -211,7 +211,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   _initModelUpdateHandling(): void {
-    this._combinedUpdateSubscription = combineLatest(this.bkgService.bkgModel$, this.peakService.peaks$).pipe(
+    this._combinedUpdateSubscription = combineLatest(this.bkgService.bkgModel$, this.peakService.models$).pipe(
       throttleTime(30, undefined, {leading: true, trailing: true})
     ).subscribe(([bkgModel, peaks]) => {
       if (bkgModel === undefined) {

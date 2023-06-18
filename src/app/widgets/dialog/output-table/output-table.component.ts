@@ -21,49 +21,49 @@ export class OutputTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.fitModelService.fitModels$.subscribe((fitModels) => {
-      let output: any[] = [];
-      let peakNum = 0;
-      for (let i = 0; i < fitModels.length; i++) {
-        peakNum = fitModels[i].peaks.length > peakNum ? fitModels[i].peaks.length : peakNum;
-        let row = convertToOutputRow(fitModels[i]);
-        output.push(row);
-      }
-
-      let displayedColumns: string[] = [];
-      displayedColumns.push('name');
-
-      displayedColumns.push('chi2');
-      displayedColumns.push('reduced_chi2');
-
-      for (let i = 1; i < peakNum + 1; i++) {
-        displayedColumns.push(`p${i}_type`);
-        displayedColumns.push(`p${i}_center`);
-        displayedColumns.push(`p${i}_center_error`);
-        displayedColumns.push(`p${i}_fwhm`);
-        displayedColumns.push(`p${i}_fwhm_error`);
-        displayedColumns.push(`p${i}_amplitude`);
-        displayedColumns.push(`p${i}_amplitude_error`);
-        displayedColumns.push(`p${i}_fraction`);
-        displayedColumns.push(`p${i}_fraction_error`);
-      }
-
-
-      displayedColumns.push('bkg_type');
-      let bkgParamsNum = 0;
-      fitModels.forEach((fitModel) => {
-        bkgParamsNum = fitModel.background.parameters.length > bkgParamsNum ?
-          fitModel.background.parameters.length : bkgParamsNum;
-      })
-
-      for (let i = 1; i < bkgParamsNum + 1; i++) {
-        displayedColumns.push(`bkg_p${i}`);
-        displayedColumns.push(`bkg_p${i}_error`);
-      }
-
-      this.displayedColumns = displayedColumns
-      this.dataSource = output;
-    });
+    // this.sub = this.fitModelService.fitModels$.subscribe((fitModels) => {
+    //   let output: any[] = [];
+    //   let peakNum = 0;
+    //   for (let i = 0; i < fitModels.length; i++) {
+    //     peakNum = fitModels[i].peaks.length > peakNum ? fitModels[i].peaks.length : peakNum;
+    //     let row = convertToOutputRow(fitModels[i]);
+    //     output.push(row);
+    //   }
+    //
+    //   let displayedColumns: string[] = [];
+    //   displayedColumns.push('name');
+    //
+    //   displayedColumns.push('chi2');
+    //   displayedColumns.push('reduced_chi2');
+    //
+    //   for (let i = 1; i < peakNum + 1; i++) {
+    //     displayedColumns.push(`p${i}_type`);
+    //     displayedColumns.push(`p${i}_center`);
+    //     displayedColumns.push(`p${i}_center_error`);
+    //     displayedColumns.push(`p${i}_fwhm`);
+    //     displayedColumns.push(`p${i}_fwhm_error`);
+    //     displayedColumns.push(`p${i}_amplitude`);
+    //     displayedColumns.push(`p${i}_amplitude_error`);
+    //     displayedColumns.push(`p${i}_fraction`);
+    //     displayedColumns.push(`p${i}_fraction_error`);
+    //   }
+    //
+    //
+    //   displayedColumns.push('bkg_type');
+    //   let bkgParamsNum = 0;
+    //   fitModels.forEach((fitModel) => {
+    //     bkgParamsNum = fitModel.background.parameters.length > bkgParamsNum ?
+    //       fitModel.background.parameters.length : bkgParamsNum;
+    //   })
+    //
+    //   for (let i = 1; i < bkgParamsNum + 1; i++) {
+    //     displayedColumns.push(`bkg_p${i}`);
+    //     displayedColumns.push(`bkg_p${i}_error`);
+    //   }
+    //
+    //   this.displayedColumns = displayedColumns
+    //   this.dataSource = output;
+    // });
   }
 
   convertColumnNameToLabel(columnName: string): string {

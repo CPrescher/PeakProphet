@@ -9,7 +9,7 @@ import {ParameterItemSimpleComponent} from './widgets/inline/parameter-item-simp
 import {MainViewComponent} from './views/main/main-view.component';
 import {NumbersOnlyDirective} from './shared/directives/numbers-only.directive';
 import {PeakItemComponent} from './widgets/control/peak-item/peak-item.component';
-import {PeakService} from "./shared/peak.service";
+import {ModelService} from "./shared/model.service";
 import {PeakControlComponent} from './widgets/control/peak-control/peak-control.component';
 import {PlotComponent} from './widgets/display/plot/plot.component';
 import {DataControlComponent} from './widgets/control/data-control/data-control.component';
@@ -57,7 +57,7 @@ import {ProjectModule} from "./project/project.module";
     StoreDevtoolsModule.instrument({ maxAge: 10, logOnly: !isDevMode() })
   ],
   providers: [
-    PeakService,
+    ModelService,
   ],
   bootstrap: [AppComponent]
 })

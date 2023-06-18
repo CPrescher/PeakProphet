@@ -1,7 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ClickModel} from "../../../shared/models/model.interface";
-import {PeakService} from "../../../shared/peak.service";
-import {Subscription} from "rxjs";
+import {ModelService} from "../../../shared/model.service";
+import {Observable, Subscription} from "rxjs";
+import {Parameter} from "../../../shared/models/parameter.model";
+import {ProjectState} from "../../../project/store/project.state";
+import {Store} from "@ngrx/store";
+import {currentFitItemIndex, currentModelIndex} from "../../../project/store/project.selectors";
+import {removeModel} from "../../../project/store/project.actions";
 
 @Component({
   selector: 'app-peak-item',
@@ -11,51 +16,66 @@ import {Subscription} from "rxjs";
 export class PeakItemComponent implements OnInit, OnDestroy {
   peak: ClickModel | undefined = undefined;
 
-  selectedPeakIndex: number | undefined = undefined;
+  selectedModelIndex: number | undefined = undefined;
   peakNum: number = 0;
 
-  private selectedPeakSubscription: Subscription = new Subscription();
-  private selectedPeakIndexSubscription: Subscription = new Subscription();
+  private selectedModelSubscription: Subscription = new Subscription();
+  private selectedModelIndexSubscription: Subscription = new Subscription();
+
+  private currentFitItemIndex: Observable<number | undefined>;
+  private currentModelIndex: Observable<number | undefined>;
 
 
   constructor(
-    private peakService: PeakService) {
+    private modelService: ModelService,
+    public projectStore: Store<ProjectState>,) {
   }
 
   ngOnInit() {
-    this.selectedPeakSubscription = this.peakService.selectedPeak$.subscribe((peak: ClickModel | undefined) => {
+    this.selectedModelSubscription = this.modelService.selectedModel$.subscribe((peak: ClickModel | undefined) => {
       this.peak = peak;
     });
-    this.selectedPeakIndexSubscription = this.peakService.selectedPeakIndex$.subscribe((index: number | undefined) => {
-      this.selectedPeakIndex = index;
-      this.peakNum = this.peakService.getPeaks().length;
+    this.selectedModelIndexSubscription = this.modelService.selectedPeakIndex$.subscribe((index: number | undefined) => {
+      this.selectedModelIndex = index;
+      this.peakNum = this.modelService.getPeaks().length;
+    });
+
+    this.currentFitItemIndex = this.projectStore.select(currentFitItemIndex);
+    this.currentFitItemIndex.subscribe((index: number | undefined) => {
+      console.log("currentFitItemIndex", index);
+    });
+
+    this.currentModelIndex = this.projectStore.select(currentModelIndex);
+    this.currentModelIndex.subscribe((index: number | undefined) => {
+      console.log("currentModelIndex", index);
     });
   }
 
-  removePeak() {
-    if (this.selectedPeakIndex !== undefined) {
-      this.peakService.removePeak(this.selectedPeakIndex);
+  removeModel() {
+    if (this.selectedModelIndex !== undefined) {
+      this.modelService.removeModel(this.selectedModelIndex);
     }
   }
 
-  updatePeak() {
-    if (this.peak !== undefined && this.selectedPeakIndex !== undefined) {
-      this.peakService.updatePeak(this.selectedPeakIndex, this.peak);
+  updateModel(parameter: Parameter) {
+    if (this.peak !== undefined && this.selectedModelIndex !== undefined) {
+      this.modelService.updateModel(this.selectedModelIndex, this.peak);
+      this.modelService.updateParameter(this.selectedModelIndex, parameter);
     }
   }
 
-  selectPeak(index: number) {
-    this.peakService.selectPeak(index);
+  selectModel(index: number) {
+    this.modelService.selectModel(index);
   }
 
-  definePeak() {
-    if(this.selectedPeakIndex !== undefined) {
-      this.peakService.clickDefinePeak(this.selectedPeakIndex);
+  defineModel() {
+    if(this.selectedModelIndex !== undefined) {
+      this.modelService.clickDefineModel(this.selectedModelIndex);
     }
   }
 
   ngOnDestroy() {
-    this.selectedPeakSubscription.unsubscribe();
-    this.selectedPeakIndexSubscription.unsubscribe();
+    this.selectedModelSubscription.unsubscribe();
+    this.selectedModelIndexSubscription.unsubscribe();
   }
 }

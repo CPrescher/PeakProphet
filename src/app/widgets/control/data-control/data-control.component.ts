@@ -2,6 +2,9 @@ import {Component, OnDestroy} from '@angular/core';
 import {FitModelService} from "../../../shared/fit-model.service";
 import {MatSelectionListChange} from "@angular/material/list";
 import {firstValueFrom, lastValueFrom, Observable, Subscription} from "rxjs";
+import {Store} from "@ngrx/store";
+import {ProjectState} from "../../../project/store/project.state";
+import {currentFitItemIndex, fitItems} from "../../../project/store/project.selectors";
 
 @Component({
   selector: 'app-data-control',
@@ -22,11 +25,11 @@ export class DataControlComponent implements OnDestroy {
   private _fitModelSubscription = new Subscription();
   private _selectedIndexSubscription = new Subscription();
 
-  constructor(private fitModelService: FitModelService) {
-
-    this.modelNum = this.fitModelService.fitModels.length;
-
-    this._selectedIndexSubscription = fitModelService.selectedIndex$.subscribe((index: number | undefined) => {
+  constructor(
+    private fitModelService: FitModelService,
+    private projectStore: Store<ProjectState>
+  ) {
+    this._selectedIndexSubscription = projectStore.select(currentFitItemIndex).subscribe((index: number | undefined) => {
       if (index !== undefined) {
         this.selectedModelIndex = index;
         this.modelNum = this.fitModelService.fitModels.length;
@@ -38,8 +41,11 @@ export class DataControlComponent implements OnDestroy {
       }
     });
 
-    this._fitModelSubscription = fitModelService.fitModels$.subscribe((fitModels) => {
-      this.fitModelNames = fitModels.map(fitModel => fitModel.name);
+    this._fitModelSubscription = projectStore.select(fitItems).subscribe((fitItems) => {
+      this.fitModelNames = [];
+      for (const key in fitItems) {
+        this.fitModelNames.push(fitItems[key].name);
+      }
     });
   }
 

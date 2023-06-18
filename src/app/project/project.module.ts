@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {StoreModule} from '@ngrx/store';
 import * as fromProject from './store/project.reducers';
-
 
 
 @NgModule({
@@ -12,4 +11,5 @@ import * as fromProject from './store/project.reducers';
     StoreModule.forFeature(fromProject.projectFeatureKey, fromProject.projectReducer)
   ]
 })
-export class ProjectModule { }
+export class ProjectModule {
+}

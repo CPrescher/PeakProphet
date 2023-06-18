@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {filter, fromEvent, withLatestFrom} from "rxjs";
-import {PeakService} from "./peak.service";
+import {ModelService} from "./model.service";
 import {MousePositionService} from "./mouse-position.service";
 import {BkgService} from "./bkg.service";
 
@@ -14,7 +14,7 @@ export class ShortcutService {
   autoSelectClosestPeakToggle = false;
 
   constructor(
-    private peakService: PeakService,
+    private modelService: ModelService,
     private mousePositionService: MousePositionService,
     private bkgService: BkgService,
   ) {
@@ -27,22 +27,22 @@ export class ShortcutService {
       }
       switch (event.key) {
         case 'g':
-          this.peakService.addPeak("Gaussian");
-          this.peakService.clickDefinePeak()
+          this.modelService.addPeak("Gaussian");
+          this.modelService.clickDefineModel()
           break;
         case 'l':
-          this.peakService.addPeak("Lorentzian");
-          this.peakService.clickDefinePeak()
+          this.modelService.addPeak("Lorentzian");
+          this.modelService.clickDefineModel()
           break;
         case 'p':
-          this.peakService.addPeak("Pseudo-Voigt");
-          this.peakService.clickDefinePeak()
+          this.modelService.addPeak("Pseudo-Voigt");
+          this.modelService.clickDefineModel()
           break;
         case 'd':
-          this.peakService.clickDefinePeak();
+          this.modelService.clickDefineModel();
           break;
         case 'r':
-          this.peakService.removePeak()
+          this.modelService.removeModel()
           break;
         case 's':
           this.autoSelectClosestPeakToggle = !this.autoSelectClosestPeakToggle;
@@ -62,7 +62,7 @@ export class ShortcutService {
       const x = mousePosition.x;
       const y = mousePosition.y;
       const y_bkg = bkgModel ? bkgModel.evaluate([x])[0] : 0;
-      this.peakService.selectClosestPeak(x, y - y_bkg);
+      this.modelService.selectClosestModel(x, y - y_bkg);
     });
   }
 }

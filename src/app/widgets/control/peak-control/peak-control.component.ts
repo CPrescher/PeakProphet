@@ -1,5 +1,5 @@
 import {Component,OnInit} from '@angular/core';
-import {PeakService} from "../../../shared/peak.service";
+import {ModelService} from "../../../shared/model.service";
 import {Store} from "@ngrx/store";
 import {ProjectState} from "../../../project/store/project.state";
 
@@ -14,7 +14,7 @@ export class PeakControlComponent implements OnInit {
 
   constructor(
     private projectStore: Store<ProjectState>,
-    private peakService: PeakService) {
+    private peakService: ModelService) {
   }
 
   ngOnInit() {
@@ -23,6 +23,6 @@ export class PeakControlComponent implements OnInit {
 
   addPeak() {
     this.peakService.addPeak(this.selectedPeakType);
-    this.peakService.clickDefinePeak()
+    this.peakService.clickDefineModel()
   }
 }

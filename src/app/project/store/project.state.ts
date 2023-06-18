@@ -13,6 +13,7 @@ export interface FitItem {
   name: string,
   pattern: Pattern,
   models: EntityState<Model>
+  currentModelIndex: number | undefined,
 }
 
 
@@ -25,7 +26,9 @@ export interface Model {
 
 export const adapter = createEntityAdapter<FitItem>();
 export const ModelAdapter = createEntityAdapter<Model>();
-export const ParameterAdapter = createEntityAdapter<Parameter>();
+export const ParameterAdapter = createEntityAdapter<Parameter>(
+  {selectId: (param: Parameter) => param.name}
+);
 
 
 export const initialProjectState: ProjectState = adapter.getInitialState({name: '', currentIndex: undefined});

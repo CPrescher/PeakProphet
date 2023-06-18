@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {PatternService} from "./pattern.service";
 import {FitModel} from "./data/fit-model";
 import {createLinearChangingPeakPatterns} from "./data/pattern-generation";
-import {PeakService} from "./peak.service";
+import {ModelService} from "./model.service";
 import {ClickModel} from "./models/model.interface";
 import {Pattern} from "./data/pattern";
 import {BehaviorSubject, fromEvent, map, Observable, Subject, take, tap, withLatestFrom} from "rxjs";
@@ -22,6 +22,7 @@ import {
 } from "../project/store/project.actions";
 import {ProjectState} from "../project/store/project.state";
 import {GaussianModel} from "./models/peaks/gaussian.model";
+import {fitItems} from "../project/store/project.selectors";
 
 
 /**
@@ -36,7 +37,7 @@ export class FitModelService {
   public fitModels: FitModel[] = [];
 
   private fitModelsSubject = new BehaviorSubject<FitModel[]>([]);
-  public fitModels$ = this.fitModelsSubject.asObservable();
+  public fitModels$ = this.projectStore.select(fitItems)
 
   private fitProgressSubject = new Subject<any>();
   public fitProgress$ = this.fitProgressSubject.asObservable();
@@ -51,7 +52,7 @@ export class FitModelService {
     private plotStore: Store<PlotState>,
     private projectStore: Store<ProjectState>,
     private patternService: PatternService,
-    private peakService: PeakService,
+    private peakService: ModelService,
     private bkgService: BkgService
   ) {
     const patterns = createLinearChangingPeakPatterns('gold ', 4, 10, [0, 10])
@@ -99,7 +100,6 @@ export class FitModelService {
     bkg.guess(pattern.x, pattern.y)
     const fitModel = new FitModel(name, pattern, peaks, bkg);
     this.fitModels.push(fitModel);
-    this.fitModelsSubject.next(this.fitModels);
 
     this.projectStore.dispatch(addFitItem(
       {
@@ -112,7 +112,7 @@ export class FitModelService {
       this.projectStore.dispatch(addModel(
         {
           itemIndex: this.fitModels.length - 1,
-          model: peak
+          model: Object.assign({}, peak) // Using a copy of the peak
         }
       ));
     })
@@ -220,7 +220,6 @@ export class FitModelService {
   removeFitModel(index: number) {
     this.projectStore.dispatch(removeFitItem({index}));
     this.fitModels.splice(index, 1);
-    this.fitModelsSubject.next(this.fitModels);
 
     if (index === this.fitModels.length && index > 0) {
       this.selectFitModel(index - 1);
@@ -236,7 +235,6 @@ export class FitModelService {
 
   clearFitModels() {
     this.fitModels = [];
-    this.fitModelsSubject.next(this.fitModels);
     this.selectedIndexSubject.next(undefined);
     this.clearSubServices();
     this.projectStore.dispatch(clearFitItems());
@@ -247,7 +245,6 @@ export class FitModelService {
       const model = this.fitModels[index];
       this.fitModels.splice(index, 1);
       this.fitModels.splice(index - 1, 0, model);
-      this.fitModelsSubject.next(this.fitModels);
       this.selectFitModel(index - 1);
       this.projectStore.dispatch(moveFitItem({index, delta: -1}));
       this.projectStore.dispatch(selectFitItem({index: index - 1}))
@@ -259,7 +256,6 @@ export class FitModelService {
       const model = this.fitModels[index];
       this.fitModels.splice(index, 1);
       this.fitModels.splice(index + 1, 0, model);
-      this.fitModelsSubject.next(this.fitModels);
       this.selectFitModel(index + 1);
       this.projectStore.dispatch(moveFitItem({index, delta: 1}));
       this.projectStore.dispatch(selectFitItem({index: index + 1}))

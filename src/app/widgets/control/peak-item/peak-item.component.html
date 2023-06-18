@@ -1,7 +1,7 @@
 <mat-card class="mat-elevation-z5">
   <mat-card-header>
     <mat-card-title>
-      <div *ngIf="selectedPeakIndex !== undefined">
+      <div *ngIf="selectedModelIndex !== undefined">
         <span
           *ngIf="peak"
           data-test="peak-type"
@@ -12,33 +12,33 @@
   </mat-card-header>
   <mat-card-content>
     <div *ngIf="peak !== undefined; else elseBlock">
-      <div class="browse-row" *ngIf="selectedPeakIndex !== undefined">
+      <div class="browse-row" *ngIf="selectedModelIndex !== undefined">
         <app-browse-index
-          [index]="selectedPeakIndex"
+          [index]="selectedModelIndex"
           [max]="peakNum"
           [min]="0"
           [add]="1"
-          (indexChange)="selectPeak($event)"></app-browse-index>
+          (indexChange)="selectModel($event)"></app-browse-index>
         <div class="spacer"></div>
         <button
           mat-mini-fab
           data-test="remove-button"
           color="primary"
-          (click)="removePeak()"
+          (click)="removeModel()"
         >-
         </button>
       </div>
       <div *ngFor="let param of peak.parameters" class="parameter-item-container">
         <app-parameter-item-simple
           [parameter]="param"
-          (parameterChange)="updatePeak()"
+          (parameterChange)="updateModel($event)"
           class="parameter-item">
         </app-parameter-item-simple>
       </div>
       <button
         mat-raised-button
         color="primary"
-        (click)="definePeak()"
+        (click)="defineModel()"
         matTooltip="Define parameters by clicking into the pattern."
         matTooltipShowDelay="500"
         matTooltipPosition="above"

@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {PeakService} from "../../../shared/peak.service";
+import {ModelService} from "../../../shared/model.service";
 
 import {PeakControlComponent} from './peak-control.component';
 import {MaterialsModule} from "../../../shared/gui/materials.module";
@@ -16,7 +16,7 @@ describe('PeakControlComponent', () => {
   let component: PeakControlComponent;
   let fixture: ComponentFixture<PeakControlComponent>;
   let loader: HarnessLoader;
-  let peakService: PeakService;
+  let peakService: ModelService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,7 +25,7 @@ describe('PeakControlComponent', () => {
     })
       .compileComponents();
 
-    peakService = TestBed.inject(PeakService);
+    peakService = TestBed.inject(ModelService);
 
     peakService.peakTypes = {
       "DummyBear": GaussianModel,
@@ -64,6 +64,6 @@ describe('PeakControlComponent', () => {
     const addPeakButton = await loader.getHarness<MatButtonHarness>(MatButtonHarness);
     await addPeakButton.click();
     expect(peakService.addPeak).toHaveBeenCalled();
-    expect(peakService.clickDefinePeak).toHaveBeenCalled();
+    expect(peakService.clickDefineModel).toHaveBeenCalled();
   });
 });

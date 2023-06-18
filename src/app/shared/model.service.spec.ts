@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {PeakService} from './peak.service';
+import {ModelService} from './model.service';
 
 describe('ModelService', () => {
-  let service: PeakService;
+  let service: ModelService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PeakService);
+    service = TestBed.inject(ModelService);
     service.clearPeaks();
     service.addPeak("Gaussian");
     service.addPeak("Lorentzian");
@@ -18,14 +18,14 @@ describe('ModelService', () => {
   });
 
   it('Should select the first peak', () => {
-    service.selectPeak(0);
+    service.selectModel(0);
     service.selectedPeakIndex$.subscribe(index => {
       expect(index).toBe(0);
     });
   });
 
   it('Should select the second peak', () => {
-    service.selectPeak(1);
+    service.selectModel(1);
     service.selectedPeakIndex$.subscribe(index => {
       expect(index).toBe(1);
     });
@@ -37,13 +37,13 @@ describe('ModelService', () => {
   });
 
   it('Should remove the first peak', () => {
-    service.removePeak(0);
+    service.removeModel(0);
     expect(service.getPeaks().length).toBe(1);
     expect(service.getPeaks()[0].type).toBe("Lorentzian");
   });
 
   it('Should remove the second peak', () => {
-    service.removePeak(1);
+    service.removeModel(1);
     expect(service.getPeaks().length).toBe(1);
     expect(service.getPeaks()[0].type).toBe("Gaussian");
   });
@@ -53,11 +53,11 @@ describe('ModelService', () => {
   });
 
   it('Should throw an error when removing an invalid peak', () => {
-    expect(() => service.removePeak(2)).toThrowError(`Cannot remove peak at index 2, it does not exist`);
+    expect(() => service.removeModel(2)).toThrowError(`Cannot remove peak at index 2, it does not exist`);
   });
 
   it('Should throw an error when selecting an invalid peak', () => {
-    expect(() => service.selectPeak(2)).toThrowError(`Cannot select peak at index 2, it does not exist`);
+    expect(() => service.selectModel(2)).toThrowError(`Cannot select peak at index 2, it does not exist`);
   });
 
   it('Should clear all peaks', () => {
@@ -66,8 +66,8 @@ describe('ModelService', () => {
   });
 
   it('Should select the first peak', (done: DoneFn) => {
-    service.selectPeak(0);
-    service.selectedPeak$.subscribe(peak => {
+    service.selectModel(0);
+    service.selectedModel$.subscribe(peak => {
       if (peak === undefined) return;
       expect(peak.type).toBe("Gaussian");
       done();
@@ -76,7 +76,7 @@ describe('ModelService', () => {
 
   it('send undefined when clearing peaks', (done: DoneFn) => {
     service.clearPeaks();
-    service.selectedPeak$.subscribe(peak => {
+    service.selectedModel$.subscribe(peak => {
       expect(peak).toBe(undefined);
       done();
     });
@@ -85,15 +85,15 @@ describe('ModelService', () => {
   it('should send undefined when removing the last peak', (done: DoneFn) => {
     service.clearPeaks();
     service.addPeak("Gaussian");
-    service.removePeak(0);
-    service.selectedPeak$.subscribe(peak => {
+    service.removeModel(0);
+    service.selectedModel$.subscribe(peak => {
       expect(peak).toBe(undefined);
       done();
     });
   });
 
   it("should send addedPeak when adding a peak", (done: DoneFn) => {
-    service.addedPeak$.subscribe(peak => {
+    service.addedModel$.subscribe(peak => {
       expect(peak.type).toBe("Gaussian");
       done();
     });
@@ -105,6 +105,6 @@ describe('ModelService', () => {
       expect(index).toBe(1);
       done();
     });
-    service.removePeak(1);
+    service.removeModel(1);
   });
 });

@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PlotComponent} from './plot.component';
-import {PeakService} from "../../../shared/peak.service";
+import {ModelService} from "../../../shared/model.service";
 import {BkgService} from "../../../shared/bkg.service";
 import {Pattern} from "../../../shared/data/pattern";
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
@@ -10,7 +10,7 @@ import {currentPattern} from "../../../plot/plot.selectors";
 describe('PlotComponent', () => {
   let component: PlotComponent;
   let fixture: ComponentFixture<PlotComponent>;
-  let peakService: PeakService;
+  let peakService: ModelService;
   let bkgService: BkgService;
   let store: MockStore<{ currentPattern: Pattern | undefined }>
   let initialPattern: Pattern = new Pattern(
@@ -31,7 +31,7 @@ describe('PlotComponent', () => {
     })
       .compileComponents();
 
-    peakService = TestBed.inject(PeakService);
+    peakService = TestBed.inject(ModelService);
     bkgService = TestBed.inject(BkgService);
     store = TestBed.inject(MockStore);
 
@@ -50,7 +50,7 @@ describe('PlotComponent', () => {
   });
 
   it("should create a model Line item when Peak is added", (done) => {
-    const peakNum = peakService.peaks.length;
+    const peakNum = peakService.models.length;
     peakService.addPeak("Gaussian");
 
     setTimeout(() => {
@@ -64,7 +64,7 @@ describe('PlotComponent', () => {
 
     setTimeout(() => {
       expect(component.peakLines.length).toBe(1);
-      peakService.removePeak(0);
+      peakService.removeModel(0);
       setTimeout(() => {
         expect(component.peakLines.length).toBe(0);
         done();
