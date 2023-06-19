@@ -3,18 +3,18 @@
     <mat-card-title>
       <div *ngIf="selectedModelIndex !== undefined">
         <span
-          *ngIf="peak"
+          *ngIf="model"
           data-test="peak-type"
           class="not-selectable"
-        >{{peak.type}}</span>
+        >{{model.type}}</span>
       </div>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div *ngIf="peak !== undefined; else elseBlock">
+    <div *ngIf="model !== undefined; else elseBlock">
       <div class="browse-row" *ngIf="selectedModelIndex !== undefined">
         <app-browse-index
-          [index]="selectedModelIndex"
+          [index]="selectedModelIndex? selectedModelIndex : 0"
           [max]="peakNum"
           [min]="0"
           [add]="1"
@@ -28,7 +28,7 @@
         >-
         </button>
       </div>
-      <div *ngFor="let param of peak.parameters" class="parameter-item-container">
+      <div *ngFor="let param of model.parameters" class="parameter-item-container">
         <app-parameter-item-simple
           [parameter]="param"
           (parameterChange)="updateModel($event)"

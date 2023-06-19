@@ -8,7 +8,7 @@ describe('ModelService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ModelService);
-    service.clearPeaks();
+    service.clearModels();
     service.addPeak("Gaussian");
     service.addPeak("Lorentzian");
   });
@@ -61,7 +61,7 @@ describe('ModelService', () => {
   });
 
   it('Should clear all peaks', () => {
-    service.clearPeaks();
+    service.clearModels();
     expect(service.getPeaks().length).toBe(0);
   });
 
@@ -75,7 +75,7 @@ describe('ModelService', () => {
   });
 
   it('send undefined when clearing peaks', (done: DoneFn) => {
-    service.clearPeaks();
+    service.clearModels();
     service.selectedModel$.subscribe(peak => {
       expect(peak).toBe(undefined);
       done();
@@ -83,7 +83,7 @@ describe('ModelService', () => {
   });
 
   it('should send undefined when removing the last peak', (done: DoneFn) => {
-    service.clearPeaks();
+    service.clearModels();
     service.addPeak("Gaussian");
     service.removeModel(0);
     service.selectedModel$.subscribe(peak => {

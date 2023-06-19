@@ -1,7 +1,9 @@
 import {createSelector} from "@ngrx/store";
-import {adapter} from "./project.state";
+import {adapter, ModelAdapter} from "./project.state";
+import {convertModel} from "../../shared/models/peaks";
 
 const fitItemSelectors = adapter.getSelectors();
+const modelSelectors = ModelAdapter.getSelectors();
 
 
 export const projectState = state => state.project;
@@ -30,15 +32,27 @@ export const currentModelIndex = createSelector(
   }
 );
 
-export const currentModel = createSelector(
-  projectState,
-  currentModelIndex,
-  (project, index) => project.entities[project.currentIndex].models[index]
-);
-
 export const models = createSelector(
   projectState,
   currentFitItemIndex,
   (project, index) => project.entities[index].models
 );
+
+export const currentModel = createSelector(
+  models,
+  currentModelIndex,
+  (models, index) => {
+    if (index === undefined) {
+      return undefined;
+    }
+    const id = models.ids[index];
+    return convertModel(models.entities[id]);
+  }
+);
+
+export const modelCount = createSelector(
+  models,
+  modelSelectors.selectTotal
+);
+
 

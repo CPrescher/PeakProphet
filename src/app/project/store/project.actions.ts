@@ -42,6 +42,11 @@ export const removeModel = createAction(
   props<{ itemIndex: number, modelIndex: number }>()
 )
 
+export const clearModels = createAction(
+  "[FIT API] Clear Models",
+  props<{ itemIndex: number }>()
+)
+
 export const addModelType = createAction(
   "[FIT API] Add Peak Type",
   props<{ peakType: string }>()

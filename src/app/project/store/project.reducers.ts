@@ -83,6 +83,21 @@ export const projectReducer = createReducer(
     }
   ),
 
+  on(ActionTypes.clearModels, (state, action) => {
+      const item = state.entities[action.itemIndex];
+      if (item == undefined) {
+        return state;
+      }
+      return adapter.updateOne({
+        id: action.itemIndex,
+        changes: {
+          models: ModelAdapter.removeAll(item.models),
+          currentModelIndex: undefined
+        }
+      }, state)
+    }
+  ),
+
   on(ActionTypes.selectModel, (state, action) => {
       const item = state.entities[action.itemIndex];
       if (item == undefined) {

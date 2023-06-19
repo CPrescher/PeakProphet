@@ -8,7 +8,7 @@ import {MousePositionService} from "./mouse-position.service";
 import {BkgService} from "./bkg.service";
 import {Store} from '@ngrx/store';
 import {ProjectState} from "../project/store/project.state";
-import {addModel, addModelType, removeModel, selectModel, updateParameter} from '../project/store/project.actions';
+import {addModel, addModelType, clearModels, removeModel, selectModel, updateParameter} from '../project/store/project.actions';
 import {currentFitItemIndex, currentModelIndex} from "../project/store/project.selectors";
 import {Parameter} from "./models/parameter.model";
 
@@ -22,8 +22,6 @@ import {Parameter} from "./models/parameter.model";
 })
 export class ModelService {
   public models: ClickModel[] = [];
-  private modelsSubject = new BehaviorSubject<ClickModel[]>([]);
-  public models$ = this.modelsSubject.asObservable();
 
   public peakTypes: { [key: string]: any } = {
     "Gaussian": GaussianModel,
@@ -31,10 +29,6 @@ export class ModelService {
     "Pseudo-Voigt": PseudoVoigtModel,
   }
 
-  private selectedModelIndexSubject = new BehaviorSubject<number | undefined>(undefined);
-  public selectedPeakIndex$ = this.selectedModelIndexSubject.asObservable();
-  private selectedModelSubject = new BehaviorSubject<ClickModel | undefined>(undefined);
-  public selectedModel$ = this.selectedModelSubject.asObservable();
   private addedModelSubject = new Subject<ClickModel>();
   public addedModel$ = this.addedModelSubject.asObservable();
 
@@ -66,12 +60,6 @@ export class ModelService {
       throw new Error("Cannot select peak, no fit item is selected");
     }
     this.projectStore.dispatch(selectModel({itemIndex: this.currentFitItemIndex, modelIndex: index}));
-    if (index < this.models.length && index >= 0) {
-      this.selectedModelIndexSubject.next(index);
-      this.selectedModelSubject.next(this.models[index]);
-    } else {
-      throw new Error(`Cannot select peak at index ${index}, it does not exist`);
-    }
   }
 
   getPeaks(): Model[] {
@@ -80,7 +68,6 @@ export class ModelService {
 
   setPeaks(peaks: ClickModel[]) {
     this.models = peaks;
-    this.modelsSubject.next(this.models);
     this.updatePeakSelectionSubjects();
   }
 
@@ -90,17 +77,20 @@ export class ModelService {
    * peak in the list.
    */
   updatePeakSelectionSubjects() {
+    console.log(this.currentFitItemIndex)
+    if (this.currentFitItemIndex === undefined) {
+      return;
+    }
     if (this.models.length === 0) {
-      this.selectedModelIndexSubject.next(undefined);
-      this.selectedModelSubject.next(undefined);
+      this.projectStore.dispatch(selectModel({itemIndex: this.currentFitItemIndex, modelIndex: undefined}));
       return;
     } else {
-      let selectedPeakIndex = this.selectedModelIndexSubject.getValue();
-      if (selectedPeakIndex === undefined || selectedPeakIndex >= this.models.length) {
-        selectedPeakIndex = this.models.length - 1;
+      if (this.currentModelIndex === undefined || this.currentModelIndex >= this.models.length) {
+        this.projectStore.dispatch(selectModel({
+          itemIndex: this.currentFitItemIndex,
+          modelIndex: this.models.length - 1
+        }));
       }
-      this.selectedModelIndexSubject.next(selectedPeakIndex);
-      this.selectedModelSubject.next(this.models[selectedPeakIndex]);
     }
   }
 
@@ -117,12 +107,13 @@ export class ModelService {
     this.models.push(peak);
     this.addedModelSubject.next(peak);
     this.projectStore.dispatch(addModel({itemIndex: this.currentFitItemIndex, model: peak2}));
+    this.projectStore.dispatch(selectModel({itemIndex: this.currentFitItemIndex, modelIndex: this.models.length - 1}));
     this.selectModel(this.models.length - 1);
   }
 
   removeModel(index?: number | undefined) {
     if (index === undefined) {
-      index = this.selectedModelIndexSubject.getValue();
+      index = this.currentModelIndex
       if (index === undefined) {
         return;
       }
@@ -134,7 +125,6 @@ export class ModelService {
     if (index < this.models.length && index >= 0) {
       this.models.splice(index, 1);
       this.removedModelSubject.next(index);
-      this.modelsSubject.next(this.models);
       this.updatePeakSelectionSubjects();
 
       this.projectStore.dispatch(removeModel({itemIndex: this.currentFitItemIndex, modelIndex: index}));
@@ -163,17 +153,21 @@ export class ModelService {
     }));
   }
 
-  clearPeaks() {
+  clearModels() {
+    if (this.currentFitItemIndex === undefined) {
+      throw new Error("Cannot update peak, no fit item is selected");
+    }
     this.models = [];
-    this.selectedModelIndexSubject.next(undefined);
-    this.selectedModelSubject.next(undefined);
-    this.modelsSubject.next(this.models);
+    this.projectStore.dispatch(clearModels({itemIndex: this.currentFitItemIndex}));
   }
 
   private mousePositionSubscription: Subscription = new Subscription();
   private mouseClickSubscription: Subscription = new Subscription();
 
-  clickDefineModel(index: number = this.selectedModelIndexSubject.getValue() as number) {
+  clickDefineModel(index: number | undefined = this.currentModelIndex) {
+    if (index === undefined) {
+      return;
+    }
 
     // Unsubscribe from any existing subscriptions
     this.mousePositionSubscription.unsubscribe()

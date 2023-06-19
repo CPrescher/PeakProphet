@@ -15,6 +15,9 @@ import {
 import {PlotState} from "../../../plot/plot.reducers";
 import {Store} from "@ngrx/store";
 import {currentPattern} from "../../../plot/plot.selectors";
+import {ProjectState} from "../../../project/store/project.state";
+import {currentModelIndex, models} from "../../../project/store/project.selectors";
+import {convertModel} from "../../../shared/models/peaks";
 
 @Component({
   selector: 'app-plot',
@@ -47,6 +50,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private store: Store<PlotState>,
+    private projectStore: Store<ProjectState>,
     private peakService: ModelService,
     private bkgService: BkgService,
     private mouseService: MousePositionService) {
@@ -166,7 +170,7 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    this._selectedPeakSubscription = this.peakService.selectedPeakIndex$.subscribe(
+    this._selectedPeakSubscription = this.projectStore.select(currentModelIndex).subscribe(
       (index: number | undefined) => {
         if (index === undefined) {
           this.peakLines.forEach((line) => {
@@ -211,15 +215,19 @@ export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   _initModelUpdateHandling(): void {
-    this._combinedUpdateSubscription = combineLatest(this.bkgService.bkgModel$, this.peakService.models$).pipe(
+    this._combinedUpdateSubscription = combineLatest(this.bkgService.bkgModel$, this.projectStore.select(models)).pipe(
       throttleTime(30, undefined, {leading: true, trailing: true})
-    ).subscribe(([bkgModel, peaks]) => {
+    ).subscribe(([bkgModel, models]) => {
       if (bkgModel === undefined) {
         this.bkgLine.setData([], []);
         return;
       }
+      let clickModels: ClickModel[] = [];
+      for (const id in models.ids) {
+        clickModels.push(convertModel(models.entities[id]));
+      }
       this.bkgLine.setData(this.mainLine.x, bkgModel.evaluate(this.mainLine.x));
-      this.updatePeaks(peaks);
+      this.updatePeaks(clickModels);
       this.updateSumLine();
     });
   }

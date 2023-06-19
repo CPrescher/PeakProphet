@@ -3,10 +3,16 @@ import {ClickModel} from "../../../shared/models/model.interface";
 import {ModelService} from "../../../shared/model.service";
 import {Observable, Subscription} from "rxjs";
 import {Parameter} from "../../../shared/models/parameter.model";
-import {ProjectState} from "../../../project/store/project.state";
+import {Model, ProjectState} from "../../../project/store/project.state";
 import {Store} from "@ngrx/store";
-import {currentFitItemIndex, currentModelIndex} from "../../../project/store/project.selectors";
+import {
+  currentFitItemIndex,
+  currentModel,
+  currentModelIndex,
+  modelCount
+} from "../../../project/store/project.selectors";
 import {removeModel} from "../../../project/store/project.actions";
+import {convertModel} from "../../../shared/models/peaks";
 
 @Component({
   selector: 'app-peak-item',
@@ -14,13 +20,14 @@ import {removeModel} from "../../../project/store/project.actions";
   styleUrls: ['./peak-item.component.css']
 })
 export class PeakItemComponent implements OnInit, OnDestroy {
-  peak: ClickModel | undefined = undefined;
+  model: ClickModel | undefined = undefined;
 
   selectedModelIndex: number | undefined = undefined;
   peakNum: number = 0;
 
   private selectedModelSubscription: Subscription = new Subscription();
   private selectedModelIndexSubscription: Subscription = new Subscription();
+  private peakNumSubscription: Subscription = new Subscription();
 
   private currentFitItemIndex: Observable<number | undefined>;
   private currentModelIndex: Observable<number | undefined>;
@@ -32,22 +39,26 @@ export class PeakItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedModelSubscription = this.modelService.selectedModel$.subscribe((peak: ClickModel | undefined) => {
-      this.peak = peak;
-    });
-    this.selectedModelIndexSubscription = this.modelService.selectedPeakIndex$.subscribe((index: number | undefined) => {
-      this.selectedModelIndex = index;
-      this.peakNum = this.modelService.getPeaks().length;
-    });
+    this.selectedModelSubscription = this.projectStore.select(currentModel).subscribe(
+      (model: ClickModel | undefined) => {
+        this.model = model
+      });
+    this.selectedModelIndexSubscription = this.projectStore.select(currentModelIndex).subscribe(
+      (index: number | undefined) => {
+        this.selectedModelIndex = index;
+      });
+
+    this.currentModelIndex = this.projectStore.select(currentModelIndex);
+
+    this.peakNumSubscription = this.projectStore.select(modelCount).subscribe(
+      (count: number) => {
+        this.peakNum = count;
+      }
+    );
 
     this.currentFitItemIndex = this.projectStore.select(currentFitItemIndex);
     this.currentFitItemIndex.subscribe((index: number | undefined) => {
       console.log("currentFitItemIndex", index);
-    });
-
-    this.currentModelIndex = this.projectStore.select(currentModelIndex);
-    this.currentModelIndex.subscribe((index: number | undefined) => {
-      console.log("currentModelIndex", index);
     });
   }
 
@@ -58,8 +69,8 @@ export class PeakItemComponent implements OnInit, OnDestroy {
   }
 
   updateModel(parameter: Parameter) {
-    if (this.peak !== undefined && this.selectedModelIndex !== undefined) {
-      this.modelService.updateModel(this.selectedModelIndex, this.peak);
+    if (this.model !== undefined && this.selectedModelIndex !== undefined) {
+      this.modelService.updateModel(this.selectedModelIndex, this.model);
       this.modelService.updateParameter(this.selectedModelIndex, parameter);
     }
   }
@@ -69,7 +80,7 @@ export class PeakItemComponent implements OnInit, OnDestroy {
   }
 
   defineModel() {
-    if(this.selectedModelIndex !== undefined) {
+    if (this.selectedModelIndex !== undefined) {
       this.modelService.clickDefineModel(this.selectedModelIndex);
     }
   }

@@ -25,7 +25,7 @@ describe('PeakItemComponent', () => {
       .compileComponents();
 
     modelService = TestBed.inject(ModelService);
-    modelService.clearPeaks();
+    modelService.clearModels();
     modelService.addPeak("Gaussian");
     modelService.addPeak("Lorentzian");
 
