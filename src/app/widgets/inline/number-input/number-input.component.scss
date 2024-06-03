@@ -49,25 +49,25 @@ input:focus + .label .label-text {
   display: flex;
   align-items: center;
   pointer-events: none;
-  color: mat.get-color-from-palette(colors.$my-accent, 500);
+  color: mat.m2-get-color-from-palette(colors.$my-accent, 500);
   font-weight: bold;
   transform: translateY(-75%);
 }
 
 input:focus {
   outline: none;
-  color: mat.get-color-from-palette(colors.$my-accent, 500);
-  border-color: mat.get-color-from-palette(colors.$my-accent, 500);
+  color: mat.m2-get-color-from-palette(colors.$my-accent, 500);
+  border-color: mat.m2-get-color-from-palette(colors.$my-accent, 500);
 }
 
 input::-moz-selection { /* Code for Firefox */
   color: white;
-  background: mat.get-color-from-palette(colors.$my-accent, 700);
+  background: mat.m2-get-color-from-palette(colors.$my-accent, 700);
 }
 
 input::selection {
   color: white;
-  background: mat.get-color-from-palette(colors.$my-accent, 700);
+  background: mat.m2-get-color-from-palette(colors.$my-accent, 700);
 }
 
 .label .label-text {
