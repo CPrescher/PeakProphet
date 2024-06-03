@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "peakprophet:build:production"
+              "buildTarget": "peakprophet:build:production"
             },
             "development": {
-              "browserTarget": "peakprophet:build:development"
+              "buildTarget": "peakprophet:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "peakprophet:build"
+            "buildTarget": "peakprophet:build"
           }
         },
         "test": {
