@@ -2,9 +2,10 @@ import {Component,OnInit} from '@angular/core';
 import {PeakService} from "../../../shared/peak.service";
 
 @Component({
-  selector: 'app-peak-control',
-  templateUrl: './peak-control.component.html',
-  styleUrls: ['./peak-control.component.css']
+    selector: 'app-peak-control',
+    templateUrl: './peak-control.component.html',
+    styleUrls: ['./peak-control.component.css'],
+    standalone: false
 })
 export class PeakControlComponent implements OnInit {
   peakTypes: String[] = [];

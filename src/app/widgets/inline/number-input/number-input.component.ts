@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-number-input',
-  templateUrl: './number-input.component.html',
-  styleUrls: ['./number-input.component.scss']
+    selector: 'app-number-input',
+    templateUrl: './number-input.component.html',
+    styleUrls: ['./number-input.component.scss'],
+    standalone: false
 })
 export class NumberInputComponent {
   @Input() label: string;

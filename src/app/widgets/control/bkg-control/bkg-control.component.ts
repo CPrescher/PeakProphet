@@ -2,9 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BkgService} from "../../../shared/bkg.service";
 
 @Component({
-  selector: 'app-bkg-control',
-  templateUrl: './bkg-control.component.html',
-  styleUrls: ['./bkg-control.component.css']
+    selector: 'app-bkg-control',
+    templateUrl: './bkg-control.component.html',
+    styleUrls: ['./bkg-control.component.css'],
+    standalone: false
 })
 export class BkgControlComponent implements OnInit, OnDestroy {
 

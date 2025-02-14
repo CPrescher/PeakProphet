@@ -4,9 +4,10 @@ import {FitModelService} from "../../shared/fit-model.service";
 import {map, Observable} from "rxjs";
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.css']
+    selector: 'app-main',
+    templateUrl: './main-view.component.html',
+    styleUrls: ['./main-view.component.css'],
+    standalone: false
 })
 export class MainViewComponent {
 

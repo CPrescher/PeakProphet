@@ -52,7 +52,7 @@ fieldset {
 }
 
 
-:host /deep/ .mat-mdc-list-option .mdc-radio__outer-circle {
+/* :host /deep/ .mat-mdc-list-option .mdc-radio__outer-circle {
   top: 3px;
   left: 3px;
   height: 14px;
@@ -70,7 +70,7 @@ fieldset {
 :host /deep/ .mdc-list-item--with-trailing-radio .mdc-list-item__end {
   width: 30px;
   margin-left: 0;
-}
+} */
 
 .small-icon-button {
   width: 24px !important;

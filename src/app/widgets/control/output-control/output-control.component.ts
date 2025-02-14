@@ -5,9 +5,10 @@ import {FitModelService} from "../../../shared/fit-model.service";
 import {convertToOutputRow, FitModel} from "../../../shared/data/fit-model";
 
 @Component({
-  selector: 'app-output-control',
-  templateUrl: './output-control.component.html',
-  styleUrls: ['./output-control.component.css']
+    selector: 'app-output-control',
+    templateUrl: './output-control.component.html',
+    styleUrls: ['./output-control.component.css'],
+    standalone: false
 })
 export class OutputControlComponent {
 

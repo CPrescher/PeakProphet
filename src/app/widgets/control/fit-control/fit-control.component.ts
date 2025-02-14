@@ -11,9 +11,10 @@ export interface Progress {
 }
 
 @Component({
-  selector: 'app-fit-control',
-  templateUrl: './fit-control.component.html',
-  styleUrls: ['./fit-control.component.css']
+    selector: 'app-fit-control',
+    templateUrl: './fit-control.component.html',
+    styleUrls: ['./fit-control.component.css'],
+    standalone: false
 })
 export class FitControlComponent implements OnDestroy {
   public stopSubject: Subject<void> | undefined = undefined;

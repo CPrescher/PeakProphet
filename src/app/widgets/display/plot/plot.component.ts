@@ -18,9 +18,10 @@ import {
 } from "rxjs";
 
 @Component({
-  selector: 'app-plot',
-  templateUrl: './plot.component.html',
-  styleUrls: ['./plot.component.css']
+    selector: 'app-plot',
+    templateUrl: './plot.component.html',
+    styleUrls: ['./plot.component.css'],
+    standalone: false
 })
 export class PlotComponent implements OnInit, AfterViewInit, OnDestroy {
 

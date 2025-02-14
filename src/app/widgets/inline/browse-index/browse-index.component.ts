@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-browse-index',
-  templateUrl: './browse-index.component.html',
-  styleUrls: ['./browse-index.component.css']
+    selector: 'app-browse-index',
+    templateUrl: './browse-index.component.html',
+    styleUrls: ['./browse-index.component.css'],
+    standalone: false
 })
 export class BrowseIndexComponent {
   @Input() index: number;

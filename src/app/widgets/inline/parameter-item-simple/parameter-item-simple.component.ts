@@ -2,9 +2,10 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Parameter} from "../../../shared/models/parameter.model";
 
 @Component({
-  selector: 'app-parameter-item-simple',
-  templateUrl: './parameter-item-simple.component.html',
-  styleUrls: ['./parameter-item-simple.component.scss']
+    selector: 'app-parameter-item-simple',
+    templateUrl: './parameter-item-simple.component.html',
+    styleUrls: ['./parameter-item-simple.component.scss'],
+    standalone: false
 })
 export class ParameterItemSimpleComponent {
   @Input() parameter: Parameter;

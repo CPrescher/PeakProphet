@@ -4,9 +4,10 @@ import {FitModelService} from "../../../shared/fit-model.service";
 import {convertToOutputRow} from "../../../shared/data/fit-model";
 
 @Component({
-  selector: 'app-output-table',
-  templateUrl: './output-table.component.html',
-  styleUrls: ['./output-table.component.css']
+    selector: 'app-output-table',
+    templateUrl: './output-table.component.html',
+    styleUrls: ['./output-table.component.css'],
+    standalone: false
 })
 export class OutputTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = []

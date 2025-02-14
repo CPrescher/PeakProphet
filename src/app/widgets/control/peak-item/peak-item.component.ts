@@ -4,9 +4,10 @@ import {PeakService} from "../../../shared/peak.service";
 import {Subscription} from "rxjs";
 
 @Component({
-  selector: 'app-peak-item',
-  templateUrl: './peak-item.component.html',
-  styleUrls: ['./peak-item.component.css']
+    selector: 'app-peak-item',
+    templateUrl: './peak-item.component.html',
+    styleUrls: ['./peak-item.component.css'],
+    standalone: false
 })
 export class PeakItemComponent implements OnInit, OnDestroy {
   peak: ClickModel | undefined = undefined;

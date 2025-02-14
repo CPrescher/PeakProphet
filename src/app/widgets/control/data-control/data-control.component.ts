@@ -4,9 +4,10 @@ import {MatSelectionListChange} from "@angular/material/list";
 import {firstValueFrom, lastValueFrom, Observable, Subscription} from "rxjs";
 
 @Component({
-  selector: 'app-data-control',
-  templateUrl: './data-control.component.html',
-  styleUrls: ['./data-control.component.css']
+    selector: 'app-data-control',
+    templateUrl: './data-control.component.html',
+    styleUrls: ['./data-control.component.css'],
+    standalone: false
 })
 export class DataControlComponent implements OnDestroy {
 
