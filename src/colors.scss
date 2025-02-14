@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
 
-$my-accent: mat.define-palette(mat.$orange-palette, 500, 200, 100);
-$my-primary: mat.define-palette(mat.$blue-grey-palette, 700, 100, 900);
-$my-warning: mat.define-palette(mat.$red-palette, 700, 50, 900);
+$my-accent: mat.m2-define-palette(mat.$m2-orange-palette, 500, 200, 100);
+$my-primary: mat.m2-define-palette(mat.$m2-blue-grey-palette, 700, 100, 900);
+$my-warning: mat.m2-define-palette(mat.$m2-red-palette, 700, 50, 900);
