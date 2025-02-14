@@ -14,14 +14,26 @@ import {
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 
+/**
+ * Handles WebSocket communication for fitting operations using Socket.IO.
+ * This class manages the connection lifecycle, data transmission, and progress monitoring
+ * for model fitting operations.
+ */
 export class FitRequest {
+  /** Subject for emitting fit results */
   private resultSubject: Subject<any> = new Subject<any>();
+  /** Observable stream of fit results */
   public result$: Observable<any>;
 
+  /** ReplaySubject to buffer and emit progress updates */
   private progressSubject: ReplaySubject<any> = new ReplaySubject<any>(10);
+  /** Observable stream of progress updates */
   public progress$: Observable<any> = this.progressSubject.asObservable();
+  /** Flag to control progress request timing */
   private _requestProgress = true;
   private _firstProgress = true;
+
+  /** Subject to handle manual stopping of the fit operation */
   public stopper$: Subject<void> = new Subject<void>();
 
   private sioClient: Socket;
@@ -35,10 +47,18 @@ export class FitRequest {
   private _progressIntervalSubscription = new Subscription();
   private _stopperSubscription = new Subscription();
 
+  /**
+   * Creates a new FitRequest instance
+   * @param fitModel The model configuration for the fitting operation
+   */
   constructor(public fitModel: FitModel) {
     this.stopper$ = new Subject<void>();
   }
 
+  /**
+   * Initiates the fitting process
+   * @returns A tuple of [result$, progress$, stopper$] observables for monitoring and controlling the fit
+   */
   public fit(): [Observable<any>, Observable<any>, Subject<void>] {
     const json_data = this._createJSONData(this.fitModel);
 
@@ -50,6 +70,11 @@ export class FitRequest {
     return [this.result$, this.progress$, this.stopper$];
   }
 
+  /**
+   * Creates a JSON string from the fit model
+   * @param fitModel The model to serialize
+   * @returns JSON string representation of the model
+   */
   private _createJSONData(fitModel: FitModel) {
     return JSON.stringify({
       name: fitModel.name,
@@ -59,13 +84,31 @@ export class FitRequest {
     });
   }
 
+  /**
+   * Establishes Socket.IO connection with automatic timeout
+   * The connection automatically closes after 60 seconds to prevent indefinite
+   * server connections in edge cases
+   */
   private _connectToSocketIO() {
     this.sioClient = io(environment.backend_url);
 
+    // Two observables: one for the connection and one for the disconnection.
     this.sioConnect$ = fromEvent(this.sioClient, 'connect');
     this.sioDisconnect$ = fromEvent(this.sioClient, 'disconnect').pipe(take(1));
+
+    // The connection will be automatically closed after 60 seconds
+    interval(60000).subscribe(() => {
+      this.sioClient.emit('stop');
+      this.sioClient.disconnect();
+      this.sioClient.close();
+    });
   }
 
+  /**
+   * Sets up the fit request and handles the response
+   * Includes error handling and cleanup on completion
+   * @param json_data The serialized model data to send
+   */
   private _emitFitRequest(json_data: string) {
     this.resultSubject = new Subject<any>();
     this.result$ = this.resultSubject
@@ -84,6 +127,7 @@ export class FitRequest {
 
     this._resultSubscription = this.result$.subscribe({
       complete: () => {
+        // A short timeout to ensure the result is sent.
         setTimeout(() => {
           this.sioClient.disconnect();
           this.sioClient.close();
@@ -96,6 +140,11 @@ export class FitRequest {
     });
   }
 
+  /**
+   * Configures progress monitoring
+   * Sends progress requests every 30ms and processes responses
+   * Progress updates continue until either the fit completes or the connection closes
+   */
   private _emitProgressRequest() {
     this.progressSubject.complete();
     this.progressSubject = new ReplaySubject<any>(10);
@@ -125,6 +174,10 @@ export class FitRequest {
     });
   }
 
+  /**
+   * Sets up the stopping mechanism
+   * When triggered, sends a stop signal to the server and closes the connection
+   */
   private _createStopper() {
     this.stopper$.complete();
     this.stopper$ = new Subject<void>();
@@ -136,6 +189,10 @@ export class FitRequest {
     });
   }
 
+  /**
+   * Cleans up all subscriptions
+   * Called when the socket disconnects or the operation completes
+   */
   private _resetSubscriptions() {
     this._connectSubscription.unsubscribe();
     this._disconnectSubscription.unsubscribe();
