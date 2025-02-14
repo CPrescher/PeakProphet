@@ -8,8 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm i --legacy-peer-deps
-RUN npm audit fix
+RUN npm ci 
 
 # Copy source code
 COPY . .
