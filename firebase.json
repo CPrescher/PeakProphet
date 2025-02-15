@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "peakprophet",
-    "public": "dist/peakprophet",
+    "public": "dist/peakprophet/browser",
     "ignore": [
       "**/.*"
     ],
